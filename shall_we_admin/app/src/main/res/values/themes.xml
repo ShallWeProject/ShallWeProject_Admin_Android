@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Shall_we_admin" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Theme.Shall_we_admin" parent="Base.Theme.Shall_we_admin" />
+
+    <style name="Theme.App.Starting" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- API 31+ specific attributes -->
+        <item name="android:windowSplashScreenBackground">#FFF0F2</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_splash</item>
+
+        <item name="postSplashScreenTheme">@style/Theme.Shall_we_admin</item>
+        # Required.
+
+
+    </style>
+</resources>
