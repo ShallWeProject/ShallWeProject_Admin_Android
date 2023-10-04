@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_marginLeft="0dp"
+        android:backgroundTint="@color/white"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="30dp">
+
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:backgroundTint="@color/white"
+            android:background="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="24dp"
+            >
+
+            <ImageView
+                android:id="@+id/check"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/check"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvDialogMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="변경사항이 저장되었습니다."
+                android:textColor="#49454F"
+                app:layout_constraintLeft_toRightOf="@+id/check"
+                android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <Button
+                android:id="@+id/btnDialogNegative"
+                android:layout_width="76dp"
+                android:layout_height="40dp"
+                android:backgroundTint="@color/white"
+                android:textSize="14dp"
+                android:text="확인"
+                android:textColor="#E31B54"
+                android:layout_marginLeft="80dp"
+                app:layout_constraintLeft_toRightOf="@id/tvDialogMessage"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>
