@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentScheduleBinding
 

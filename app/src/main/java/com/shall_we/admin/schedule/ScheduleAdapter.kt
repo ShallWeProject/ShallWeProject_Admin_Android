@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.admin.R
+import com.shall_we.admin.reservation.ReservationData
 
-class ScheduleAdapter(private val scheduleList : List<ScheduleData>, private val onItemClicked: (ScheduleData) -> Unit) : RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
+class ScheduleAdapter(private val scheduleList: List<ScheduleData>, private val onItemClicked: (ScheduleData) -> Unit) : RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
 
     class ScheduleViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         val title = itemView.findViewById<TextView>(R.id.title)
