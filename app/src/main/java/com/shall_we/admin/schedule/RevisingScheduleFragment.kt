@@ -14,6 +14,8 @@ import android.view.WindowManager
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentRevisingScheduleBinding
+import java.text.ParseException
+import java.text.SimpleDateFormat
 
 import java.util.Date
 import java.util.Locale
@@ -24,7 +26,6 @@ class RevisingScheduleFragment : Fragment() {
     private var _binding: FragmentRevisingScheduleBinding? = null
     private val binding get() = _binding!!
     private lateinit var calendarView: MaterialCalendarView
-    var selectedDate: Date? = null
     private val locale: Locale = Locale("ko")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,11 +47,13 @@ class RevisingScheduleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         calendarView = binding.calendar
+
+
         val btnbtn = binding.btnbtn
 
         // 달력 날짜 선택 리스너를 설정합니다.
         calendarView.setOnDateChangedListener { widget, date, selected ->
-            // 선택된 날짜에 따라 btnbtn의 가시성을 변경합니다.
+
             if (selected) {
                 btnbtn.visibility = View.VISIBLE
             } else {
@@ -72,7 +75,7 @@ class RevisingScheduleFragment : Fragment() {
         }
 
         binding.btnbtnbtn.setOnClickListener {
-            val alertDialog = CustomAlertDialog(requireContext())
+            val alertDialog = CustomAlertDialog(requireContext(),R.layout.custom_popup_layout)
             val dialog = alertDialog.create()
 
             val layoutParams = WindowManager.LayoutParams()

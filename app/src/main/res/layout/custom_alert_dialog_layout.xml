@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.cardview.widget.CardView
+        android:backgroundTint="@color/white"
+        android:background="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:cardCornerRadius="30dp">
+
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:backgroundTint="@color/white"
+            android:background="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="24dp"
+            >
+
+            <TextView
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/tvDialogTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:layout_margin="15dp"
+                android:text="결제 확인"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tvDialogMessage01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="김에린 외 2명"
+                android:layout_marginTop="10dp"
+                android:textSize="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="0dp"
+                android:textColor="#E31B54"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDialogTitle" />
+
+
+            <TextView
+                android:id="@+id/tvDialogMessage03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="44dp"
+                android:textColor="#49454F"
+                android:text="결제를 확인하셨습니까? "
+                android:textSize="15dp"
+
+                app:layout_constraintLeft_toLeftOf="@id/tvDialogMessage01"
+                app:layout_constraintTop_toBottomOf="@id/tvDialogMessage01" />
+
+            <Button
+                android:id="@+id/btnDialogPositive"
+                android:layout_width="110dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="80dp"
+                android:background="@drawable/btn_design"
+                android:text="예약확정"
+                android:layout_marginLeft="5dp"
+                android:textColor="#E31B54"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:backgroundTint="#FFE4E8"
+                app:layout_constraintLeft_toRightOf="@id/btnDialogNegative"
+                app:layout_constraintTop_toBottomOf="@id/tvDialogMessage01" />
+
+            <Button
+                android:id="@+id/btnDialogNegative"
+                android:layout_width="76dp"
+                android:layout_height="40dp"
+
+                android:layout_marginLeft="140dp"
+                android:layout_marginTop="80dp"
+                android:background="@drawable/btn_design"
+                android:text="취소"
+
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDialogMessage01" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>
