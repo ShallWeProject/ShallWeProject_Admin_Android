@@ -32,6 +32,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        dataBinding true
     }
 }
 
@@ -52,4 +53,6 @@ dependencies {
     //splash
     implementation 'androidx.core:core-splashscreen:1.0.0-alpha01'
 
+
+    implementation 'com.github.prolificinteractive:material-calendarview:1.4.3'
 }
