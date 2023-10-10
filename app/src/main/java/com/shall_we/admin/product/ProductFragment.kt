@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.shall_we.admin.R
+import com.shall_we.admin.databinding.FragmentProductBinding
 
 
 class ProductFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-
+    private var _binding: FragmentProductBinding? = null
+    private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -21,8 +23,38 @@ class ProductFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product, container, false)
+        _binding = FragmentProductBinding.inflate(inflater, container, false)
+
+        // Sample data for testing.
+        val myDataset = listOf(
+            ProductData("[성수]인기 베이킹 클래스", "기념일케이크 사지말고 만들어요"),
+            ProductData("[홍대]인기 공예 클래스", "테마가 있는 프라이빗 칵테일 클래스")
+            // Add more data here...
+        )
+
+        val viewManager = LinearLayoutManager(requireContext())
+        val viewAdapter = ProductAdapter(myDataset){ product ->
+            navigateToOtherFragment(product)
+        }
+
+        binding.rvProduct.apply {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = viewAdapter
+        }
+
+        return binding.root
+    }
+
+    private fun navigateToOtherFragment(product : ProductData) {
+        val newFragment = ManagingProductFragment()
+        val bundle = Bundle()
+        newFragment.arguments = bundle
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView, newFragment)
+            .addToBackStack(null)
+            .commit()
+
     }
     override fun onResume() {
         super.onResume()
