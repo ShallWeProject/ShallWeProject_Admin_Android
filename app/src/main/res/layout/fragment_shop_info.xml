@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".login.signup.ShopInfoFragment">
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="100dp"
+        android:text="셸위와 함께하기 위해\n필수 서류를 준비해주세요"
+        android:textColor="@color/rose600"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="92dp"
+        android:text="대표자 신분증을 첨부해주세요"
+        android:textColor="#333333"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/textView9"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="104dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_login_et"
+        android:backgroundTint="#454545"
+        android:text="사진 첨부"
+        android:textColor="#FFFCFC"
+        app:layout_constraintStart_toStartOf="@+id/textView11"
+        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="34dp"
+        android:text="사업자등록증을 첨부해주세요"
+        android:textColor="#333333"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/textView11"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="104dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_login_et"
+        android:backgroundTint="#454545"
+        android:text="사진 첨부"
+        android:textColor="#FFFCFC"
+        app:layout_constraintStart_toStartOf="@+id/textView11"
+        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="34dp"
+        android:text="통장사본을 첨부해주세요"
+        android:textColor="#333333"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/textView11"
+        app:layout_constraintTop_toBottomOf="@+id/button2" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="104dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_login_et"
+        android:backgroundTint="#454545"
+        android:text="사진 첨부"
+        android:textColor="#FFFCFC"
+        app:layout_constraintStart_toStartOf="@+id/textView11"
+        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+    <Button
+        android:id="@+id/btn_next_shop_info"
+        android:layout_width="328dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="46dp"
+        android:background="@drawable/btn_next_black"
+        android:text="다음"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

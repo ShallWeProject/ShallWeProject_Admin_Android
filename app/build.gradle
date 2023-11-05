@@ -6,7 +6,7 @@ plugins {
 android {
     namespace 'com.shall_we.admin'
     compileSdk 33
-
+    buildToolsVersion "33.0.1"
     defaultConfig {
         applicationId "com.shall_we.admin"
         minSdk 33

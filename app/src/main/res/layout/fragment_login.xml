@@ -12,38 +12,105 @@
         android:id="@+id/imageView3"
         android:layout_width="200dp"
         android:layout_height="174.38dp"
-        android:layout_marginTop="150dp"
-        android:layout_marginBottom="39dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
+        android:layout_marginTop="130dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/splash_icon" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
-        android:layout_height="31dp"
-        android:layout_marginTop="39dp"
-        android:gravity="center"
-        android:text="경험을 선물하는 서비스 셸위"
-        android:textColor="@color/rose600"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="84dp"
+        android:text="휴대폰번호를 입력해주세요"
+        android:textColor="#333333"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/login_password_et"
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
+    <EditText
+        android:id="@+id/login_phone_number_et"
+        android:layout_width="212dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="11dp"
+        android:background="@drawable/bg_login_et"
+        android:ems="11"
+        android:inputType="number"
+        android:textSize="12sp"
+        android:paddingLeft="18dp"
+        android:text="010"
+        app:layout_constraintStart_toStartOf="@+id/login_password_et"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
-        android:layout_height="28dp"
-        android:layout_marginTop="2dp"
-        android:gravity="center"
-        android:text="소중한 사람들과 잊지 못할 추억을 만들어보세요"
-        android:textColor="#E66187"
-        android:textSize="11sp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="비밀번호를 입력해주세요"
+        android:textColor="#333333"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/login_password_et"
+        app:layout_constraintTop_toBottomOf="@+id/login_phone_number_et" />
+
+    <EditText
+        android:id="@+id/login_password_et"
+        android:layout_width="329dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_login_et"
+        android:inputType="textPassword"
+        android:paddingLeft="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/btn_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="11dp"
+        android:text="회원가입"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/btn_reset_password"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_password_et" />
+
+    <TextView
+        android:id="@+id/btn_reset_password"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="63dp"
+        android:text="비밀번호 재설정"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_signup"
+        app:layout_constraintTop_toBottomOf="@+id/login_password_et" />
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="328dp"
+        android:layout_height="39dp"
+        android:layout_marginBottom="38dp"
+        android:background="@drawable/btn_next"
+        android:text="로그인"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_loginhome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="홈으로"
+        app:layout_constraintBottom_toTopOf="@+id/btn_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
