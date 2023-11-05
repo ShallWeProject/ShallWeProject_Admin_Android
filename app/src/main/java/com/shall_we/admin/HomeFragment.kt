@@ -31,7 +31,7 @@ class HomeFragment : Fragment() {
 
             // 프래그먼트 전환
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, newFragment)
+                .add(R.id.fragmentContainerView, newFragment)
                 .addToBackStack(null)
                 .commit()
 
@@ -44,7 +44,7 @@ class HomeFragment : Fragment() {
 
             // 프래그먼트 전환
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, newFragment)
+                .add(R.id.fragmentContainerView, newFragment)
                 .addToBackStack(null)
                 .commit()
 
@@ -57,7 +57,7 @@ class HomeFragment : Fragment() {
 
             // 프래그먼트 전환
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, newFragment)
+                .add(R.id.fragmentContainerView, newFragment)
                 .addToBackStack(null)
                 .commit()
 
