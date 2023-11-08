@@ -9,6 +9,7 @@
     tools:context=".product.ManagingProductFragment">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints">
@@ -36,6 +37,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/region"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
                 android:text="지역"
                 android:textSize="15sp"
                 android:textColor="@color/black"/>
@@ -57,16 +59,23 @@
                 android:id="@+id/tv_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@+id/category"
-                app:layout_constraintBottom_toBottomOf="@id/category"
+                app:layout_constraintTop_toTopOf="@+id/spinner"
+                app:layout_constraintBottom_toBottomOf="@id/spinner"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"
                 android:text="카테고리"
                 android:textSize="15sp"
                 android:textColor="@color/black"/>
 
-            <Spinner
+            <TextView
                 android:id="@+id/category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="@id/region"
+                app:layout_constraintTop_toBottomOf="@+id/region"/>
+            <Spinner
+                android:id="@+id/spinner"
                 android:layout_width="280dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="8dp"
@@ -94,7 +103,7 @@
                 android:layout_width="280dp"
                 android:layout_height="40dp"
                 app:layout_constraintStart_toStartOf="@id/region"
-                app:layout_constraintTop_toBottomOf="@+id/category"
+                app:layout_constraintTop_toBottomOf="@+id/spinner"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/border"
@@ -302,6 +311,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:text="4단계: 완성"
+                android:gravity="center_vertical"
                 android:background="@drawable/border"
                 android:padding="5dp"/>
 
@@ -377,6 +387,7 @@
 
 
             <ImageButton
+                android:id="@+id/btn_back"
                 android:layout_width="340dp"
                 android:layout_height="40dp"
                 android:background="@drawable/btn_list"
