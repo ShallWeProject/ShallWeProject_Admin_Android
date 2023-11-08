@@ -33,7 +33,7 @@ class ProductFragment : Fragment() {
         )
 
         val viewManager = LinearLayoutManager(requireContext())
-        val viewAdapter = ProductAdapter(myDataset){ product ->
+        val viewAdapter = ProductAdapter(myDataset) { product ->
             navigateToOtherFragment(product)
         }
 
@@ -52,9 +52,15 @@ class ProductFragment : Fragment() {
         newFragment.arguments = bundle
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainerView, newFragment)
-            .addToBackStack(null)
+            .addToBackStack("fragment")
             .commit()
 
+//        val fragment = parentFragmentManager.findFragmentByTag("fragment")
+//        if (fragment != null) {
+//            Toast.makeText(requireContext(), "있어..", Toast.LENGTH_SHORT).show()
+//        } else {
+//            Toast.makeText(requireContext(), "없어..", Toast.LENGTH_SHORT).show()
+//        }
     }
     override fun onResume() {
         super.onResume()
