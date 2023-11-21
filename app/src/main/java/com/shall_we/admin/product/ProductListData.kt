@@ -1,18 +1,23 @@
 package com.shall_we.admin.product
 
 data class ProductListData(
-    val region: String,
-    val category: String,
-    val productName: String,
+    val title: String,
+    val expCategory: CharSequence,
+    val sttCategory: String,
+    val subtitle: String,
     val thumbnail: String,
     val description: String,
+    val explanation: List<ExplanationRes>,
     val contextImg: String,
-    val curriculum2: String,
-    val curriculum2Img: String,
-    val curriculum3: String,
-    val curriculum3Img: String,
-    val curriculum4: String,
-    val curriculum4Img: String,
-    val address: String,
-    val caution: String
+    //val location: String,
+    val price: Int,
+    //val caution: String
     )
+
+
+
+data class ExplanationRes(
+    val stage: String? = null,
+    val description: String? = null,
+    val explanationUrl: List<String>? = null
+)

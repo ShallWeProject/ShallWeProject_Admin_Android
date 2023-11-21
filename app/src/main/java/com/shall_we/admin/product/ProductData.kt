@@ -1,6 +1,7 @@
 package com.shall_we.admin.product
 
 data class ProductData(
-    val description: String,
-    val title: String
+    val experienceGiftId: Int,
+    val subtitle: String,
+    val title: String,
 )

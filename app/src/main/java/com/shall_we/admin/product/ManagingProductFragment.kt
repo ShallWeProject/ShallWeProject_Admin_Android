@@ -3,15 +3,17 @@ package com.shall_we.admin.product
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.AdapterView
-import android.widget.Toast
+import android.widget.EditText
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentManagingProductBinding
 import com.shall_we.admin.schedule.CustomAlertDialog
@@ -49,7 +51,76 @@ class ManagingProductFragment : Fragment() {
             }
         }
 
+        val priceEditText: EditText? = view?.findViewById(R.id.price)
+
+        priceEditText?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s.isNullOrBlank() || !s.endsWith("원")) {
+                    // 텍스트가 비어있거나 "원"으로 끝나지 않으면 "원"을 자동으로 추가
+                    s?.append("원")
+                }
+            }
+        })
+
+
         binding.btnSave.setOnClickListener {
+            val region = binding.region.text.toString()
+            val expCategory = binding.category.text.toString()
+            val title = binding.product.text.toString()
+            val price = Integer.parseInt(binding.price.text.toString())
+            val thumbnail = binding.thumbnail.text.toString()
+            val description = binding.description.text.toString()
+            val contextImg = binding.contextImg.text.toString()
+            val curriculum1 = binding.curr1Description.text.toString()
+            val curriculum1Img = binding.curr1Img.text.toString()
+            val curriculum2 = binding.curr2Description.text.toString()
+            val curriculum2Img = binding.curr2Img.text.toString()
+            val curriculum3 = binding.curr3Description.text.toString()
+            val curriculum3Img = binding.curr3Img.text.toString()
+            val curriculum4 = binding.tvCurr4.text.toString()
+            val curriculum4Img = binding.curr4Img.text.toString()
+            val address = binding.address.text.toString()
+            val caution = binding.caution.text.toString()
+
+            val explanationList = listOf(
+                ExplanationRes(stage = "1", description = curriculum1, explanationUrl = listOf(
+                    curriculum1Img
+                )),
+                ExplanationRes(stage = "2", description = curriculum2, explanationUrl = listOf(
+                    curriculum2Img
+                )),
+                ExplanationRes(stage = "3", description = curriculum3, explanationUrl = listOf(
+                    curriculum3Img
+                )),
+                ExplanationRes(stage = "4", description = curriculum4, explanationUrl = listOf(
+                    curriculum4Img
+                ))
+            )
+
+            val productListData = ProductListData(
+                title = title,
+                //region = region,
+                expCategory = expCategory,
+                sttCategory = expCategory,
+                thumbnail = thumbnail,
+                subtitle = "",
+                description = description,
+                explanation = explanationList,
+                contextImg = contextImg,
+                //location = address,
+                price = price
+                //caution = caution
+            )
+
+            Log.d("ProductListData", "$productListData")
+
+
+            // 저장하기 api
+
             val newAlertDialog = CustomAlertDialog(requireContext(), R.layout.custom_popup_layout)
             newAlertDialog.setDialogContent("변경사항이 저장되었습니다.")
             val newDialog = newAlertDialog.create()
@@ -66,6 +137,8 @@ class ManagingProductFragment : Fragment() {
                 newDialog.dismiss()
             }
             newDialog.show()
+            Log.d("ProductListData", "$productListData")
+
         }
 
         binding.btnBack.setOnClickListener {
