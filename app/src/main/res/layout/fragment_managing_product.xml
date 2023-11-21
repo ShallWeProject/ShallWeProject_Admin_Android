@@ -111,6 +111,43 @@
                 android:hint="상품명을 입력해주세요."/>
 
             <TextView
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/price"
+                app:layout_constraintBottom_toBottomOf="@id/price"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="16dp"
+                android:text="가격"
+                android:textSize="15sp"
+                android:textColor="@color/black"/>
+
+            <EditText
+                android:id="@+id/price"
+                android:layout_width="280dp"
+                android:layout_height="40dp"
+                app:layout_constraintStart_toStartOf="@id/region"
+                app:layout_constraintTop_toBottomOf="@+id/product"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/border"
+                android:inputType="number"
+                android:gravity="right"
+                android:paddingRight="30dp"/>
+
+            <TextView
+                android:id="@+id/tv_price_won"
+                android:layout_width="280dp"
+                android:layout_height="40dp"
+                app:layout_constraintStart_toStartOf="@id/region"
+                app:layout_constraintTop_toBottomOf="@+id/product"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="20dp"
+                android:text="원"
+                android:textSize="18sp"
+                android:gravity="center_vertical|right"
+                android:paddingRight="10dp"/>
+            <TextView
                 android:id="@+id/tv_thumbnail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -127,7 +164,7 @@
                 android:layout_width="80dp"
                 android:layout_height="40dp"
                 app:layout_constraintStart_toStartOf="@id/region"
-                app:layout_constraintTop_toBottomOf="@+id/product"
+                app:layout_constraintTop_toBottomOf="@+id/price"
                 android:layout_marginTop="8dp"
                 android:text="사진첨부"
                 android:gravity="center"
@@ -311,6 +348,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:text="4단계: 완성"
+                android:textSize="18sp"
                 android:gravity="center_vertical"
                 android:background="@drawable/border"
                 android:padding="5dp"/>
@@ -352,11 +390,11 @@
                 android:padding="5dp"/>
 
             <TextView
-                android:id="@+id/tv_tips"
+                android:id="@+id/tv_caution"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@+id/tips"
-                app:layout_constraintBottom_toBottomOf="@id/tips"
+                app:layout_constraintTop_toTopOf="@+id/caution"
+                app:layout_constraintBottom_toBottomOf="@id/caution"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"
                 android:text="유의사항"
@@ -364,7 +402,7 @@
                 android:textColor="@color/black"/>
 
             <EditText
-                android:id="@+id/tips"
+                android:id="@+id/caution"
                 android:layout_width="280dp"
                 android:layout_height="120dp"
                 app:layout_constraintStart_toStartOf="@id/region"
@@ -372,6 +410,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/border"
+                android:gravity="top"
                 android:padding="5dp"/>
             
             <ImageButton
@@ -382,7 +421,7 @@
                 android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tips"
+                app:layout_constraintTop_toBottomOf="@id/caution"
                 android:layout_marginTop="30dp"/>
 
 

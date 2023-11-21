@@ -25,7 +25,7 @@ class ProductAdapter(private val productList : List<ProductData>, private val on
     override fun onBindViewHolder(holder: ProductAdapter.ProductViewHolder, position: Int) {
         val product = productList[position]
         holder.title.text = product.title
-        holder.description.text = product.description
+        holder.description.text = product.subtitle
 
         holder.itemView.setOnClickListener {
             onItemClicked(product)
