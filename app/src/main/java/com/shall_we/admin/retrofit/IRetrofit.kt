@@ -8,6 +8,7 @@ import com.shall_we.admin.login.data.SendOneReq
 import com.shall_we.admin.login.data.SendOneRes
 import com.shall_we.admin.login.data.SignInReq
 import com.shall_we.admin.login.data.SignUpReq
+import com.shall_we.admin.login.data.ValidCodeReq
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.PATCH
@@ -37,7 +38,7 @@ interface IRetrofit {
     fun sendOne(@Body phoneNumber : SendOneReq): Call <JsonElement>
 
     @POST(API.VALID_VERIFICATION)
-    fun validVerification(@Body validVerificationArray : ValidVerificationArray): Call<JsonElement>
+    fun validVerification(@Body validVerificationArray : ValidCodeReq): Call<JsonElement>
 
 }
 
