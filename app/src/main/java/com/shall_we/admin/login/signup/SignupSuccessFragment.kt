@@ -6,9 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import com.shall_we.admin.MainActivity
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentSignupSuccessBinding
+import com.shall_we.admin.login.LoginFragment
 
 
 class SignupSuccessFragment : Fragment() {
@@ -24,11 +26,17 @@ class SignupSuccessFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentSignupSuccessBinding.inflate(inflater,container,false)
-
         binding.btnHome.setOnClickListener {
-            val intent = Intent(activity, MainActivity::class.java)
-            startActivity(intent)
+            val newFragment = LoginFragment() // 전환할 다른 프래그먼트 객체 생성
+            val bundle = Bundle()
+            newFragment.arguments = bundle
+            // 프래그먼트 전환
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView3, newFragment)
+                .commit()
         }
+
+
         return binding.root
     }
 

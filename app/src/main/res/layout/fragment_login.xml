@@ -26,11 +26,11 @@
         android:text="휴대폰번호를 입력해주세요"
         android:textColor="#333333"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/login_password_et"
+        app:layout_constraintStart_toStartOf="@+id/et_login_password"
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <EditText
-        android:id="@+id/login_phone_number_et"
+        android:id="@+id/et_login_phone_number"
         android:layout_width="212dp"
         android:layout_height="39dp"
         android:layout_marginTop="11dp"
@@ -40,7 +40,7 @@
         android:textSize="12sp"
         android:paddingLeft="18dp"
         android:text="010"
-        app:layout_constraintStart_toStartOf="@+id/login_password_et"
+        app:layout_constraintStart_toStartOf="@+id/et_login_password"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
@@ -51,11 +51,11 @@
         android:text="비밀번호를 입력해주세요"
         android:textColor="#333333"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/login_password_et"
-        app:layout_constraintTop_toBottomOf="@+id/login_phone_number_et" />
+        app:layout_constraintStart_toStartOf="@+id/et_login_password"
+        app:layout_constraintTop_toBottomOf="@+id/et_login_phone_number" />
 
     <EditText
-        android:id="@+id/login_password_et"
+        android:id="@+id/et_login_password"
         android:layout_width="329dp"
         android:layout_height="39dp"
         android:layout_marginTop="15dp"
@@ -76,7 +76,7 @@
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/btn_reset_password"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_password_et" />
+        app:layout_constraintTop_toBottomOf="@+id/et_login_password" />
 
     <TextView
         android:id="@+id/btn_reset_password"
@@ -89,7 +89,7 @@
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_signup"
-        app:layout_constraintTop_toBottomOf="@+id/login_password_et" />
+        app:layout_constraintTop_toBottomOf="@+id/et_login_password" />
 
     <Button
         android:id="@+id/btn_login"

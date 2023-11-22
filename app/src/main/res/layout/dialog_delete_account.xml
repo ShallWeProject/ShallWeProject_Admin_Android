@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="312dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_cancel_reserv"
+    android:padding="24dp"
+    android:layout_marginStart="24dp"
+    android:layout_marginEnd="24dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tv_delete_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="회원 탈퇴"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#1D1B20"/>
+
+    <TextView
+        android:id="@+id/tv_delete_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="회원 탈퇴시 계정 및 프로필 정보, 예약 정보, 캐시가 삭제되며, 한 번 삭제된 정보는 복구가 불가능합니다.\n정말 회원을 탈퇴하시겠습니까?"
+        android:textSize="15sp"
+        android:textColor="#1D1B20"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+        <Button
+            android:id="@+id/btn_cancel_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_delete_description"
+            app:layout_constraintEnd_toStartOf="@id/tv_delete_description"
+            android:layout_marginEnd="8dp"
+            android:background="@null"
+            android:text="아니오"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_delete_account_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_delete_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/btn_cancel_reservation"
+            android:outlineProvider="none"
+            android:text="회원탈퇴"
+            android:textSize="14sp"
+            android:textColor="@color/rose600"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>
