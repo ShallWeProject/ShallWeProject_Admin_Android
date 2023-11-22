@@ -394,7 +394,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@+id/caution"
-                app:layout_constraintBottom_toBottomOf="@id/caution"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"
                 android:text="유의사항"
