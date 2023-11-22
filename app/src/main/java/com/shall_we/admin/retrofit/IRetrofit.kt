@@ -22,7 +22,7 @@ interface IRetrofit {
 
     // 유저 회원가입
     @POST(API.AUTH_SIGN_UP)
-    fun authSignUp(@Body auth: SignUpReq): Call<MessageRes>
+    fun authSignUp(@Body auth: SignUpReq): Call<AuthRes>
 
     // 유저 로그아웃
     @POST(API.AUTH_SIGN_OUT)

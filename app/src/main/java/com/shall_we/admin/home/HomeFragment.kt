@@ -88,7 +88,7 @@ class HomeFragment : Fragment() {
 
     }
 
-    fun logoutRetrofitCall() {
+    private fun logoutRetrofitCall() {
         val refreshTokenArray = RefreshTokenReq(App.refreshToken!!)
         SignOutService().postSignOut(
             refreshTokenArray,
@@ -140,7 +140,7 @@ class HomeFragment : Fragment() {
             dialog.dismiss()
         }
     }
-    fun deleteAccountRetrofitCall() {
+    private fun deleteAccountRetrofitCall() {
         DeleteAccountService().patchShopOwner(
             completion = { responseState, responseBody ->
                 when (responseState) {
@@ -159,8 +159,6 @@ class HomeFragment : Fragment() {
                         App.phoneNumber = sharedPref?.getString("PHONE_NUMBER", null)
                         App.password = sharedPref?.getString("PASSWORD", null)
 
-                        //로그인 화면으로 돌아가기
-                        requireActivity().finish()
                     }
 
                     RESPONSE_STATE.FAIL -> {
@@ -184,6 +182,9 @@ class HomeFragment : Fragment() {
             // 로그아웃 api 연결
             deleteAccountRetrofitCall()
             dialog.dismiss()
+
+            //로그인 화면으로 돌아가기
+            requireActivity().finish()
 
         }
         myLayout.findViewById<Button>(R.id.btn_cancel_delete).setOnClickListener {
