@@ -10,7 +10,7 @@ data class ProductListData(
     val explanation: List<ExplanationRes>,
     val contextImg: String,
     //val location: String,
-    val price: Int,
+    val price: Int? = 0,
     //val caution: String
     )
 
