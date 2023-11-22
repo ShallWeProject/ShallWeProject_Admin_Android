@@ -11,6 +11,10 @@ import com.shall_we.admin.login.signin.ResetPasswordFragment
 
 class ShopInfoFragment : Fragment() {
 
+    private lateinit var name : String
+    private lateinit var phoneNumber : String
+    private lateinit var password : String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -22,9 +26,17 @@ class ShopInfoFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentShopInfoBinding.inflate(inflater,container,false)
+
+        phoneNumber = arguments?.getString("phone", "").toString()
+        name = arguments?.getString("name","").toString()
+        password = arguments?.getString("password","").toString()
+
         binding.btnNextShopInfo.setOnClickListener {
             val newFragment = AgreementFragment() // 전환할 다른 프래그먼트 객체 생성
             val bundle = Bundle()
+            bundle.putString("name",name)
+            bundle.putString("phone",phoneNumber)
+            bundle.putString("password",password)
             newFragment.arguments = bundle
 
             // 프래그먼트 전환

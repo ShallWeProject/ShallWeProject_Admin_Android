@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,13 +14,22 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ScrollView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentAgreementBinding
+import com.shall_we.admin.login.LoginFragment
+import com.shall_we.admin.login.data.MessageRes
+import com.shall_we.admin.login.data.SignUpReq
+import com.shall_we.admin.login.retrofit.IAuthSignUp
+import com.shall_we.admin.login.retrofit.SignUpService
 
-class AgreementFragment : Fragment() {
+class AgreementFragment : Fragment(),IAuthSignUp{
     private lateinit var binding : FragmentAgreementBinding
 
+    private lateinit var name : String
     private lateinit var phone : String
+    private lateinit var password : String
 
     fun initAgreement() {
 
@@ -79,9 +89,6 @@ class AgreementFragment : Fragment() {
                 binding.btnNextAgree.isClickable = false
             }
         }
-        binding.cbAgree4.setOnCheckedChangeListener { button, ischecked ->
-            // Todo: 마케팅동의 정보 전달.
-        }
         binding.tvAgree2More.setOnClickListener {
             agreementDialog(it, 1)
         }
@@ -90,18 +97,8 @@ class AgreementFragment : Fragment() {
             agreementDialog(it, 2)
         }
         binding.btnNextAgree.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString("phone", phone)
-            bundle.putBoolean("isChecked", binding.cbAgree4.isChecked)
-            val newFragment = SignupSuccessFragment() // 전환할 다른 프래그먼트 객체 생성
-            newFragment.arguments = bundle
-
-            // 프래그먼트 전환
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView3, newFragment)
-                .addToBackStack(null)
-                .commit()
-
+            val auth = SignUpReq(phoneNumber = phone, name = name, password = password, marketingConsent = binding.cbAgree4.isChecked)
+            SignUpService(this).postAuthSignUp(auth)
         }
 
     }
@@ -160,6 +157,8 @@ class AgreementFragment : Fragment() {
         binding = FragmentAgreementBinding.inflate(inflater, container, false)
 
         phone = arguments?.getString("phone", "").toString()
+        name = arguments?.getString("name","").toString()
+        password = arguments?.getString("password","").toString()
 
         return binding.root
     }
@@ -169,5 +168,18 @@ class AgreementFragment : Fragment() {
         initAgreement()
     }
 
+    override fun onPostAuthSignUpSuccess(response: MessageRes) {
+
+        requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE) // 현재 스택에 있는 모든 프래그먼트를 제거합니다.
+
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragmentContainerView3, SignupSuccessFragment())
+        transaction.addToBackStack(null) // 이전 상태를 백 스택에 추가합니다.
+        transaction.commit()
+    }
+
+    override fun onPostAuthSignUpFailed(message: String) {
+        Toast.makeText(context,"회원가입 실패. 다시 시도해 주세요",Toast.LENGTH_LONG).show()
+    }
 
 }

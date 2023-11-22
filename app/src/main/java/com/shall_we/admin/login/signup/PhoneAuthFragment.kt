@@ -5,6 +5,7 @@ import android.os.CountDownTimer
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,9 @@ import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentPhoneAuthBinding
+import com.shall_we.admin.login.data.SendOneReq
+import com.shall_we.admin.login.retrofit.PhoneAuthService
+import com.shall_we.admin.retrofit.RESPONSE_STATE
 
 
 class PhoneAuthFragment : Fragment() {
@@ -135,13 +139,16 @@ class PhoneAuthFragment : Fragment() {
 
         })
         binding.btnNextAuth.setOnClickListener {
+            password = binding.passwordEt.text.toString()
             // 인증번호 검증 -> 번호 맞을때만 다음 프래그먼트로 넘기기
             verificationCode = binding.codeEt.text.toString()
 //            validRetrofitCall()
 
             val newFragment = ShopInfoFragment() // 전환할 다른 프래그먼트 객체 생성
             val bundle = Bundle()
+            bundle.putString("name",nameTxt)
             bundle.putString("phone",phoneNumber)
+            bundle.putString("password",password)
             newFragment.arguments = bundle
             // 프래그먼트 전환
             parentFragmentManager.beginTransaction()
@@ -173,5 +180,55 @@ class PhoneAuthFragment : Fragment() {
         super.onDestroy()
         timer?.cancel() // 액티비티가 종료될 때 타이머를 취소합니다.
     }
+
+    private fun sendRetrofitCall() {
+        Log.d("retrofit","$phoneNumber")
+        val sendOneArray : SendOneReq = SendOneReq(phoneNumber)
+        PhoneAuthService().sendOne(sendOneArray, completion = {
+                responseState, responseBody ->
+            when(responseState){
+                RESPONSE_STATE.OKAY -> {
+                    Log.d("retrofit", "category api : ${responseBody}")
+                }
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        })
+    }
+
+//    private fun validRetrofitCall() {
+//        Log.d("retrofit","$phoneNumber")
+//        Log.d("retrofit","$verificationCode")
+//
+//        val validVerificationArray : ValidVerificationArray = ValidVerificationArray(verificationCode,phoneNumber)
+//
+//        RetrofitManager.instance.validVerification(validVerificationArray = validVerificationArray, completion = {
+//                responseState, responseBody ->
+//            when(responseState){
+//                RESPONSE_STATE.OKAY -> {
+//                    Log.d("retrofit", "category api : ${responseBody.hashCode()}")
+//                    if(responseBody.hashCode() == 200){
+//                        val newFragment = AgreementFragment() // 전환할 다른 프래그먼트 객체 생성
+//                        val bundle = Bundle()
+//                        bundle.putString("phone",phoneNumber)
+//                        newFragment.arguments = bundle
+//                        // 프래그먼트 전환
+//                        parentFragmentManager.beginTransaction()
+//                            .replace(R.id.fragmentContainerView3, newFragment)
+//                            .addToBackStack(null)
+//                            .commit()
+//                    }
+//                    else if (responseBody == 400){
+//                        Toast.makeText(context,"인증번호를 확인해주세요.",Toast.LENGTH_LONG).show()
+//                    }
+//
+//                }
+//                RESPONSE_STATE.FAIL -> {
+//                    Log.d("retrofit", "api 호출 에러")
+//                }
+//            }
+//        })
+//    }
 
 }
