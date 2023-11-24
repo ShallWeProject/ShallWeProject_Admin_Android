@@ -17,6 +17,7 @@ object API {
 
     const val VALID_VERIFICATION = "auth/valid-verification-code"
 
+    const val CHANGE_PASSWORD = "auth/shop-owner/change-password"
     
 
 }
