@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentShopInfoBinding
-import com.shall_we.admin.login.signin.ResetPasswordFragment
 
 class ShopInfoFragment : Fragment() {
 

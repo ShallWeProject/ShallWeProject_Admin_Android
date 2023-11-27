@@ -2,6 +2,7 @@ package com.shall_we.admin.retrofit
 
 import com.google.gson.JsonElement
 import com.shall_we.admin.login.data.AuthRes
+import com.shall_we.admin.login.data.ChangePasswordReq
 import com.shall_we.admin.login.data.MessageRes
 import com.shall_we.admin.login.data.RefreshTokenReq
 import com.shall_we.admin.login.data.SendOneReq
@@ -40,5 +41,7 @@ interface IRetrofit {
     @POST(API.VALID_VERIFICATION)
     fun validVerification(@Body validVerificationArray : ValidCodeReq): Call<JsonElement>
 
+    @PATCH(API.CHANGE_PASSWORD)
+    fun changePassword(@Body changePassword : ChangePasswordReq) : Call<JsonElement>
 }
 
