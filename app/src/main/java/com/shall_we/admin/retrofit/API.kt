@@ -17,9 +17,15 @@ object API {
 
     const val VALID_VERIFICATION = "auth/valid-verification-code"
 
+    const val ADMIN_EXPERIENCE_GIFT = "/api/v1/admin/experience/gift"
+
     const val CHANGE_PASSWORD = "auth/shop-owner/change-password"
     
+    const val ADMIN_EXPERIENCE_GIFT_MAIN = "/api/v1/admin/experience/gift/main"
 
+    const val ADMIN_EXPERIENCE_GIFT_REGISTER = "/api/v1/admin/experience/gift/register"
+
+    const val ADMIN_EXPERIENCE_GIFT_DELETE = "/api/v1/admin/experience/gift/{experienceGiftId}"
 }
 
 enum class RESPONSE_STATE {
