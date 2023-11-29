@@ -18,7 +18,8 @@ object API {
     const val VALID_VERIFICATION = "auth/valid-verification-code"
 
     const val CHANGE_PASSWORD = "auth/shop-owner/change-password"
-    
+
+    const val HOME_RESERVATION_INFO = "api/v1/admin/experience/gift/main"
 
 }
 
