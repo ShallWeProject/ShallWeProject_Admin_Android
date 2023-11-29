@@ -1,12 +1,20 @@
 package com.shall_we.admin.login
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.shall_we.admin.App
@@ -17,7 +25,7 @@ import com.shall_we.admin.login.data.AuthRes
 import com.shall_we.admin.login.data.SignInReq
 import com.shall_we.admin.login.retrofit.IAuthSignIn
 import com.shall_we.admin.login.retrofit.SignInService
-import com.shall_we.admin.login.signin.ResetPasswordFragment
+import com.shall_we.admin.login.signin.ChangePasswordFragment
 import com.shall_we.admin.login.signup.PhoneAuthFragment
 
 class LoginFragment : Fragment(), IAuthSignIn {
@@ -52,21 +60,16 @@ class LoginFragment : Fragment(), IAuthSignIn {
                 .commit()
         }
         binding.btnResetPassword.setOnClickListener {
-            val newFragment = ResetPasswordFragment() // 전환할 다른 프래그먼트 객체 생성
+            val newFragment = ChangePasswordFragment() // 전환할 다른 프래그먼트 객체 생성
             val bundle = Bundle()
             newFragment.arguments = bundle
 
             // 프래그먼트 전환
             parentFragmentManager.beginTransaction()
-                .add(R.id.fragmentContainerView3, newFragment)
+                .replace(R.id.fragmentContainerView3, newFragment)
                 .addToBackStack(null)
                 .commit()
         }
-
-//        binding.btnLoginhome.setOnClickListener {
-//            val intent = Intent(activity, MainActivity::class.java)
-//            startActivity(intent)
-//        }
 
         return binding.root
     }

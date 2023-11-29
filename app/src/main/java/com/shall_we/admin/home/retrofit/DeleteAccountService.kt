@@ -24,11 +24,10 @@ class DeleteAccountService {
                 if(response.code() == 200){
                     val authResponse = response.body()
                     if (authResponse != null) {
-                        Log.e("login", "Success: ${authResponse}")
+                        Log.e("delete", "Success: ${authResponse}")
                         completion(RESPONSE_STATE.OKAY, authResponse)
                     } else {
                         completion(RESPONSE_STATE.OKAY, null)
-
                     }
                 }else{
                     try{

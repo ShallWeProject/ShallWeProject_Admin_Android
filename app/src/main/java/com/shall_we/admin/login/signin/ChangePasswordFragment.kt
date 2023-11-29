@@ -2,6 +2,7 @@ package com.shall_we.admin.login.signin
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -9,6 +10,8 @@ import android.os.CountDownTimer
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
+import android.util.Log
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -19,11 +22,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.shall_we.admin.R
-import com.shall_we.admin.databinding.FragmentResetPasswordBinding
+import com.shall_we.admin.databinding.FragmentChangePasswordBinding
 import com.shall_we.admin.login.LoginFragment
+import com.shall_we.admin.login.data.ChangePasswordReq
+import com.shall_we.admin.login.data.SendOneReq
+import com.shall_we.admin.login.data.ValidCodeReq
+import com.shall_we.admin.login.retrofit.ChangePasswordService
+import com.shall_we.admin.login.retrofit.PhoneAuthService
+import com.shall_we.admin.login.retrofit.ValidCodeService
+import com.shall_we.admin.retrofit.RESPONSE_STATE
 
 
-class ResetPasswordFragment : Fragment() {
+class ChangePasswordFragment : Fragment() {
 
     private lateinit var timerTv: TextView
 
@@ -51,7 +61,7 @@ class ResetPasswordFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding = FragmentResetPasswordBinding.inflate(inflater, container, false)
+        val binding = FragmentChangePasswordBinding.inflate(inflater, container, false)
 
         timerTv = binding.timer
 
@@ -90,7 +100,7 @@ class ResetPasswordFragment : Fragment() {
                 nameTxt = binding.nameEt.text.toString()
                 phoneNumberTxt = binding.phonenumberEt.text.toString()
 
-//                sendRetrofitCall()
+                sendRetrofitCall()
                 timerTv.visibility = View.VISIBLE
                 startTimer()
             } else if (!nameFlag) {
@@ -146,33 +156,7 @@ class ResetPasswordFragment : Fragment() {
         binding.btnFinish.setOnClickListener {
             // 인증번호 검증 -> 번호 맞을때만 다음 프래그먼트로 넘기기
             verificationCode = binding.codeEt.text.toString()
-//            validRetrofitCall()
-
-            val myLayout =
-                LayoutInflater.from(context).inflate(R.layout.dialog_reset_password, null)
-            val build = AlertDialog.Builder(view?.context).apply {
-                setView(myLayout)
-            }
-            val dialog = build.create()
-            dialog.getWindow()?.setGravity(Gravity.BOTTOM);
-            val params = dialog.window!!.attributes
-            params.width = WindowManager.LayoutParams.WRAP_CONTENT
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog.window?.attributes = params
-            dialog.show()
-            myLayout.findViewById<Button>(R.id.btn_ok).setOnClickListener {
-                dialog.dismiss()
-
-                val newFragment = LoginFragment() // 전환할 다른 프래그먼트 객체 생성
-                val bundle = Bundle()
-                bundle.putString("phone", phoneNumber)
-                newFragment.arguments = bundle
-                // 프래그먼트 전환
-                parentFragmentManager.beginTransaction()
-                    .add(R.id.fragmentContainerView3, newFragment)
-                    .addToBackStack(null)
-                    .commit()
-            }
+            validRetrofitCall(it)
         }
         return binding.root
     }
@@ -197,5 +181,112 @@ class ResetPasswordFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         timer?.cancel() // 액티비티가 종료될 때 타이머를 취소합니다.
+    }
+
+
+
+    private fun sendRetrofitCall() {
+        Log.d("retrofit","$phoneNumber")
+        val sendOneArray : SendOneReq = SendOneReq(phoneNumber)
+        PhoneAuthService().sendOne(sendOneArray, completion = {
+                responseState, responseBody ->
+            when(responseState){
+                RESPONSE_STATE.OKAY -> {
+                    Log.d("retrofit", "category api : ${responseBody}")
+                }
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        })
+    }
+
+    private fun validRetrofitCall(view: View) {
+        Log.d("retrofit","$phoneNumber")
+        Log.d("retrofit","$verificationCode")
+
+        val validVerificationArray : ValidCodeReq = ValidCodeReq(verificationCode,phoneNumber)
+
+        ValidCodeService().validVerification(validVerificationArray = validVerificationArray, completion = {
+                responseState, responseBody ->
+            when(responseState){
+                RESPONSE_STATE.OKAY -> {
+                    Log.d("retrofit", "category api : ${responseBody.hashCode()}")
+                    if(responseBody.hashCode() == 200){
+                        changePasswordRetrofitCall(view)
+                    }
+                    else if (responseBody == 400){
+                        Toast.makeText(context,"인증번호를 확인해주세요.",Toast.LENGTH_LONG).show()
+                    }
+                }
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        })
+    }
+
+    private fun changePasswordRetrofitCall(view: View) {
+
+        val changePasswordRed : ChangePasswordReq = ChangePasswordReq(phoneNumber,confirmPw)
+
+        ChangePasswordService().patchChangePassword(changePasswordRed, completion = {
+                responseState, responseBody ->
+            when(responseState){
+                RESPONSE_STATE.OKAY -> {
+                    Log.d("retrofit", "category api : ${responseBody.hashCode()}")
+                    if(responseBody == 200){
+                        confirmDialog(view)
+                    }
+                    else if (responseBody == 400){
+                        Toast.makeText(context,"${responseBody.hashCode()}",Toast.LENGTH_LONG).show()
+                    }
+                }
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        })
+    }
+    private fun confirmDialog(view: View){
+        Log.d("dialog", "성공")
+        val myLayout = LayoutInflater.from(context).inflate(R.layout.dialog_change_password, null)
+        val dialog = AlertDialog.Builder(view.context).apply {
+            setView(myLayout)
+        }.create()
+
+        dialog.show()
+
+        // 다이얼로그의 Window 속성 가져오기
+        val window = dialog.window
+        dialog.getWindow()?.setGravity(Gravity.BOTTOM);
+        window?.attributes?.y = -100
+
+        window?.setLayout(dpToPx(316), dpToPx(48)) // 너비와 높이를 원하는 픽셀로 설정
+
+        // 다이얼로그의 배경 설정 (옵션)
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        // 확인 버튼 클릭 시 다이얼로그 닫기
+        myLayout.findViewById<Button>(R.id.btn_ok).setOnClickListener {
+            dialog.dismiss()
+
+            val newFragment = LoginFragment() // 전환할 다른 프래그먼트 객체 생성
+            val bundle = Bundle()
+            bundle.putString("phone", phoneNumber)
+            newFragment.arguments = bundle
+            // 프래그먼트 전환
+            parentFragmentManager.beginTransaction()
+                .add(R.id.fragmentContainerView3, newFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+    fun dpToPx(dp: Int) : Int{
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            Resources.getSystem().displayMetrics).toInt()
+
     }
 }

@@ -2,6 +2,7 @@ package com.shall_we.admin.retrofit
 
 import com.google.gson.JsonElement
 import com.shall_we.admin.login.data.AuthRes
+import com.shall_we.admin.login.data.ChangePasswordReq
 import com.shall_we.admin.login.data.MessageRes
 import com.shall_we.admin.login.data.RefreshTokenReq
 import com.shall_we.admin.login.data.SendOneReq
@@ -27,7 +28,7 @@ interface IRetrofit {
 
     // 유저 회원가입
     @POST(API.AUTH_SIGN_UP)
-    fun authSignUp(@Body auth: SignUpReq): Call<MessageRes>
+    fun authSignUp(@Body auth: SignUpReq): Call<AuthRes>
 
     // 유저 로그아웃
     @POST(API.AUTH_SIGN_OUT)
@@ -61,5 +62,8 @@ interface IRetrofit {
 
     @DELETE(API.ADMIN_EXPERIENCE_GIFT_DELETE)
     fun delAdminExperienceGift(@Path("experienceGiftId") experienceGiftId: Int): Call<JsonElement>
+
+    @PATCH(API.CHANGE_PASSWORD)
+    fun changePassword(@Body changePassword : ChangePasswordReq) : Call<JsonElement>
 }
 
