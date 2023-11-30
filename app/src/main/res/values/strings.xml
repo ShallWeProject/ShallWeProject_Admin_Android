@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">shall_we_admin</string>
+    <string name="app_name">ShallWe관리자</string>
     <string name="title_activity_login">LoginActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -247,6 +247,7 @@ E-mail :\n\n
 
     </string>
     <string-array name="select_category">
+        <item>------ 카테고리를 선택하세요 ------</item>
         <item>베이킹</item>
         <item>공예</item>
         <item>문화예술</item>
