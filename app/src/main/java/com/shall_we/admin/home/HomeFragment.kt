@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import com.shall_we.admin.App
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentHomeBinding
@@ -41,10 +42,8 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding = FragmentHomeBinding.inflate(inflater,container,false)
         binding.date.text = getCurrentDate()
-        reservInfoRetrofitCall()
-        binding.totalReservCount.text = totalReservationCount
-        binding.reservCheckCount.text = reservCheckCount
-        
+        reservInfoRetrofitCall( binding.totalReservCount,binding.reservCheckCount)
+
         binding.btnProduct.setOnClickListener {
             val newFragment = ProductFragment() // 전환할 다른 프래그먼트 객체 생성
             val bundle = Bundle()
@@ -207,7 +206,7 @@ class HomeFragment : Fragment() {
         return dateFormat.format(calendar.time)
     }
 
-    private fun reservInfoRetrofitCall() {
+    private fun reservInfoRetrofitCall(totalCount : TextView, checkCount : TextView) {
         ReservationInfoService().reservationInfo(
             completion = { responseState, responseBody ->
                 when (responseState) {
@@ -215,6 +214,8 @@ class HomeFragment : Fragment() {
                         if (responseBody != null) {
                             totalReservationCount = responseBody.data.bookedReservationsCount.toString()
                             reservCheckCount =  responseBody.data.bookedCheckCount.toString()
+                            totalCount.text = totalReservationCount
+                            checkCount.text = reservCheckCount
                         }
                     }
 
