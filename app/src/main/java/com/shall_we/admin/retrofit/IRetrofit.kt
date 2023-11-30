@@ -1,6 +1,7 @@
 package com.shall_we.admin.retrofit
 
 import com.google.gson.JsonElement
+import com.shall_we.admin.home.data.ReservationInfoRes
 import com.shall_we.admin.login.data.AuthRes
 import com.shall_we.admin.login.data.ChangePasswordReq
 import com.shall_we.admin.login.data.MessageRes
@@ -52,7 +53,7 @@ interface IRetrofit {
 
     // 메인 페이지 예약 정보
     @GET(API.HOME_RESERVATION_INFO)
-    fun homeReservationInfo() : Call<JsonElement>
+    fun homeReservationInfo() : Call<ReservationInfoRes>
 
 }
 

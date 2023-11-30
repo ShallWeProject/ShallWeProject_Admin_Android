@@ -1,6 +1,8 @@
 package com.shall_we.admin.home.retrofit
 
 import android.util.Log
+import com.shall_we.admin.home.data.ReservationInfoData
+import com.shall_we.admin.home.data.ReservationInfoRes
 import com.shall_we.admin.login.data.MessageRes
 import com.shall_we.admin.login.data.RefreshTokenReq
 import com.shall_we.admin.retrofit.API
@@ -16,16 +18,16 @@ class ReservationInfoService {
     private val iRetrofit: IRetrofit? =
         RetrofitClient.getClient(API.BASE_URL)?.create(IRetrofit::class.java)
 
-    fun postSignOut(refreshToken: RefreshTokenReq, completion: (RESPONSE_STATE, MessageRes?) -> Unit) {
-        val call = iRetrofit?.authSignOut(refreshToken) ?: return
-        call.enqueue(object : Callback<MessageRes> {
+    fun reservationInfo(completion: (RESPONSE_STATE, ReservationInfoRes?) -> Unit) {
+        val call = iRetrofit?.homeReservationInfo() ?: return
+        call.enqueue(object : Callback<ReservationInfoRes> {
             // 응답 성공인 경우
-            override fun onResponse(call: Call<MessageRes>, response: Response<MessageRes>) {
+            override fun onResponse(call: Call<ReservationInfoRes>, response: Response<ReservationInfoRes>) {
                 if(response.code() == 200){
                     val authResponse = response.body()
                     if (authResponse != null) {
                         Log.e("login", "Success: ${authResponse}")
-                        completion(RESPONSE_STATE.OKAY, authResponse)
+                        completion(RESPONSE_STATE.OKAY, response.body())
                     } else {
                         completion(RESPONSE_STATE.OKAY, null)
 
@@ -43,7 +45,7 @@ class ReservationInfoService {
                 }
             }
 
-            override fun onFailure(call: Call<MessageRes>, t: Throwable) {
+            override fun onFailure(call: Call<ReservationInfoRes>, t: Throwable) {
             }
         })
     }

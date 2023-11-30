@@ -20,7 +20,6 @@ object API {
     const val CHANGE_PASSWORD = "auth/shop-owner/change-password"
 
     const val HOME_RESERVATION_INFO = "api/v1/admin/experience/gift/main"
-
 }
 
 enum class RESPONSE_STATE {
