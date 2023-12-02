@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
@@ -11,6 +12,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.shall_we.admin.App
 import com.shall_we.admin.MainActivity
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.ActivityLoginBinding
@@ -46,6 +48,7 @@ class LoginActivity : AppCompatActivity() , IAuthSignIn {
     }
 
     override fun onPostAuthSignInSuccess(response: AuthRes) {
+        setUserData(response)
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
@@ -60,6 +63,21 @@ class LoginActivity : AppCompatActivity() , IAuthSignIn {
             .replace(R.id.fragmentContainerView3, newFragment)
             .addToBackStack(null)
             .commit()
+    }
+    private fun setUserData(response: AuthRes){
+        val sharedPref = this.getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
+        val accessToken = response.data.accessToken
+        sharedPref?.edit()?.putString("ACCESS_TOKEN", accessToken)?.apply()
+        val refreshToken = response.data.refreshToken
+        sharedPref?.edit()?.putString("REFRESH_TOKEN", refreshToken)?.apply()
+
+        App.accessToken = sharedPref?.getString("ACCESS_TOKEN", null)
+        App.refreshToken = sharedPref?.getString("REFRESH_TOKEN", null)
+
+
+        Log.d("login","access token ${App.accessToken}")
+        Log.d("login", "refresh token ${App.refreshToken}")
+
     }
 
 }
