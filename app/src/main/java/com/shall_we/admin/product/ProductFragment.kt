@@ -12,19 +12,24 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.RecyclerListener
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentProductBinding
 import com.shall_we.admin.product.retrofit.AdminExperienceService
 import com.shall_we.admin.retrofit.RESPONSE_STATE
 import com.shall_we.admin.schedule.CustomAlertDialog
+import okhttp3.internal.notify
 
 
-class ProductFragment : Fragment() {
+class ProductFragment : Fragment(), ProductAdapter.OnItemClickListener {
     private var _binding: FragmentProductBinding? = null
+    private lateinit var productAdapter: ProductAdapter
+
     private val binding get() = _binding!!
 
+    private var deleteOrNot: Boolean = false
     private var datas = mutableListOf<ProductData>()
+//    private var id: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,38 +43,15 @@ class ProductFragment : Fragment() {
 
         RetrofitGetCall()
 
+
+
         binding.btnAdd.setOnClickListener {
             navigateToNewFragment()
         }
 
 
         binding.btnDelete.setOnClickListener {
-
-            // 여기에 삭제할 상품 선택하면 해당 idx 가져오고
-
-            val alertDialog = CustomAlertDialog(requireContext(), R.layout.dialog_delete_product)
-            val dialog = alertDialog.create()
-
-            val layoutParams = WindowManager.LayoutParams()
-            layoutParams.copyFrom(dialog.window?.attributes)
-            layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT
-            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
-            layoutParams.gravity = Gravity.CENTER // 중앙으로 정렬
-            dialog.window?.attributes = layoutParams
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 이 부분을 수정
-            alertDialog.setNegativeButton("취소") { v ->
-
-                dialog.dismiss()
-            }
-
-            alertDialog.setPositiveButton("삭제하기") { v ->
-
-                //여기서 삭제api 실행
-                dialog.dismiss()
-                popupMsg("해당 상품이 삭제되었습니다.")
-            }
-            dialog.show()
-
+            deleteOrNot = true
         }
 
 
@@ -77,19 +59,19 @@ class ProductFragment : Fragment() {
     }
 
     fun init(data: ArrayList<ProductData>?){
-        val viewManager = LinearLayoutManager(requireContext())
-        val viewAdapter = ProductAdapter(data) { idx ->
-            navigateToEditFragment(idx)
-        }
-
         binding.rvProduct.apply {
             setHasFixedSize(true)
-            layoutManager = viewManager
-            adapter = viewAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            productAdapter = ProductAdapter(data) { position ->
+                Log.d("item은", "$position")
+                onItemClick(position)
+            }
+            adapter = productAdapter
         }
     }
 
     fun popupMsg(msg : String){
+
         val newAlertDialog =
             CustomAlertDialog(requireContext(), R.layout.custom_popup_layout)
         newAlertDialog.setDialogContent(msg)
@@ -104,16 +86,17 @@ class ProductFragment : Fragment() {
         newDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 이 부분을 수정
 
         newAlertDialog.setNegativeButton("확인") { v ->
-
             newDialog.dismiss()
         }
         newDialog.show()
     }
 
-    private fun navigateToEditFragment(idx: Int) {
-        val newFragment = ManagingProductFragment()
-        val index = datas[idx].experienceGiftId //해당 id의 데이터에 접근해야함
+    private fun navigateToEditFragment(item: ProductData) {
+        val index = item.experienceGiftId //해당 id의 데이터에 접근해야함
         val bundle = Bundle()
+        bundle.putInt("idx",index)
+        Log.d("navigate","$index, $item")
+        val newFragment = ManagingProductFragment()
         newFragment.arguments = bundle
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainerView, newFragment)
@@ -137,6 +120,23 @@ class ProductFragment : Fragment() {
                     if (resultData != null) {
                         datas = resultData
                     }
+                    Log.d("RetrofitGetCall resultData","$resultData")
+                }
+
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        }
+    }
+
+    private fun RetrofitDeleteCall(experienceGiftId: Int){
+        AdminExperienceService().delAdminExperienceGiftRegister(experienceGiftId = experienceGiftId) { responseState ->
+            when (responseState) {
+                RESPONSE_STATE.OKAY -> {
+
+                    Log.d("retrofit", "updateReservation")
+
                 }
 
                 RESPONSE_STATE.FAIL -> {
@@ -162,4 +162,50 @@ class ProductFragment : Fragment() {
         val supportActionBar = (requireActivity() as AppCompatActivity).supportActionBar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
+
+    override fun onItemClick(position: Int) {
+        Log.d("onItemClick", "$position")
+
+        // 상품 수정
+        if (!deleteOrNot) {
+            navigateToEditFragment(datas[position])
+        }
+        // 상품 삭제
+        else {
+            deleteProduct(position)
+            deleteOrNot = false
+        }
+    }
+
+    private fun deleteProduct(position: Int) {
+        val alertDialog = CustomAlertDialog(requireContext(), R.layout.dialog_delete_product)
+        val dialog = alertDialog.create()
+
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(dialog.window?.attributes)
+        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+        layoutParams.gravity = Gravity.CENTER // 중앙으로 정렬
+        dialog.window?.attributes = layoutParams
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 이 부분을 수정
+        alertDialog.setNegativeButton("취소") { v ->
+
+            dialog.dismiss()
+        }
+
+        alertDialog.setPositiveButton("삭제하기") { v ->
+
+            //여기서 삭제api 실행
+            RetrofitDeleteCall(datas[position].experienceGiftId)
+            datas.apply {
+                removeAt(position)
+            }
+            dialog.dismiss()
+            popupMsg("해당 상품이 삭제되었습니다.")
+            Log.d("notifyItemRemoved", "$position")
+            productAdapter.notifyItemRemoved(position)
+        }
+        dialog.show()
+    }
+
 }

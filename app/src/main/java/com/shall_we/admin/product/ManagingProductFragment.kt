@@ -1,8 +1,16 @@
 package com.shall_we.admin.product
 
+import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.database.Cursor
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -13,7 +21,14 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.EditText
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
+import com.amazonaws.regions.Regions
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentManagingProductBinding
 import com.shall_we.admin.product.data.AdminExperienceReq
@@ -21,11 +36,21 @@ import com.shall_we.admin.product.data.ExplanationRes
 import com.shall_we.admin.product.retrofit.AdminExperienceService
 import com.shall_we.admin.retrofit.RESPONSE_STATE
 import com.shall_we.admin.schedule.CustomAlertDialog
+import com.shall_we.admin.utils.S3Util
+import java.io.File
 
 
 class ManagingProductFragment : Fragment() {
     private var _binding: FragmentManagingProductBinding? = null
     private val binding get() = _binding!!
+
+    private var selectedImageUri: Uri = Uri.EMPTY
+    private var filename: String = ""
+    private var ext: String = ""
+    private lateinit var file: File
+    private var path: Uri = Uri.EMPTY
+
+    var idx: Int? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -69,6 +94,10 @@ class ManagingProductFragment : Fragment() {
                 }
             }
         })
+
+        binding.giftImgKey.setOnClickListener {
+
+        }
 
 
         binding.btnSave.setOnClickListener {
@@ -119,7 +148,6 @@ class ManagingProductFragment : Fragment() {
 
             // 수정하기 api
 
-
             Log.d("ProductListData", "$productListData")
 
         }
@@ -135,6 +163,122 @@ class ManagingProductFragment : Fragment() {
         }
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
+
+    private fun initView() {
+        idx = arguments?.getInt("idx")
+        if (idx != null) {
+
+        }
+    }
+
+    private fun requestPermission() {
+        val locationResultLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) {
+            if (!it) {
+                Toast.makeText(view?.context, "스토리지에 접근 권한을 허가해주세요", Toast.LENGTH_SHORT).show()
+            }
+        }
+        locationResultLauncher.launch(
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+    }
+
+    private val PICK_IMAGE_REQUEST = 1 // 요청 코드
+
+    // 갤러리 열기
+    private fun openGallery() {
+        Log.d("gallery", "갤러리")
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+    }
+
+    // startActivityForResult로부터 결과 처리
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+            // 선택한 이미지의 Uri 가져오기
+            selectedImageUri = data?.data!!
+            path = selectedImageUri
+            selectedImageUri =
+                selectedImageUri?.let {
+                    getImageAbsolutePath(
+                        it,
+                        requireContext()
+                    )?.toUri()
+                }!!// 선택한 이미지의 경로를 구하는 함수 호출
+            if (selectedImageUri != null) {
+                this.selectedImageUri = selectedImageUri
+                parseUri(selectedImageUri)
+                file = File(selectedImageUri.toString())
+                //upload()
+            }
+        }
+    }
+    // Uri에서 절대 경로 추출하기
+    private fun getImageAbsolutePath(uri: Uri, context: Context): String? {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        var cursor: Cursor? = null
+        var path: String? = null
+        try {
+            cursor = context.contentResolver.query(uri, projection, null, null, null)
+            cursor?.let {
+                if (it.moveToFirst()) {
+                    val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                    path = it.getString(columnIndex)
+                    Log.d("getImageAbsolutePath", "절대경로 추출 uri = $path")
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("getImageAbsolutePath", "절대경로 추출 오류: ${e.message}")
+        } finally {
+            cursor?.close()
+        }
+        return path
+    }
+    private fun parseUri(selectedImageUri: Uri) {
+        val fileForName = File(selectedImageUri.toString())
+        filename = fileForName.nameWithoutExtension
+        ext = fileForName.extension
+//        Log.d("fileForName", "$fileForName")
+//        Log.d("filename, ext", "$filename $ext")
+//        Log.d("Album Result", "$selectedImageUri")
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+//
+//    private fun upload() {
+//        S3Util.instance
+//            .setKeys(access_key, secret_key)
+//            .setRegion(Regions.AP_NORTHEAST_2)
+//            .uploadWithTransferUtility(
+//                this.context,
+//                "shallwebucket",
+//                "uploads",
+//                file,
+//                object : TransferListener {
+//                    override fun onStateChanged(id: Int, state: TransferState?) {
+//                    }
+//                    override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {
+//                    }
+//                    override fun onError(id: Int, ex: java.lang.Exception?) {
+//                    }
+//                }
+//            );
+//        Log.d("S3Util", "hi")
+//        val imageKey = "uploads/$filename.$ext"
+//        Log.d("imageKey", "$imageKey")
+//        //Toast.makeText(view?.context , "사진이 추가되었습니다.", Toast.LENGTH_SHORT).show()
+//
+//    }
 
     fun popupMsg(msg : String){
         val newAlertDialog = CustomAlertDialog(requireContext(), R.layout.custom_popup_layout)
@@ -159,7 +303,7 @@ class ManagingProductFragment : Fragment() {
         parentFragmentManager.popBackStack("fragment", 0) // 백 스택에서 이전 Fragment로 이동
     }
 
-    fun RetrofitPostCall(adminExperienceReq: AdminExperienceReq){
+    private fun RetrofitPostCall(adminExperienceReq: AdminExperienceReq){
         AdminExperienceService().postAdminExperienceGift(adminExperienceReq = adminExperienceReq, completion =  { responseState ->
             when (responseState) {
                 RESPONSE_STATE.OKAY -> {
