@@ -15,9 +15,12 @@ import com.shall_we.admin.product.data.AdminMainRes
 import com.shall_we.admin.reservation.data.ReservationListData
 import com.shall_we.admin.reservation.data.ReservationResponse
 import com.shall_we.admin.retrofit.API.ADMIN_GET_RESERVATION
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -91,6 +94,11 @@ interface IRetrofit {
         @Query("giftId") giftId: Long,
         @Query("date") date: String
     ): Call<ReservationResponse>
+
+    //예약확정
+
+    @POST(API.ADMIN_POST_RESERVATION)
+    fun postReservation(@Query("reservationId") reservationId: Long): Call<MessageRes>
 
 
 
