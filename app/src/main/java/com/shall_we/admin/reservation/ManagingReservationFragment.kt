@@ -3,6 +3,7 @@ package com.shall_we.admin.reservation
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,9 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentManagingReservationBinding
 import com.shall_we.admin.reservation.data.ReservationListData
+import com.shall_we.admin.reservation.retrofit.ReservationService
 import com.shall_we.admin.reservation.viewmodel.ReservationViewModel
+import com.shall_we.admin.retrofit.RESPONSE_STATE
 import com.shall_we.admin.schedule.CustomAlertDialog
 import java.util.Locale
 
@@ -29,6 +32,7 @@ class ManagingReservationFragment : Fragment() {
     private val locale: Locale = Locale("ko")
     private val reservationList = mutableListOf<ReservationListData>() // 예약 데이터 리스트
     private lateinit var viewModel: ReservationViewModel
+    val giftId:Long=3
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,40 +78,48 @@ class ManagingReservationFragment : Fragment() {
                 }
 
                 alertDialog.setPositiveButton("예약 확정"){v->
+                    val reservationService = ReservationService()  // ReservationService 인스턴스 생성
+                    val reservationId: Long = reservation.reservationId // 예약 ID 설정
 
-                    dialog.dismiss()
-                    val newAlertDialog = CustomAlertDialog(requireContext(),R.layout.custom_popup_layout)
-                    newAlertDialog.setDialogContent("해당 예약이 확정되었습니다.")
-                    val newDialog = newAlertDialog.create()
+                    reservationService.postReservation(reservationId) { state, messageRes ->
+                        if (state == RESPONSE_STATE.OKAY) {
+                            dialog.dismiss()
+                            val newAlertDialog = CustomAlertDialog(requireContext(),R.layout.custom_popup_layout)
+                            newAlertDialog.setDialogContent("해당 예약이 확정되었습니다.")
+                            val newDialog = newAlertDialog.create()
 
-                    val layoutParams = WindowManager.LayoutParams()
-                    layoutParams.copyFrom(dialog.window?.attributes)
-                    layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
-                    layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
-                    layoutParams.gravity = Gravity.BOTTOM // 중앙으로 정렬
-                    newDialog.window?.attributes = layoutParams
-                    newDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 이 부분을 수정
+                            val layoutParams = WindowManager.LayoutParams()
+                            layoutParams.copyFrom(dialog.window?.attributes)
+                            layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+                            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+                            layoutParams.gravity = Gravity.BOTTOM // 중앙으로 정렬
+                            newDialog.window?.attributes = layoutParams
+                            newDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 이 부분을 수정
 
-                    newAlertDialog.setNegativeButton("확인") { v ->
-
-                        newDialog.dismiss()
+                            newAlertDialog.setNegativeButton("확인") { v ->
+                                newDialog.dismiss()
+                            }
+                            newDialog.show()
+                        } else {
+                            // 오류 처리
+                            Log.d("ReservationService", "Failed to confirm reservation.")
+                        }
                     }
-                    newDialog.show()
                 }
                 dialog.show()
-
             }
             binding.recyclerview.adapter = adapter
         })
 
-        // Fetch data
+
+
 
 
         calendarView.setOnDateChangedListener { widget, date, selected ->
             if (selected) {
                 // 선택된 날짜를 YYYY-MM-DD 형식의 문자열로 변환합니다.
                 val date = String.format("%04d-%02d-%02d", date.year, date.month + 1, date.day)
-                val giftId:Long=3
+
                 // API를 호출하는 함수를 실행합니다.
                 viewModel.fetchReservations(giftId,date)
             }

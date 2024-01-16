@@ -36,6 +36,9 @@ object API {
 
     //해당 날짜에 생성된 예약 조회
     const val ADMIN_GET_RESERVATION="/api/v1/shop-owners/date"
+
+    //예약 확정
+    const val ADMIN_POST_RESERVATION="/api/v1/shop-owners/confirm"
 }
 
 enum class RESPONSE_STATE {
