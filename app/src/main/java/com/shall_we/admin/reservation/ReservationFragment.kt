@@ -9,9 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentReservationBinding
-import com.shall_we.admin.schedule.RevisingScheduleFragment
-import com.shall_we.admin.schedule.ScheduleAdapter
-import com.shall_we.admin.schedule.ScheduleData
+import com.shall_we.admin.reservation.data.ReservationData
 
 
 class ReservationFragment : Fragment() {

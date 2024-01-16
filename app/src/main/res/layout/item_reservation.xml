@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_margin="1dp"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
@@ -21,11 +22,51 @@
         android:textColor="@color/black"
         android:textSize="14dp"
         android:textStyle="bold"
-        android:text="이수진 외 1명"
+        android:text="이수진"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/reserved"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="15dp"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="외"
+        app:layout_constraintLeft_toRightOf="@+id/title"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="1dp"
+        android:textSize="14dp"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/person"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/textView"
+        android:textColor="@color/black"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="1dp"
+        android:textSize="14dp"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="명"
+        app:layout_constraintLeft_toRightOf="@+id/person"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="1dp"
+        android:textSize="14dp"
+        android:textStyle="bold"/>
+
+
+
     <TextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
@@ -42,25 +83,30 @@
         android:id="@+id/phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:text="연락처:"
         android:textColor="@color/black"
         android:textSize="14dp"
-        android:text="연락처:"
-        app:layout_constraintTop_toBottomOf="@+id/time"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/reserved"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/time" />
 
     <TextView
         android:id="@+id/phonenumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:text="010-0000-0000"
         android:textColor="@color/black"
         android:textSize="14dp"
-        android:text="010-0000-0000"
-        app:layout_constraintTop_toBottomOf="@+id/time"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/phone"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/time" />
+
 
     <TextView
         android:id="@+id/payment"

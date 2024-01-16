@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.admin.R
+import com.shall_we.admin.reservation.data.ReservationListData
 
 class ReservationListAdapter(private val reservationList : List<ReservationListData>, private val onItemClicked: (ReservationListData) -> Unit) : RecyclerView.Adapter<ReservationListAdapter.ReservationListViewHolder>() {
 
@@ -19,12 +20,14 @@ class ReservationListAdapter(private val reservationList : List<ReservationListD
         val title = itemView.findViewById<TextView>(R.id.title)
         val time = itemView.findViewById<TextView>(R.id.time)
         val phonenumber=itemView.findViewById<TextView>(R.id.phonenumber)
+        val person=itemView.findViewById<TextView>(R.id.person)
     }
 
     override fun onBindViewHolder(holder: ReservationListViewHolder, position: Int) {
         val reservation = reservationList[position]
-        holder.title.text = reservation.title
+        holder.title.text = reservation.name
         holder.time.text = reservation.time
+        holder.person.text=reservation.person.toString()
         holder.phonenumber.text=reservation.phonenumber
 
 
