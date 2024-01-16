@@ -26,9 +26,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
-import com.amazonaws.regions.Regions
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentManagingProductBinding
 import com.shall_we.admin.product.data.AdminExperienceReq
@@ -36,11 +33,10 @@ import com.shall_we.admin.product.data.ExplanationRes
 import com.shall_we.admin.product.retrofit.AdminExperienceService
 import com.shall_we.admin.retrofit.RESPONSE_STATE
 import com.shall_we.admin.schedule.CustomAlertDialog
-import com.shall_we.admin.utils.S3Util
 import java.io.File
 
 
-class ManagingProductFragment : Fragment() {
+class EditingProductFragment : Fragment() {
     private var _binding: FragmentManagingProductBinding? = null
     private val binding get() = _binding!!
 
@@ -50,7 +46,7 @@ class ManagingProductFragment : Fragment() {
     private lateinit var file: File
     private var path: Uri = Uri.EMPTY
 
-    var idx: Int? = null
+    var idx: Int = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -142,9 +138,9 @@ class ManagingProductFragment : Fragment() {
 
             Log.d("ProductListData", "$productListData")
 
-            // 저장하기 api
-            popupMsg("상품이 등록되었습니다. //이거수정필요")
-            RetrofitPostCall(productListData)
+            // 수정하기 api
+            popupMsg("변경사항이 저장되었습니다.")
+            RetrofitPatchCall(idx, productListData)
 
             Log.d("ProductListData", "$productListData")
 
@@ -168,9 +164,9 @@ class ManagingProductFragment : Fragment() {
     }
 
     private fun initView() {
-        idx = arguments?.getInt("idx")
+        idx = requireArguments().getInt("idx")
         if (idx != null) {
-
+            //에러
         }
     }
 
@@ -301,8 +297,8 @@ class ManagingProductFragment : Fragment() {
         parentFragmentManager.popBackStack("fragment", 0) // 백 스택에서 이전 Fragment로 이동
     }
 
-    private fun RetrofitPostCall(adminExperienceReq: AdminExperienceReq){
-        AdminExperienceService().postAdminExperienceGift(adminExperienceReq = adminExperienceReq, completion =  { responseState ->
+    private fun RetrofitPatchCall(idx: Int, adminExperienceReq: AdminExperienceReq){
+        AdminExperienceService().putAdminExperienceGift(experienceGiftId = idx, adminExperienceReq = adminExperienceReq, completion =  { responseState ->
             when (responseState) {
                 RESPONSE_STATE.OKAY -> {
                     Log.d("retrofit", "postAdminExperienceGift success")
