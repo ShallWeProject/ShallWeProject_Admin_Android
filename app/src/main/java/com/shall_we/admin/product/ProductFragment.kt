@@ -96,7 +96,7 @@ class ProductFragment : Fragment(), ProductAdapter.OnItemClickListener {
         val bundle = Bundle()
         bundle.putInt("idx",index)
         Log.d("navigate","$index, $item")
-        val newFragment = ManagingProductFragment()
+        val newFragment = EditingProductFragment()
         newFragment.arguments = bundle
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainerView, newFragment)
