@@ -12,6 +12,9 @@ import com.shall_we.admin.login.data.SignUpReq
 import com.shall_we.admin.login.data.ValidCodeReq
 import com.shall_we.admin.product.data.AdminExperienceReq
 import com.shall_we.admin.product.data.AdminMainRes
+import com.shall_we.admin.reservation.data.ReservationListData
+import com.shall_we.admin.reservation.data.ReservationResponse
+import com.shall_we.admin.retrofit.API.ADMIN_GET_RESERVATION
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -20,6 +23,7 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface IRetrofit {
 
@@ -75,6 +79,20 @@ interface IRetrofit {
     // 메인 페이지 예약 정보
     @GET(API.HOME_RESERVATION_INFO)
     fun homeReservationInfo() : Call<ReservationInfoRes>
+
+
+    //일정관리
+    @GET(API.ADMIN_MANAGING_RESERVATION)
+    fun getSchedule(@Query("giftId") giftId: Long): Call<ReservationResponse>
+
+    //예약정보 불러오기
+    @GET(ADMIN_GET_RESERVATION)
+    fun getReservationsByDate(
+        @Query("giftId") giftId: Long,
+        @Query("date") date: String
+    ): Call<ReservationResponse>
+
+
 
 }
 

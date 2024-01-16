@@ -1,4 +1,4 @@
-package com.shall_we.admin.schedule
+package com.shall_we.admin.schedule.data
 
 data class ScheduleData(
     val title: String,

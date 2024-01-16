@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentScheduleBinding
+import com.shall_we.admin.schedule.data.ScheduleData
 
 class ScheduleFragment : Fragment() {
 
