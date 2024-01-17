@@ -51,6 +51,7 @@ class LoginActivity : AppCompatActivity() , IAuthSignIn {
         setUserData(response)
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     override fun onPostAuthSignInFailed(message: String) {

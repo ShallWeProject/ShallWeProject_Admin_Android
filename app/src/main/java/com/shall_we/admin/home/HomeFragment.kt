@@ -2,6 +2,7 @@ package com.shall_we.admin.home
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -19,6 +20,7 @@ import com.shall_we.admin.home.retrofit.DeleteAccountService
 import com.shall_we.admin.home.retrofit.ReservationInfoService
 import com.shall_we.admin.login.data.RefreshTokenReq
 import com.shall_we.admin.home.retrofit.SignOutService
+import com.shall_we.admin.login.LoginActivity
 import com.shall_we.admin.product.ProductFragment
 import com.shall_we.admin.reservation.ReservationFragment
 import com.shall_we.admin.retrofit.RESPONSE_STATE
@@ -143,6 +145,10 @@ class HomeFragment : Fragment() {
             logoutRetrofitCall()
             dialog.dismiss()
 
+            //로그인 화면으로 돌아가기
+            val intent = Intent(requireContext(), LoginActivity::class.java)
+            startActivity(intent)
+            requireActivity().finish()
         }
         myLayout.findViewById<Button>(R.id.btn_cancel_logout).setOnClickListener {
             dialog.dismiss()
@@ -192,6 +198,8 @@ class HomeFragment : Fragment() {
             dialog.dismiss()
 
             //로그인 화면으로 돌아가기
+            val intent = Intent(requireContext(), LoginActivity::class.java)
+            startActivity(intent)
             requireActivity().finish()
 
         }

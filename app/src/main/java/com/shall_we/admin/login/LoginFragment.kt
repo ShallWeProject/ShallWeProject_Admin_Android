@@ -78,6 +78,7 @@ class LoginFragment : Fragment(), IAuthSignIn {
         setUserData(auth, response)
         val intent = Intent(activity, MainActivity::class.java)
         startActivity(intent)
+        activity?.finish()
     }
 
     override fun onPostAuthSignInFailed(message: String) {
