@@ -58,21 +58,25 @@ interface IRetrofit {
     @POST(API.VALID_VERIFICATION)
     fun validVerification(@Body validVerificationArray : ValidCodeReq): Call<JsonElement>
 
+    // 상품관리 - 사장 경험 선물 리스트
     @GET(API.ADMIN_EXPERIENCE_GIFT)
     fun adminExperienceGift(): Call<JsonElement>
 
     @GET(API.ADMIN_EXPERIENCE_GIFT_MAIN)
     fun adminExperienceGiftMain(): Call<AdminMainRes>
 
+    // 상품관리 - 사장 경험 선물 등록
     @POST(API.ADMIN_EXPERIENCE_GIFT_REGISTER)
     fun postAdminExperienceGiftRegister(@Body adminExperienceReq: AdminExperienceReq): Call<JsonElement>
 
 
-    @PUT(API.ADMIN_EXPERIENCE_GIFT_DELETE)
+    // 상품관리 - 사장 경험 선물 수정
+    @PUT(API.ADMIN_EXPERIENCE_GIFT_CHANGE)
     fun putAdminExperienceGift(@Path("experienceGiftId") experienceGiftId: Int, @Body adminExperienceReqArray : AdminExperienceReq): Call<JsonElement>
 
 
-    @DELETE(API.ADMIN_EXPERIENCE_GIFT_DELETE)
+    // 상품관리 - 사장 경험 선물 등록
+    @DELETE(API.ADMIN_EXPERIENCE_GIFT_CHANGE)
     fun delAdminExperienceGift(@Path("experienceGiftId") experienceGiftId: Int): Call<JsonElement>
 
     // 비밀번호 변경

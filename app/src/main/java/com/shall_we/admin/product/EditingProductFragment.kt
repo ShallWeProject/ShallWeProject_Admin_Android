@@ -105,22 +105,25 @@ class EditingProductFragment : Fragment() {
             //val giftImgKey = binding.thumbnail.text.toString()
             val description = binding.description.text.toString()
 //            val contextImg = binding.contextImg.text.toString()
-            val curriculum1 = binding.curr1Description.text.toString()
+            val curriculum1 = binding.tvCurr1.text.toString()
+            val curriculum1desc = binding.curr1Description.text.toString()
             val curriculum1Img = binding.curr1Img.text.toString()
-            val curriculum2 = binding.curr2Description.text.toString()
+            val curriculum2 = binding.tvCurr2.text.toString()
+            val curriculum2desc = binding.curr2Description.text.toString()
             val curriculum2Img = binding.curr2Img.text.toString()
-            val curriculum3 = binding.curr3Description.text.toString()
+            val curriculum3 = binding.tvCurr3.text.toString()
+            val curriculum3desc = binding.curr3Description.text.toString()
             val curriculum3Img = binding.curr3Img.text.toString()
-            val curriculum4 = binding.tvCurr4.text.toString()
+            val curriculum4desc = binding.tvCurr4.text.toString()
             val curriculum4Img = binding.curr4Img.text.toString()
             val location = binding.address.text.toString()
             val caution = binding.caution.text.toString()
 
             val explanationList = listOf(
-                ExplanationRes(stage = "1", description = curriculum1, explanationUrl = curriculum1Img),
-                ExplanationRes(stage = "2", description = curriculum2, explanationUrl = curriculum2Img),
-                ExplanationRes(stage = "3", description = curriculum3, explanationUrl = curriculum3Img),
-                ExplanationRes(stage = "4", description = curriculum4, explanationUrl = curriculum4Img)
+                ExplanationRes(stage = curriculum1, description = curriculum1desc, explanationUrl = curriculum1Img),
+                ExplanationRes(stage = curriculum2, description = curriculum2desc, explanationUrl = curriculum2Img),
+                ExplanationRes(stage = curriculum3, description = curriculum3desc, explanationUrl = curriculum3Img),
+                ExplanationRes(stage = "", description = curriculum4desc, explanationUrl = curriculum4Img)
             )
 
             val productListData = AdminExperienceReq(
@@ -140,7 +143,7 @@ class EditingProductFragment : Fragment() {
 
             // 수정하기 api
             popupMsg("변경사항이 저장되었습니다.")
-            RetrofitPatchCall(idx, productListData)
+            RetrofitPutCall(idx, productListData)
 
             Log.d("ProductListData", "$productListData")
 
@@ -297,11 +300,11 @@ class EditingProductFragment : Fragment() {
         parentFragmentManager.popBackStack("fragment", 0) // 백 스택에서 이전 Fragment로 이동
     }
 
-    private fun RetrofitPatchCall(idx: Int, adminExperienceReq: AdminExperienceReq){
+    private fun RetrofitPutCall(idx: Int, adminExperienceReq: AdminExperienceReq){
         AdminExperienceService().putAdminExperienceGift(experienceGiftId = idx, adminExperienceReq = adminExperienceReq, completion =  { responseState ->
             when (responseState) {
                 RESPONSE_STATE.OKAY -> {
-                    Log.d("retrofit", "postAdminExperienceGift success")
+                    Log.d("retrofit", "patchAdminExperienceGift success")
                 }
 
                 RESPONSE_STATE.FAIL -> {
