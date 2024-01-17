@@ -60,9 +60,6 @@ interface IRetrofit {
     @GET(API.ADMIN_EXPERIENCE_GIFT)
     fun adminExperienceGift(): Call<JsonElement>
 
-    @GET(API.ADMIN_EXPERIENCE_GIFT_MAIN)
-    fun adminExperienceGiftMain(): Call<AdminMainRes>
-
     // 상품관리 - 사장 경험 선물 등록
     @POST(API.ADMIN_EXPERIENCE_GIFT_REGISTER)
     fun postAdminExperienceGiftRegister(@Body adminExperienceReq: AdminExperienceReq): Call<JsonElement>
