@@ -98,7 +98,7 @@ interface IRetrofit {
     //예약확정
 
     @POST(API.ADMIN_POST_RESERVATION)
-    fun postReservation(@Query("reservationId") reservationId: Long): Call<MessageRes>
+    fun postReservation(@Query("reservationId") reservationId: Long): Call<com.shall_we.admin.reservation.data.MessageRes>
 
 
 

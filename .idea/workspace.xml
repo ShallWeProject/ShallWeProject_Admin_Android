@@ -9,9 +9,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0f3ff1d2-2059-4890-a345-b9e17777d118" name="Changes" comment="✨ [Feat]: 일정관리 API 연결(1)">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/reservation/data/MessageRes.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/reservation/retrofit/ReservationService.kt" afterDir="false" />
+    <list default="true" id="0f3ff1d2-2059-4890-a345-b9e17777d118" name="Changes" comment="✨ [Feat]: 예약관리3 API 연결(2)">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/reservation/TimeAdapter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/reservation/data/TimeData.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/schedule/SchduleTimeAdapter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/schedule/data/TimeData.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/back.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/back_selected.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_time.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.0/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/checksums/checksums.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.0/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/checksums/md5-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.0/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/checksums/sha1-checksums.bin" afterDir="false" />
@@ -25,8 +30,10 @@
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/reservation/ManagingReservationFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/reservation/ManagingReservationFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/retrofit/API.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/retrofit/API.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/reservation/retrofit/ReservationService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/reservation/retrofit/ReservationService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/retrofit/IRetrofit.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/retrofit/IRetrofit.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/schedule/RevisingScheduleFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/schedule/RevisingScheduleFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_revising_schedule.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_revising_schedule.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,8 +88,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="layoutResourceFile" />
-        <option value="Kotlin Class" />
+        <option value="resourceFile" />
         <option value="Kotlin Data Class" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -135,6 +143,7 @@
       <recent name="com.shall_we.admin.login.signin" />
     </key>
     <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
+      <recent name="com.shall_we.admin.schedule" />
       <recent name="com.shall_we.admin.login.signin" />
     </key>
   </component>
@@ -222,7 +231,14 @@
       <option name="project" value="LOCAL" />
       <updated>1705397428205</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="✨ [Feat]: 예약관리3 API 연결(2)">
+      <created>1705399885174</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1705399885174</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -236,7 +252,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="39" />
+                        <option value="45" />
                       </list>
                     </value>
                   </entry>
@@ -265,6 +281,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="✨ [Feat]: 일정관리 API 연결(1)" />
-    <option name="LAST_COMMIT_MESSAGE" value="✨ [Feat]: 일정관리 API 연결(1)" />
+    <MESSAGE value="✨ [Feat]: 예약관리3 API 연결(2)" />
+    <option name="LAST_COMMIT_MESSAGE" value="✨ [Feat]: 예약관리3 API 연결(2)" />
   </component>
 </project>
