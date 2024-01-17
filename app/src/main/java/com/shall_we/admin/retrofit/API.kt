@@ -40,6 +40,9 @@ object API {
 
     //예약 확정
     const val ADMIN_POST_RESERVATION="/api/v1/shop-owners/confirm"
+
+    //사장님 선물 불러오기
+    const val ADMIN_GET_GIFT="/api/v1/experience/gift/shop-owner"
 }
 
 enum class RESPONSE_STATE {
