@@ -1,5 +1,6 @@
 package com.shall_we.admin.schedule
 
+import ScheduleService
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,12 +10,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentScheduleBinding
+import com.shall_we.admin.retrofit.RESPONSE_STATE
+import com.shall_we.admin.schedule.data.ScheduleData
 
 class ScheduleFragment : Fragment() {
 
     private var _binding: FragmentScheduleBinding? = null
-    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
+
+    private val viewAdapter by lazy {
+        ScheduleAdapter(mutableListOf(ScheduleData(123,"[성수] 인기 베이킹 클래스", "기념일 레터링 케이크" + "사지 말고 함께 만들어요"))){ schedule ->
+            navigateToOtherFragment(schedule)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,17 +31,16 @@ class ScheduleFragment : Fragment() {
         _binding = FragmentScheduleBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        // Sample data for testing.
-        val myDataset = listOf(
-            ScheduleData("[성수]인기 베이킹 클래스", "기념일케이크 사지말고 만들어요"),
-            ScheduleData("[홍대]인기 공예 클래스", "테마가 있는 프라이빗 칵테일 클래스")
-            // Add more data here...
-        )
-
         val viewManager = LinearLayoutManager(requireContext())
-        val viewAdapter = ScheduleAdapter(myDataset){ schedule ->
-            // Handle item click here.
-            navigateToOtherFragment(schedule)
+
+        val scheduleService = ScheduleService()
+        scheduleService.getGift { responseState, scheduleList ->
+            if (responseState == RESPONSE_STATE.OKAY && scheduleList != null) {
+                viewAdapter.scheduleList = scheduleList
+                viewAdapter.notifyDataSetChanged()
+            } else {
+                // 데이터를 가져오는 데 실패했을 때의 처리 코드를 여기에 작성합니다.
+            }
         }
 
         binding.recyclerview.apply {
@@ -43,6 +50,7 @@ class ScheduleFragment : Fragment() {
         }
 
         return view
+
     }
 
     private fun navigateToOtherFragment(schedule : ScheduleData){

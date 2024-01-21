@@ -17,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Shall_we_admin"
         android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
         tools:targetApi="31">
         <activity
             android:name=".login.LoginActivity"
@@ -35,6 +36,8 @@
             android:theme="@style/Theme.App.Starting">
 
         </activity>
+        <service android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService" android:enabled="true"/>
+
     </application>
 
 </manifest>

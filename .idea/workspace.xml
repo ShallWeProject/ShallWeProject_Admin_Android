@@ -9,17 +9,29 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0f3ff1d2-2059-4890-a345-b9e17777d118" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="0f3ff1d2-2059-4890-a345-b9e17777d118" name="Changes" comment="💄예약페이지 디자인 변경">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/schedule/retrofit/ScheduleService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.0/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.0/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/checksums/md5-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.0/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/checksums/sha1-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.0/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.0/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.0/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.0/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.0/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/reservation/ReservationAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/reservation/ReservationAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/reservation/ReservationFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/reservation/ReservationFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/reservation/data/ReservationData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/reservation/data/ReservationData.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/reservation/retrofit/ReservationService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/reservation/retrofit/ReservationService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/retrofit/API.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/retrofit/API.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/schedule/RevisingScheduleFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/schedule/RevisingScheduleFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_managing_reservation.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_managing_reservation.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_reservation.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_reservation.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_revising_schedule.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_revising_schedule.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_schedule.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_schedule.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/retrofit/IRetrofit.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/retrofit/IRetrofit.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/schedule/ScheduleAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/schedule/ScheduleAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/schedule/ScheduleFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/schedule/ScheduleFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/schedule/data/ScheduleData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/shall_we/admin/schedule/data/ScheduleData.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,13 +86,16 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="layoutResourceFile" />
+        <option value="resourceFile" />
+        <option value="Kotlin Data Class" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="45" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -96,19 +111,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/jangnari/Documents/ShallWeProject_Admin_Android&quot;,
-    &quot;memory.settings.postsync.last.time.stamp&quot;: &quot;1698666969761&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "cidr.known.project.marker": "true",
+    "com.google.services.firebase.aqiPopupShown": "true",
+    "last_opened_file_path": "/Users/jangnari/Documents/ShallWeProject_Admin_Android",
+    "memory.settings.postsync.last.time.stamp": "1698666969761",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.17",
+    "project.structure.side.proportion": "0.2"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
@@ -119,10 +135,14 @@
       <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.shall_we.admin.reservation.data" />
+      <recent name="com.shall_we.admin.reservation.retrofit" />
+      <recent name="com.shall_we.admin.schedule.data" />
       <recent name="com.shall_we.admin.login.signup" />
       <recent name="com.shall_we.admin.login.signin" />
     </key>
     <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
+      <recent name="com.shall_we.admin.schedule" />
       <recent name="com.shall_we.admin.login.signin" />
     </key>
   </component>
@@ -203,6 +223,28 @@
       <option name="presentableId" value="Default" />
       <updated>1696049448735</updated>
     </task>
+    <task id="LOCAL-00001" summary="✨ [Feat]: 일정관리 API 연결(1)">
+      <created>1705397428205</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1705397428205</updated>
+    </task>
+    <task id="LOCAL-00002" summary="✨ [Feat]: 예약관리3 API 연결(2)">
+      <created>1705399885174</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1705399885174</updated>
+    </task>
+    <task id="LOCAL-00003" summary="💄예약페이지 디자인 변경">
+      <created>1705482689231</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1705482689231</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -216,7 +258,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="26-revisingView" />
+                        <option value="47" />
                       </list>
                     </value>
                   </entry>
@@ -242,5 +284,11 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="✨ [Feat]: 일정관리 API 연결(1)" />
+    <MESSAGE value="✨ [Feat]: 예약관리3 API 연결(2)" />
+    <MESSAGE value="예약페이지 디자인 변경" />
+    <option name="LAST_COMMIT_MESSAGE" value="예약페이지 디자인 변경" />
   </component>
 </project>

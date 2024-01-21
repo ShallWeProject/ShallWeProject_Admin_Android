@@ -6,10 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.shall_we.admin.R
-import com.shall_we.admin.schedule.ScheduleAdapter
-import com.shall_we.admin.schedule.ScheduleData
+import com.shall_we.admin.reservation.data.ReservationData
 
-class ReservationAdapter(private val reservationList : List<ReservationData>, private val onItemClicked: (ReservationData) -> Unit) : RecyclerView.Adapter<ReservationAdapter.ReservationViewHolder>() {
+class ReservationAdapter(var reservationList : List<ReservationData>, private val onItemClicked: (ReservationData) -> Unit) : RecyclerView.Adapter<ReservationAdapter.ReservationViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReservationViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_schedule, parent, false)

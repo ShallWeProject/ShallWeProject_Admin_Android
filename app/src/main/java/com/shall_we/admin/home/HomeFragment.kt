@@ -11,19 +11,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import com.shall_we.admin.App
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentHomeBinding
 import com.shall_we.admin.home.retrofit.DeleteAccountService
+import com.shall_we.admin.home.retrofit.ReservationInfoService
 import com.shall_we.admin.login.data.RefreshTokenReq
 import com.shall_we.admin.home.retrofit.SignOutService
 import com.shall_we.admin.product.ProductFragment
 import com.shall_we.admin.reservation.ReservationFragment
 import com.shall_we.admin.retrofit.RESPONSE_STATE
 import com.shall_we.admin.schedule.ScheduleFragment
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 class HomeFragment : Fragment() {
 
+    var totalReservationCount = ""
+    var reservCheckCount = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -35,6 +41,8 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentHomeBinding.inflate(inflater,container,false)
+        binding.date.text = getCurrentDate()
+        reservInfoRetrofitCall( binding.totalReservCount,binding.reservCheckCount)
 
         binding.btnProduct.setOnClickListener {
             val newFragment = ProductFragment() // 전환할 다른 프래그먼트 객체 생성
@@ -190,5 +198,31 @@ class HomeFragment : Fragment() {
         myLayout.findViewById<Button>(R.id.btn_cancel_delete).setOnClickListener {
             dialog.dismiss()
         }
+    }
+
+    fun getCurrentDate(): String {
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("yyyy.MM.dd") // 출력할 날짜 형식 지정
+        return dateFormat.format(calendar.time)
+    }
+
+    private fun reservInfoRetrofitCall(totalCount : TextView, checkCount : TextView) {
+        ReservationInfoService().reservationInfo(
+            completion = { responseState, responseBody ->
+                when (responseState) {
+                    RESPONSE_STATE.OKAY -> {
+                        if (responseBody != null) {
+                            totalReservationCount = responseBody.data.bookedReservationsCount.toString()
+                            reservCheckCount =  responseBody.data.bookedCheckCount.toString()
+                            totalCount.text = totalReservationCount
+                            checkCount.text = reservCheckCount
+                        }
+                    }
+
+                    RESPONSE_STATE.FAIL -> {
+                        Log.d("retrofit", "api 호출 에러")
+                    }
+                }
+            })
     }
 }
