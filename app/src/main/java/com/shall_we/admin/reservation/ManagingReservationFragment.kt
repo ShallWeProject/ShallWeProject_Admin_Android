@@ -79,7 +79,7 @@ class ManagingReservationFragment : Fragment() {
 
                 alertDialog.setPositiveButton("예약 확정"){v->
                     val reservationService = ReservationService()  // ReservationService 인스턴스 생성
-                    val reservationId: Long = reservation.reservationId // 예약 ID 설정
+                    val reservationId: Long =31 // 예약 ID 설정
 
                     reservationService.postReservation(reservationId) { state, messageRes ->
                         if (state == RESPONSE_STATE.OKAY) {

@@ -50,7 +50,6 @@ class ManagingProductFragment : Fragment() {
     private lateinit var file: File
     private var path: Uri = Uri.EMPTY
 
-    var idx: Int? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -109,35 +108,38 @@ class ManagingProductFragment : Fragment() {
             //val giftImgKey = binding.thumbnail.text.toString()
             val description = binding.description.text.toString()
 //            val contextImg = binding.contextImg.text.toString()
-            val curriculum1 = binding.curr1Description.text.toString()
+            val curriculum1 = binding.tvCurr1.text.toString()
+            val curriculum1desc = binding.curr1Description.text.toString()
             val curriculum1Img = binding.curr1Img.text.toString()
-            val curriculum2 = binding.curr2Description.text.toString()
+            val curriculum2 = binding.tvCurr2.text.toString()
+            val curriculum2desc = binding.curr2Description.text.toString()
             val curriculum2Img = binding.curr2Img.text.toString()
-            val curriculum3 = binding.curr3Description.text.toString()
+            val curriculum3 = binding.tvCurr3.text.toString()
+            val curriculum3desc = binding.curr3Description.text.toString()
             val curriculum3Img = binding.curr3Img.text.toString()
-            val curriculum4 = binding.tvCurr4.text.toString()
+            val curriculum4desc = binding.tvCurr4.text.toString()
             val curriculum4Img = binding.curr4Img.text.toString()
             val location = binding.address.text.toString()
             val caution = binding.caution.text.toString()
 
             val explanationList = listOf(
-                ExplanationRes(stage = "1", description = curriculum1, explanationUrl = curriculum1Img),
-                ExplanationRes(stage = "2", description = curriculum2, explanationUrl = curriculum2Img),
-                ExplanationRes(stage = "3", description = curriculum3, explanationUrl = curriculum3Img),
-                ExplanationRes(stage = "4", description = curriculum4, explanationUrl = curriculum4Img)
+                    ExplanationRes(stage = curriculum1, description = curriculum1desc, explanationUrl = curriculum1Img),
+                    ExplanationRes(stage = curriculum2, description = curriculum2desc, explanationUrl = curriculum2Img),
+                    ExplanationRes(stage = curriculum3, description = curriculum3desc, explanationUrl = curriculum3Img),
+                    ExplanationRes(stage = "", description = curriculum4desc, explanationUrl = curriculum4Img)
             )
 
             val productListData = AdminExperienceReq(
-                subtitle = subtitle,
-                expCategory = expCategory,
-                //sttCategory = expCategory,
-                title = title,
-                giftImgKey = listOf("i"),
-                description = description,
-                explanation = explanationList,
-                location = location,
-                price = price,
-                note = caution
+                    subtitle = subtitle,
+                    expCategory = expCategory,
+                    //sttCategory = expCategory,
+                    title = title,
+                    giftImgKey = listOf("i"),
+                    description = description,
+                    explanation = explanationList,
+                    location = location,
+                    price = price,
+                    note = caution
             )
 
             Log.d("ProductListData", "$productListData")
@@ -164,15 +166,8 @@ class ManagingProductFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
     }
 
-    private fun initView() {
-        idx = arguments?.getInt("idx")
-        if (idx != null) {
-
-        }
-    }
 
     private fun requestPermission() {
         val locationResultLauncher = registerForActivityResult(

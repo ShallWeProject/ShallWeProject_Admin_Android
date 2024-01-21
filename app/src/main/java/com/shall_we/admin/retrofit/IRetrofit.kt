@@ -13,15 +13,13 @@ import com.shall_we.admin.login.data.SignUpReq
 import com.shall_we.admin.login.data.ValidCodeReq
 import com.shall_we.admin.product.data.AdminExperienceReq
 import com.shall_we.admin.product.data.AdminMainRes
-import com.shall_we.admin.reservation.data.ReservationListData
+import com.shall_we.admin.reservation.data.ReservationData
 import com.shall_we.admin.reservation.data.ReservationResponse
 import com.shall_we.admin.retrofit.API.ADMIN_GET_RESERVATION
-import okhttp3.ResponseBody
+import com.shall_we.admin.schedule.data.ScheduleData
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -59,6 +57,7 @@ interface IRetrofit {
     @POST(API.VALID_VERIFICATION)
     fun validVerification(@Body validVerificationArray : ValidCodeReq): Call<JsonElement>
 
+    // 상품관리 - 사장 경험 선물 리스트
     @GET(API.ADMIN_EXPERIENCE_GIFT)
     fun adminExperienceGift(): Call<JsonElement>
 
@@ -67,11 +66,13 @@ interface IRetrofit {
     fun postAdminExperienceGiftRegister(@Body adminExperienceReq: AdminExperienceReq): Call<JsonElement>
 
 
-    @PUT(API.ADMIN_EXPERIENCE_GIFT_DELETE)
+    // 상품관리 - 사장 경험 선물 수정
+    @PUT(API.ADMIN_EXPERIENCE_GIFT_CHANGE)
     fun putAdminExperienceGift(@Path("experienceGiftId") experienceGiftId: Int, @Body adminExperienceReqArray : AdminExperienceReq): Call<JsonElement>
 
 
-    @DELETE(API.ADMIN_EXPERIENCE_GIFT_DELETE)
+    // 상품관리 - 사장 경험 선물 등록
+    @DELETE(API.ADMIN_EXPERIENCE_GIFT_CHANGE)
     fun delAdminExperienceGift(@Path("experienceGiftId") experienceGiftId: Int): Call<JsonElement>
 
     // 비밀번호 변경
@@ -95,11 +96,16 @@ interface IRetrofit {
     ): Call<ReservationResponse>
 
     //예약확정
-
     @POST(API.ADMIN_POST_RESERVATION)
-    fun postReservation(@Query("reservationId") reservationId: Long): Call<MessageRes>
+    fun postReservation(@Query("reservationId") reservationId: Long): Call<com.shall_we.admin.reservation.data.MessageRes>
 
 
+    //사장님 선물 불러오기
+    @GET(API.ADMIN_GET_GIFT)
+    fun getGift(): Call<List<ScheduleData>>
+
+    @GET(API.ADMIN_GET_GIFT)
+    fun getReservationGift(): Call<List<ReservationData>>
 
 }
 
