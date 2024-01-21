@@ -24,7 +24,6 @@ import com.shall_we.admin.login.data.UploadPhotoArray
 import com.shall_we.admin.utils.S3Util
 import java.io.File
 
-
 class ShopInfoFragment : Fragment() {
 
     private lateinit var name : String

@@ -2,6 +2,7 @@ package com.shall_we.admin.home
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -19,6 +20,7 @@ import com.shall_we.admin.home.retrofit.DeleteAccountService
 import com.shall_we.admin.home.retrofit.ReservationInfoService
 import com.shall_we.admin.login.data.RefreshTokenReq
 import com.shall_we.admin.home.retrofit.SignOutService
+import com.shall_we.admin.login.LoginActivity
 import com.shall_we.admin.product.ProductFragment
 import com.shall_we.admin.reservation.ReservationFragment
 import com.shall_we.admin.retrofit.RESPONSE_STATE
@@ -105,19 +107,21 @@ class HomeFragment : Fragment() {
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "logout api : ${responseBody}")
                         // 토큰 리셋
-                        val sharedPref =
-                            context?.getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
-                        sharedPref?.edit()?.putString("ACCESS_TOKEN", null)?.apply()
-                        sharedPref?.edit()?.putString("REFRESH_TOKEN", null)?.apply()
-                        sharedPref?.edit()?.putString("PHONE_NUMBER", null)?.apply()
-                        sharedPref?.edit()?.putString("PASSWORD", null)?.apply()
+                        val sharedPref = context?.getSharedPreferences("com.shall_we.admin", Context.MODE_PRIVATE)
 
-                        App.accessToken = sharedPref?.getString("ACCESS_TOKEN", null)
-                        App.refreshToken = sharedPref?.getString("REFRESH_TOKEN", null)
-                        App.phoneNumber = sharedPref?.getString("PHONE_NUMBER", null)
-                        App.password = sharedPref?.getString("PASSWORD", null)
+                        sharedPref?.edit()?.putString("access_token", null)?.apply()
+                        sharedPref?.edit()?.putString("refresh_token", null)?.apply()
+                        sharedPref?.edit()?.putString("phone_number", null)?.apply()
+                        sharedPref?.edit()?.putString("password", null)?.apply()
+
+                        App.accessToken = sharedPref?.getString("access_token", null)
+                        App.refreshToken = sharedPref?.getString("refresh_token", null)
+                        App.phoneNumber = sharedPref?.getString("phone_number", null)
+                        App.password = sharedPref?.getString("password", null)
 
                         //로그인 화면으로 돌아가기
+                        val intent = Intent(requireContext(), LoginActivity::class.java)
+                        startActivity(intent)
                         requireActivity().finish()
                     }
 
@@ -156,17 +160,21 @@ class HomeFragment : Fragment() {
                         Log.d("retrofit", "delete api : ${responseBody}")
                         // 토큰 리셋
                         val sharedPref =
-                            context?.getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
-                        sharedPref?.edit()?.putString("ACCESS_TOKEN", null)?.apply()
-                        sharedPref?.edit()?.putString("REFRESH_TOKEN", null)?.apply()
-                        sharedPref?.edit()?.putString("PHONE_NUMBER", null)?.apply()
-                        sharedPref?.edit()?.putString("PASSWORD", null)?.apply()
+                            context?.getSharedPreferences("com.shall_we.admin", Context.MODE_PRIVATE)
+                        sharedPref?.edit()?.putString("access_token", null)?.apply()
+                        sharedPref?.edit()?.putString("refresh_token", null)?.apply()
+                        sharedPref?.edit()?.putString("phone_number", null)?.apply()
+                        sharedPref?.edit()?.putString("password", null)?.apply()
 
-                        App.accessToken = sharedPref?.getString("ACCESS_TOKEN", null)
-                        App.refreshToken = sharedPref?.getString("REFRESH_TOKEN", null)
-                        App.phoneNumber = sharedPref?.getString("PHONE_NUMBER", null)
-                        App.password = sharedPref?.getString("PASSWORD", null)
+                        App.accessToken = sharedPref?.getString("access_token", null)
+                        App.refreshToken = sharedPref?.getString("refresh_token", null)
+                        App.phoneNumber = sharedPref?.getString("phone_number", null)
+                        App.password = sharedPref?.getString("password", null)
 
+                        //로그인 화면으로 돌아가기
+                        val intent = Intent(requireContext(), LoginActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
                     }
 
                     RESPONSE_STATE.FAIL -> {
@@ -187,13 +195,9 @@ class HomeFragment : Fragment() {
         dialog.show()
 
         myLayout.findViewById<Button>(R.id.btn_delete_account_confirm).setOnClickListener {
-            // 로그아웃 api 연결
+            // 회원탈퇴 api 연결
             deleteAccountRetrofitCall()
             dialog.dismiss()
-
-            //로그인 화면으로 돌아가기
-            requireActivity().finish()
-
         }
         myLayout.findViewById<Button>(R.id.btn_cancel_delete).setOnClickListener {
             dialog.dismiss()
