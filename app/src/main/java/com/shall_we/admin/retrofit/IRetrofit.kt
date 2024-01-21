@@ -1,6 +1,7 @@
 package com.shall_we.admin.retrofit
 
 import com.google.gson.JsonElement
+import com.shall_we.admin.home.data.AuthSignOutResponse
 import com.shall_we.admin.home.data.ReservationInfoRes
 import com.shall_we.admin.login.data.AuthRes
 import com.shall_we.admin.login.data.ChangePasswordReq
@@ -40,11 +41,11 @@ interface IRetrofit {
 
     // 사장 로그아웃
     @POST(API.AUTH_SIGN_OUT)
-    fun authSignOut(@Body refreshTokenArray : RefreshTokenReq): Call<MessageRes>
+    fun authSignOut(@Body refreshTokenArray : RefreshTokenReq): Call<AuthSignOutResponse>
 
     // 사장 탈퇴
     @PATCH(API.PATCH_SHOP_OWNER)
-    fun patchShopOwners() : Call<MessageRes>
+    fun patchShopOwners() : Call<AuthSignOutResponse>
 
     // 토큰 리프레시
     @POST(API.AUTH_REFRESH)
@@ -61,6 +62,7 @@ interface IRetrofit {
     @GET(API.ADMIN_EXPERIENCE_GIFT)
     fun adminExperienceGift(): Call<JsonElement>
 
+    // 상품관리 - 사장 경험 선물 등록
     @POST(API.ADMIN_EXPERIENCE_GIFT_REGISTER)
     fun postAdminExperienceGiftRegister(@Body adminExperienceReq: AdminExperienceReq): Call<JsonElement>
 

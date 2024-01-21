@@ -99,24 +99,19 @@ class LoginFragment : Fragment(), IAuthSignIn {
     }
 
     private fun setUserData(auth : SignInReq, response: AuthRes){
-        val sharedPref = context?.getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
+        val sharedPref = context?.getSharedPreferences("com.shall_we.admin", Context.MODE_PRIVATE)
         val accessToken = response.data.accessToken
-        sharedPref?.edit()?.putString("ACCESS_TOKEN", accessToken)?.apply()
+        sharedPref?.edit()?.putString("access_token", accessToken)?.apply()
         val refreshToken = response.data.refreshToken
-        sharedPref?.edit()?.putString("REFRESH_TOKEN", refreshToken)?.apply()
+        sharedPref?.edit()?.putString("refresh_token", refreshToken)?.apply()
         val phoneNumber = auth.phoneNumber
-        sharedPref?.edit()?.putString("PHONE_NUMBER", phoneNumber)?.apply()
+        sharedPref?.edit()?.putString("phone_number", phoneNumber)?.apply()
         val password = auth.password
-        sharedPref?.edit()?.putString("PASSWORD", password)?.apply()
+        sharedPref?.edit()?.putString("password", password)?.apply()
 
-        App.accessToken = sharedPref?.getString("ACCESS_TOKEN", null)
-        App.refreshToken = sharedPref?.getString("REFRESH_TOKEN", null)
-        App.phoneNumber = sharedPref?.getString("PHONE_NUMBER",null)
-        App.password = sharedPref?.getString("PASSWORD",null)
-
-        Log.d("login","access token ${App.accessToken}")
-        Log.d("login", "refresh token ${App.refreshToken}")
-        Log.d("login", "refresh token ${App.phoneNumber}")
-        Log.d("login", "refresh token ${App.password}")
+        App.accessToken = sharedPref?.getString("access_token", null)
+        App.refreshToken = sharedPref?.getString("refresh_token", null)
+        App.phoneNumber = sharedPref?.getString("phone_number",null)
+        App.password = sharedPref?.getString("password",null)
     }
 }
