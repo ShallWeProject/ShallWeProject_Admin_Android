@@ -1,7 +1,7 @@
 package com.shall_we.admin.retrofit
 
 object API {
-    const val BASE_URL : String = "http://13.124.44.109/"
+    const val BASE_URL : String = "https://api.shallwes.com/"
 
     const val AUTH_SIGN_UP : String = "auth/shop-owner/sign-up"
 
