@@ -19,9 +19,7 @@ object API {
 
     const val CHANGE_PASSWORD = "auth/shop-owner/change-password"
 
-    const val HOME_RESERVATION_INFO = "api/v1/admin/experience/gift/main"
-
-    const val ADMIN_EXPERIENCE_GIFT = "/api/v1/experience/gift/shop-owner"
+    const val HOME_RESERVATION_INFO = "/api/v1/experience/gift/shop-owner/main"
 
     const val ADMIN_EXPERIENCE_GIFT_REGISTER = "/api/v1/experience/gift/shop-owner/register"
 
@@ -38,6 +36,9 @@ object API {
 
     //예약 확정
     const val ADMIN_POST_RESERVATION="/api/v1/shop-owners/confirm"
+
+    //사장님 선물 불러오기
+    const val ADMIN_GET_GIFT="/api/v1/experience/gift/shop-owner"
 }
 
 enum class RESPONSE_STATE {

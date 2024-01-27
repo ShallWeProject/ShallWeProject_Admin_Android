@@ -10,9 +10,11 @@ class App : Application() {
         lateinit var instance: App
         lateinit var context: Context
 
-        var accessToken:String? = "ACCESS_TOKEN"
-        var refreshToken:String? = "REFRESH_TOKEN"
-        var phoneNumber : String? = "phoneNumber"
+        lateinit var sharedPreferences: SharedPreferences
+
+        var accessToken:String? = "access_token"
+        var refreshToken:String? = "refresh_token"
+        var phoneNumber : String? = "phone_number"
         var password : String? = "password"
     }
 
@@ -20,6 +22,9 @@ class App : Application() {
         super.onCreate()
         instance = this
         context = applicationContext
+
+        sharedPreferences =
+            applicationContext.getSharedPreferences("com.shall_we.admin", MODE_PRIVATE)
     }
 
 }
