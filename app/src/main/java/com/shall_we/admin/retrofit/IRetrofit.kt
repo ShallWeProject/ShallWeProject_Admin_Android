@@ -17,6 +17,7 @@ import com.shall_we.admin.product.data.AdminMainRes
 import com.shall_we.admin.reservation.data.ReservationData
 import com.shall_we.admin.reservation.data.ReservationResponse
 import com.shall_we.admin.retrofit.API.ADMIN_GET_RESERVATION
+import com.shall_we.admin.schedule.data.ReservationInfo
 import com.shall_we.admin.schedule.data.ScheduleData
 import retrofit2.Call
 import retrofit2.http.Body
@@ -110,6 +111,9 @@ interface IRetrofit {
 
     @GET(API.ADMIN_GET_GIFT)
     fun getReservationGift(): Call<List<ReservationData>>
+
+    @POST(API.ADMIN_ADD_RESERVATION)
+    fun AddReservation(@Body reservationInfo: ReservationInfo): Call<JsonElement>
 
 }
 

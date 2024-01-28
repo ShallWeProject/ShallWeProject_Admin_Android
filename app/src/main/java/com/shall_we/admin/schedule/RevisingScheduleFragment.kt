@@ -1,5 +1,6 @@
 package com.shall_we.admin.schedule
 
+import ScheduleService
 import TimeAdapter
 import android.app.AlertDialog
 import android.graphics.Color
@@ -18,6 +19,7 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentRevisingScheduleBinding
 import com.shall_we.admin.product.ProductFragment
+import com.shall_we.admin.schedule.data.ReservationInfo
 import com.shall_we.admin.schedule.data.TimeData
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -32,7 +34,8 @@ class RevisingScheduleFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var calendarView: MaterialCalendarView
     private val locale: Locale = Locale("ko")
-
+    private val scheduleService = ScheduleService()  // ScheduleService의 인스턴스를 생성합니다.
+    private var selectedTimes: List<String> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,17 +58,6 @@ class RevisingScheduleFragment : Fragment() {
         calendarView = binding.calendar
         val rec = binding.rec
 
-        rec.visibility = View.INVISIBLE
-        // 달력 날짜 선택 리스너를 설정합니다.
-        calendarView.setOnDateChangedListener { widget, date, selected ->
-
-            if (selected) {
-                rec.visibility = View.VISIBLE
-            } else {
-                rec.visibility = View.INVISIBLE
-            }
-        }
-
         // 리사이클러뷰에 어댑터를 설정합니다.
         val timeList = listOf<TimeData>(
             TimeData("1시"),
@@ -84,10 +76,42 @@ class RevisingScheduleFragment : Fragment() {
             adapter = timeAdapter
         }
 
+        rec.visibility = View.INVISIBLE
+        // 달력 날짜 선택 리스너를 설정합니다.
+        // 달력 날짜 선택 리스너를 설정합니다.
+        calendarView.setOnDateChangedListener { widget, date, selected ->
+            if (selected) {
+                rec.visibility = View.VISIBLE
 
+                // 선택된 날짜를 문자열로 변환합니다.
+                val selectedDate = String.format("%04d-%02d-%02d", date.year, date.month + 1, date.day)
+
+                // 선택된 시간들을 리스트로 만듭니다.
+                selectedTimes = timeList.map { it.toLocalTimeFormat() }  // TimeData의 toLocalTimeFormat 메서드를 사용하여 시간을 변환합니다.
+            } else {
+                rec.visibility = View.INVISIBLE
+            }
+        }
 
         binding.btnbtnbtn.setOnClickListener {
-            val alertDialog = CustomAlertDialog(requireContext(),R.layout.custom_popup_layout)
+            // 선택된 날짜를 문자열로 변환합니다.
+            // 월과 일이 한 자리 수일 때 앞에 0을 붙입니다.
+            val selectedDate = String.format("%04d-%02d-%02d", calendarView.selectedDate.year, calendarView.selectedDate.month + 1, calendarView.selectedDate.day)
+
+            // 예약 정보를 만듭니다.
+            val reservationInfo = ReservationInfo(
+                experienceGiftId = 1,
+                dateTimeMap = mapOf(
+                    selectedDate to selectedTimes
+                )
+            )
+            scheduleService.addReservation(reservationInfo) { state, result ->
+                // 응답 처리 코드를 여기에 작성합니다.
+
+            }
+
+
+        val alertDialog = CustomAlertDialog(requireContext(),R.layout.custom_popup_layout)
             val dialog = alertDialog.create()
 
             val layoutParams = WindowManager.LayoutParams()
