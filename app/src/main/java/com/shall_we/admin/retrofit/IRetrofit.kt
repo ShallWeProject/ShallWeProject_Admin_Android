@@ -1,6 +1,7 @@
 package com.shall_we.admin.retrofit
 
 import com.google.gson.JsonElement
+import com.shall_we.admin.home.data.AuthSignOutResponse
 import com.shall_we.admin.home.data.ReservationInfoRes
 import com.shall_we.admin.login.data.AuthRes
 import com.shall_we.admin.login.data.ChangePasswordReq
@@ -12,14 +13,14 @@ import com.shall_we.admin.login.data.SignUpReq
 import com.shall_we.admin.login.data.ValidCodeReq
 import com.shall_we.admin.product.data.AdminExperienceReq
 import com.shall_we.admin.product.data.AdminExperienceRes
+import com.shall_we.admin.product.data.AdminMainRes
+import com.shall_we.admin.reservation.data.ReservationData
 import com.shall_we.admin.reservation.data.ReservationResponse
 import com.shall_we.admin.retrofit.API.ADMIN_GET_RESERVATION
-import okhttp3.ResponseBody
+import com.shall_we.admin.schedule.data.ScheduleData
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -39,11 +40,11 @@ interface IRetrofit {
 
     // 사장 로그아웃
     @POST(API.AUTH_SIGN_OUT)
-    fun authSignOut(@Body refreshTokenArray : RefreshTokenReq): Call<MessageRes>
+    fun authSignOut(@Body refreshTokenArray : RefreshTokenReq): Call<AuthSignOutResponse>
 
     // 사장 탈퇴
     @PATCH(API.PATCH_SHOP_OWNER)
-    fun patchShopOwners() : Call<MessageRes>
+    fun patchShopOwners() : Call<AuthSignOutResponse>
 
     // 토큰 리프레시
     @POST(API.AUTH_REFRESH)
@@ -99,11 +100,16 @@ interface IRetrofit {
     ): Call<ReservationResponse>
 
     //예약확정
-
     @POST(API.ADMIN_POST_RESERVATION)
-    fun postReservation(@Query("reservationId") reservationId: Long): Call<MessageRes>
+    fun postReservation(@Query("reservationId") reservationId: Long): Call<com.shall_we.admin.reservation.data.MessageRes>
 
 
+    //사장님 선물 불러오기
+    @GET(API.ADMIN_GET_GIFT)
+    fun getGift(): Call<List<ScheduleData>>
+
+    @GET(API.ADMIN_GET_GIFT)
+    fun getReservationGift(): Call<List<ReservationData>>
 
 }
 

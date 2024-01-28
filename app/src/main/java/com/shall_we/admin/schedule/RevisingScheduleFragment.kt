@@ -1,5 +1,6 @@
 package com.shall_we.admin.schedule
 
+import TimeAdapter
 import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -11,10 +12,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentRevisingScheduleBinding
 import com.shall_we.admin.product.ProductFragment
+import com.shall_we.admin.schedule.data.TimeData
 import java.text.ParseException
 import java.text.SimpleDateFormat
 
@@ -28,6 +32,7 @@ class RevisingScheduleFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var calendarView: MaterialCalendarView
     private val locale: Locale = Locale("ko")
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,32 +53,38 @@ class RevisingScheduleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         calendarView = binding.calendar
+        val rec = binding.rec
 
-
-        val btnbtn = binding.btnbtn
-
+        rec.visibility = View.INVISIBLE
         // 달력 날짜 선택 리스너를 설정합니다.
         calendarView.setOnDateChangedListener { widget, date, selected ->
 
             if (selected) {
-                btnbtn.visibility = View.VISIBLE
+                rec.visibility = View.VISIBLE
             } else {
-                btnbtn.visibility = View.INVISIBLE
+                rec.visibility = View.INVISIBLE
             }
         }
 
-        // btnbtn 클릭 이벤트 처리
-        btnbtn.setOnClickListener {
-            // 클릭 시 버튼 디자인을 변경합니다.
-            // 선택된 상태에 따라 리소스 변경을 할 수 있습니다.
-            if (btnbtn.isSelected) {
-                // 선택 해제된 경우
-                btnbtn.isSelected = false
-            } else {
-                // 선택된 경우
-                btnbtn.isSelected = true
-            }
+        // 리사이클러뷰에 어댑터를 설정합니다.
+        val timeList = listOf<TimeData>(
+            TimeData("1시"),
+            TimeData("2시"),
+            TimeData("3시"),
+            TimeData("4시"),
+            TimeData("5시")
+        )  // 실제 데이터로 교체해야 합니다.
+
+        val timeAdapter = SchduleTimeAdapter(timeList) { timeData ->
+            // 아이템 클릭 시 수행할 행동을 정의합니다.
         }
+
+        rec.apply {
+            layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            adapter = timeAdapter
+        }
+
+
 
         binding.btnbtnbtn.setOnClickListener {
             val alertDialog = CustomAlertDialog(requireContext(),R.layout.custom_popup_layout)

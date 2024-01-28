@@ -69,14 +69,14 @@ class TokenAuthenticator: Authenticator {
                         RESPONSE_STATE.OKAY -> {
                             Log.d("retrofit", "category api : ${responseBody}")
                             val sharedPref =
-                                context.getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
+                                context.getSharedPreferences("com.shall_we", Context.MODE_PRIVATE)
                             val accessToken = responseBody?.accessToken
-                            sharedPref?.edit()?.putString("ACCESS_TOKEN", accessToken)?.apply()
+                            sharedPref?.edit()?.putString("access_token", accessToken)?.apply()
                             val refreshToken = responseBody?.refreshToken
-                            sharedPref?.edit()?.putString("REFRESH_TOKEN", refreshToken)?.apply()
+                            sharedPref?.edit()?.putString("refresh_token", refreshToken)?.apply()
 
-                            App.accessToken = sharedPref?.getString("ACCESS_TOKEN", null)
-                            App.refreshToken = sharedPref?.getString("REFRESH_TOKEN", null)
+                            App.accessToken = sharedPref?.getString("access_token", null)
+                            App.refreshToken = sharedPref?.getString("refresh_token", null)
                         }
 
                         RESPONSE_STATE.FAIL -> {
