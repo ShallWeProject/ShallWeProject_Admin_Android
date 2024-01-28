@@ -1,8 +1,10 @@
 import android.util.Log
+import com.google.gson.JsonElement
 import com.shall_we.admin.retrofit.API
 import com.shall_we.admin.retrofit.IRetrofit
 import com.shall_we.admin.retrofit.RESPONSE_STATE
 import com.shall_we.admin.retrofit.RetrofitClient
+import com.shall_we.admin.schedule.data.ReservationInfo
 import com.shall_we.admin.schedule.data.ScheduleData
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,4 +32,24 @@ class ScheduleService {
             }
         })
     }
+
+    fun addReservation(reservationInfo: ReservationInfo, completion: (RESPONSE_STATE, JsonElement?) -> Unit) {
+        val call = iRetrofit?.AddReservation(reservationInfo)
+        call?.enqueue(object : Callback<JsonElement> {
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                if (response.isSuccessful) {
+                    val result = response.body()
+                    completion(RESPONSE_STATE.OKAY, result)
+                } else {
+                    completion(RESPONSE_STATE.FAIL, null)
+                }
+            }
+
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                completion(RESPONSE_STATE.FAIL, null)
+            }
+        })
+    }
+
+
 }
