@@ -17,7 +17,6 @@ import com.shall_we.admin.databinding.FragmentProductBinding
 import com.shall_we.admin.product.retrofit.AdminExperienceService
 import com.shall_we.admin.retrofit.RESPONSE_STATE
 import com.shall_we.admin.schedule.CustomAlertDialog
-import okhttp3.internal.notify
 
 
 class ProductFragment : Fragment(), ProductAdapter.OnItemClickListener {
@@ -40,20 +39,15 @@ class ProductFragment : Fragment(), ProductAdapter.OnItemClickListener {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentProductBinding.inflate(inflater, container, false)
-
         RetrofitGetCall()
-
-
 
         binding.btnAdd.setOnClickListener {
             navigateToNewFragment()
         }
 
-
         binding.btnDelete.setOnClickListener {
             deleteOrNot = true
         }
-
 
         return binding.root
     }
@@ -63,32 +57,10 @@ class ProductFragment : Fragment(), ProductAdapter.OnItemClickListener {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
             productAdapter = ProductAdapter(data) { position ->
-                Log.d("item은", "$position")
                 onItemClick(position)
             }
             adapter = productAdapter
         }
-    }
-
-    fun popupMsg(msg : String){
-
-        val newAlertDialog =
-            CustomAlertDialog(requireContext(), R.layout.custom_popup_layout)
-        newAlertDialog.setDialogContent(msg)
-        val newDialog = newAlertDialog.create()
-
-        val layoutParams = WindowManager.LayoutParams()
-       // layoutParams.copyFrom(dialog.window?.attributes)
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
-        layoutParams.gravity = Gravity.BOTTOM // 중앙으로 정렬
-        newDialog.window?.attributes = layoutParams
-        newDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 이 부분을 수정
-
-        newAlertDialog.setNegativeButton("확인") { v ->
-            newDialog.dismiss()
-        }
-        newDialog.show()
     }
 
     private fun navigateToEditFragment(item: ProductData) {
@@ -96,56 +68,14 @@ class ProductFragment : Fragment(), ProductAdapter.OnItemClickListener {
         val bundle = Bundle()
         bundle.putInt("idx",index)
         Log.d("navigate","$index, $item")
+
         val newFragment = EditingProductFragment()
         newFragment.arguments = bundle
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainerView, newFragment)
             .addToBackStack("fragment")
             .commit()
-
-//        val fragment = parentFragmentManager.findFragmentByTag("fragment")
-//        if (fragment != null) {
-//            Toast.makeText(requireContext(), "있어..", Toast.LENGTH_SHORT).show()
-//        } else {
-//            Toast.makeText(requireContext(), "없어..", Toast.LENGTH_SHORT).show()
-//        }
     }
-
-    private fun RetrofitGetCall(){
-        AdminExperienceService().adminExperienceGift { responseState, resultData ->
-            when (responseState) {
-                RESPONSE_STATE.OKAY -> {
-                    Log.d("retrofit", "updateReservation")
-                    init(resultData)
-                    if (resultData != null) {
-                        datas = resultData
-                    }
-                    Log.d("RetrofitGetCall resultData","$resultData")
-                }
-
-                RESPONSE_STATE.FAIL -> {
-                    Log.d("retrofit", "api 호출 에러")
-                }
-            }
-        }
-    }
-
-    private fun RetrofitDeleteCall(experienceGiftId: Int){
-        AdminExperienceService().delAdminExperienceGiftRegister(experienceGiftId = experienceGiftId) { responseState ->
-            when (responseState) {
-                RESPONSE_STATE.OKAY -> {
-
-                    Log.d("retrofit", "updateReservation")
-
-                }
-
-                RESPONSE_STATE.FAIL -> {
-                    Log.d("retrofit", "api 호출 에러")
-                }
-            }
-        }
-    }
-
 
     private fun navigateToNewFragment() {
         val newFragment = ManagingProductFragment()
@@ -208,4 +138,56 @@ class ProductFragment : Fragment(), ProductAdapter.OnItemClickListener {
         dialog.show()
     }
 
+    fun popupMsg(msg : String){
+        val alertDialog2 = CustomAlertDialog(requireContext(),R.layout.custom_popup_layout)
+        val dialog2 = alertDialog2.create()
+        alertDialog2.setDialogContent(msg)
+
+        val layoutParams2 = WindowManager.LayoutParams()
+        layoutParams2.copyFrom(dialog2.window?.attributes)
+        layoutParams2.width = WindowManager.LayoutParams.MATCH_PARENT
+        layoutParams2.height = WindowManager.LayoutParams.WRAP_CONTENT
+        layoutParams2.gravity = Gravity.BOTTOM
+        dialog2.window?.attributes = layoutParams2
+        dialog2.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog2.setNegativeButton("확인") { v ->
+            dialog2.dismiss()
+        }
+        dialog2.show()
+    }
+
+    private fun RetrofitGetCall(){
+        AdminExperienceService().adminExperienceGift { responseState, resultData ->
+            when (responseState) {
+                RESPONSE_STATE.OKAY -> {
+                    Log.d("retrofit", "updateReservation")
+                    init(resultData)
+                    if (resultData != null) {
+                        datas = resultData
+                    }
+                    Log.d("RetrofitGetCall resultData","$resultData")
+                }
+
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        }
+    }
+
+    private fun RetrofitDeleteCall(experienceGiftId: Int){
+        AdminExperienceService().delAdminExperienceGift(experienceGiftId = experienceGiftId) { responseState ->
+            when (responseState) {
+                RESPONSE_STATE.OKAY -> {
+
+                    Log.d("retrofit", "updateReservation")
+
+                }
+
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        }
+    }
 }

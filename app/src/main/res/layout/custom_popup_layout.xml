@@ -18,7 +18,7 @@
 
             android:backgroundTint="@color/white"
             android:background="@color/white"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
@@ -55,8 +55,7 @@
                 android:textSize="14dp"
                 android:text="확인"
                 android:textColor="#E31B54"
-                android:layout_marginLeft="80dp"
-                app:layout_constraintLeft_toRightOf="@id/tvDialogMessage"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

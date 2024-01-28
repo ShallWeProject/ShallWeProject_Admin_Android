@@ -207,7 +207,6 @@
                 android:padding="5dp"
                 android:hint="상품설명을 입력해주세요."/>
 
-
             <TextView
                 android:id="@+id/tv_curriculum"
                 android:layout_width="wrap_content"
@@ -245,18 +244,22 @@
 
             <TextView
                 android:id="@+id/curr1_img"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:layout_constraintTop_toBottomOf="@id/tv_curr1"
-                app:layout_constraintStart_toStartOf="@id/tv_curr1"
-                android:visibility="gone"/>
-
-            <ImageView
                 android:layout_width="72dp"
                 android:layout_height="72dp"
-                app:layout_constraintTop_toBottomOf="@id/curr1_img"
-                app:layout_constraintStart_toStartOf="@id/curr1_img"/>
+                android:layout_marginTop="10dp"
+                android:textSize="0sp"
+                android:background="@drawable/splash_icon"
+                app:layout_constraintTop_toBottomOf="@id/tv_curr1"
+                app:layout_constraintStart_toStartOf="@id/tv_curr1"/>
 
+            <TextView
+                android:id="@+id/btn_del1"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/del_img"
+                app:layout_constraintTop_toBottomOf="@id/tv_curr1"
+                app:layout_constraintEnd_toEndOf="@id/curr1_img"/>
             <EditText
                 android:id="@+id/curr1_description"
                 android:layout_width="280dp"
@@ -282,7 +285,7 @@
                 android:padding="5dp"/>
 
             <TextView
-                android:id="@+id/curr2_img"
+                android:id="@+id/tv_curr2_img"
                 android:layout_width="80dp"
                 android:layout_height="40dp"
                 app:layout_constraintEnd_toEndOf="@id/product"
@@ -293,12 +296,22 @@
                 android:background="@drawable/button"
                 android:padding="5dp"/>
 
+            <TextView
+                android:id="@+id/curr2_img"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginTop="10dp"
+                android:textSize="0sp"
+                android:background="@drawable/splash_icon"
+                app:layout_constraintTop_toBottomOf="@id/tv_curr2"
+                app:layout_constraintStart_toStartOf="@id/tv_curr2"/>
+
             <EditText
                 android:id="@+id/curr2_description"
                 android:layout_width="280dp"
                 android:layout_height="100dp"
                 app:layout_constraintStart_toStartOf="@id/subtitle"
-                app:layout_constraintTop_toBottomOf="@+id/tv_curr2"
+                app:layout_constraintTop_toBottomOf="@+id/curr2_img"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/border"
@@ -318,7 +331,7 @@
                 android:padding="5dp"/>
 
             <TextView
-                android:id="@+id/curr3_img"
+                android:id="@+id/tv_curr3_img"
                 android:layout_width="80dp"
                 android:layout_height="40dp"
                 app:layout_constraintEnd_toEndOf="@id/product"
@@ -329,12 +342,22 @@
                 android:background="@drawable/button"
                 android:padding="5dp"/>
 
+            <TextView
+                android:id="@+id/curr3_img"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginTop="10dp"
+                android:textSize="0sp"
+                android:background="@drawable/splash_icon"
+                app:layout_constraintTop_toBottomOf="@id/tv_curr3"
+                app:layout_constraintStart_toStartOf="@id/tv_curr3"/>
+
             <EditText
                 android:id="@+id/curr3_description"
                 android:layout_width="280dp"
                 android:layout_height="100dp"
                 app:layout_constraintStart_toStartOf="@id/subtitle"
-                app:layout_constraintTop_toBottomOf="@+id/tv_curr3"
+                app:layout_constraintTop_toBottomOf="@+id/curr3_img"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/border"
@@ -357,17 +380,26 @@
                 android:padding="5dp"/>
 
             <TextView
-                android:id="@+id/curr4_img"
+                android:id="@+id/tv_curr4_img"
                 android:layout_width="80dp"
                 android:layout_height="40dp"
                 app:layout_constraintEnd_toEndOf="@id/product"
                 app:layout_constraintTop_toBottomOf="@+id/curr3_description"
                 android:layout_marginTop="8dp"
                 android:text="사진첨부"
-                android:textSize="10sp"
                 android:gravity="center"
                 android:background="@drawable/button"
                 android:padding="5dp"/>
+
+            <TextView
+                android:id="@+id/curr4_img"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginTop="10dp"
+                android:textSize="0sp"
+                android:background="@drawable/splash_icon"
+                app:layout_constraintTop_toBottomOf="@id/tv_curr4"
+                app:layout_constraintStart_toStartOf="@id/tv_curr4"/>
 
             <TextView
                 android:id="@+id/tv_address"
