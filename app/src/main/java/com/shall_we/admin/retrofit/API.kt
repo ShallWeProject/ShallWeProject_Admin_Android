@@ -21,6 +21,8 @@ object API {
 
     const val HOME_RESERVATION_INFO = "/api/v1/experience/gift/shop-owner/main"
 
+    const val ADMIN_EXPERIENCE_GIFT = "/api/v1/experience/gift/shop-owner"
+
     const val ADMIN_EXPERIENCE_GIFT_REGISTER = "/api/v1/experience/gift/shop-owner/register"
 
     const val ADMIN_EXPERIENCE_GIFT_CHANGE = "/api/v1/experience/gift/shop-owner/{experienceGiftId}"
