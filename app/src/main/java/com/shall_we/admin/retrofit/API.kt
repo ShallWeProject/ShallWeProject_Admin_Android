@@ -1,7 +1,7 @@
 package com.shall_we.admin.retrofit
 
 object API {
-    const val BASE_URL : String = "http://13.124.44.109/"
+    const val BASE_URL : String = "https://api.shallwes.com/"
 
     const val AUTH_SIGN_UP : String = "auth/shop-owner/sign-up"
 
@@ -39,6 +39,8 @@ object API {
 
     //사장님 선물 불러오기
     const val ADMIN_GET_GIFT="/api/v1/experience/gift/shop-owner"
+
+    const val ADMIN_IDENTIFICATION = "/api/v1/shop-owners/identification"
 }
 
 enum class RESPONSE_STATE {

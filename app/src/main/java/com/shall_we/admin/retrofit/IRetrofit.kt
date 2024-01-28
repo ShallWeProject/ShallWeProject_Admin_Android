@@ -5,6 +5,7 @@ import com.shall_we.admin.home.data.AuthSignOutResponse
 import com.shall_we.admin.home.data.ReservationInfoRes
 import com.shall_we.admin.login.data.AuthRes
 import com.shall_we.admin.login.data.ChangePasswordReq
+import com.shall_we.admin.login.data.IdentificationUploadReq
 import com.shall_we.admin.login.data.MessageRes
 import com.shall_we.admin.login.data.RefreshTokenReq
 import com.shall_we.admin.login.data.SendOneReq
@@ -58,7 +59,7 @@ interface IRetrofit {
     fun validVerification(@Body validVerificationArray : ValidCodeReq): Call<JsonElement>
 
     // 상품관리 - 사장 경험 선물 리스트
-    @GET(API.ADMIN_EXPERIENCE_GIFT)
+    @GET(API.ADMIN_GET_GIFT)
     fun adminExperienceGift(): Call<JsonElement>
 
     // 상품관리 - 사장 경험 선물 등록
@@ -106,6 +107,10 @@ interface IRetrofit {
 
     @GET(API.ADMIN_GET_GIFT)
     fun getReservationGift(): Call<List<ReservationData>>
+
+    @POST(API.ADMIN_IDENTIFICATION)
+    fun postIdenficicationUpload(@Body identification: IdentificationUploadReq): Call<JsonElement>
+
 
 }
 

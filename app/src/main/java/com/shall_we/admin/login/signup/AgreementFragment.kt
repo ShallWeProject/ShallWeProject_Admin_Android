@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
@@ -16,16 +17,27 @@ import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
+import com.amazonaws.regions.Regions
 import com.shall_we.admin.App.Companion.context
+import com.shall_we.admin.BuildConfig
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentAgreementBinding
 import com.shall_we.admin.login.LoginFragment
+import com.shall_we.admin.login.data.IdentificationUploadReq
+import com.shall_we.admin.login.data.IdentificationUploadUri
 import com.shall_we.admin.login.data.MessageRes
 import com.shall_we.admin.login.data.SignUpReq
 import com.shall_we.admin.login.retrofit.IAuthSignUp
+import com.shall_we.admin.login.retrofit.IdentificationUploadService
 import com.shall_we.admin.login.retrofit.SignUpService
 import com.shall_we.admin.login.retrofit.ValidCodeService
 import com.shall_we.admin.retrofit.RESPONSE_STATE
+import com.shall_we.admin.utils.S3Util
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class AgreementFragment : Fragment(){
     private lateinit var binding : FragmentAgreementBinding
@@ -33,6 +45,18 @@ class AgreementFragment : Fragment(){
     private lateinit var name : String
     private lateinit var phone : String
     private lateinit var password : String
+
+    private lateinit var identificationUploadUri: IdentificationUploadUri
+
+
+    private var selectedImageUri: Uri = Uri.EMPTY
+    private var filename: String = ""
+    private var ext: String = ""
+    private lateinit var file: File
+
+    private lateinit var identificationReq : IdentificationUploadReq
+
+    private
 
     fun initAgreement() {
 
@@ -99,6 +123,8 @@ class AgreementFragment : Fragment(){
         binding.tvAgree3More.setOnClickListener {
             agreementDialog(it, 2)
         }
+
+
         binding.btnNextAgree.setOnClickListener {
             val auth = SignUpReq(phoneNumber = phone, name = name, password = password, marketingConsent = binding.cbAgree4.isChecked)
 
@@ -108,12 +134,17 @@ class AgreementFragment : Fragment(){
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "category api : ${responseBody.hashCode()}")
                         if(responseBody.hashCode() == 200){
-                            requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE) // 현재 스택에 있는 모든 프래그먼트를 제거합니다.
+                            // 이미지 s3에 업로드
+                            upload(identificationUploadUri.identificationUri)
+                            var identificationFileName = "uploads/$filename.$ext"
+                            upload(identificationUploadUri.businessRegistrationUri)
+                            var businessRegistrationFileName = "uploads/$filename.$ext"
+                            upload(identificationUploadUri.bankbookUri)
+                            var bankbookFileName = "uploads/$filename.$ext"
+                            identificationReq = IdentificationUploadReq(identificationFileName, businessRegistrationFileName, bankbookFileName)
 
-                            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                            transaction.replace(R.id.fragmentContainerView3, SignupSuccessFragment())
-                            transaction.addToBackStack(null) // 이전 상태를 백 스택에 추가합니다.
-                            transaction.commit()
+                            // 이미지 서버에 업로드
+                            postIdenficicationUpload(identificationReq)
                         }
                         else if (responseBody == 400){
                             Toast.makeText(context,"${responseBody}. 다시 시도해 주세요",Toast.LENGTH_LONG).show()
@@ -187,6 +218,10 @@ class AgreementFragment : Fragment(){
         name = arguments?.getString("name","").toString()
         password = arguments?.getString("password","").toString()
 
+        identificationUploadUri = arguments?.getParcelable("identificationUploadUri")!!
+
+        Log.d("identificationUploadUri", "$identificationUploadUri")
+
         return binding.root
     }
 
@@ -195,4 +230,73 @@ class AgreementFragment : Fragment(){
         initAgreement()
     }
 
+    private fun upload(selectedImageUri : Uri) {
+        if (selectedImageUri != null) {
+            this.selectedImageUri = selectedImageUri
+            parseUri(selectedImageUri)
+            file = File(selectedImageUri.toString())
+        }
+
+        S3Util.instance
+            .setKeys(BuildConfig.access_key, BuildConfig.secret_key)
+            .setRegion(Regions.AP_NORTHEAST_2)
+            .uploadWithTransferUtility(
+                this.context,
+                bucketName = "shallwebucket",
+                folder = "uploads",
+                file = file,
+                fileName = "$filename.$ext",
+                object : TransferListener {
+                    override fun onStateChanged(id: Int, state: TransferState?) {
+                    }
+                    override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {
+                    }
+                    override fun onError(id: Int, ex: java.lang.Exception?) {
+                    }
+                }
+            );
+        Log.d("S3Util", "hi")
+//        val uploadImage = IdentificationUploadReq("uploads/$filename.$ext", giftData[giftIdx].idx)
+//        Log.d("upload photo array", "$uploadPhotoArray")
+//        postMemoryPhoto(uploadImage)
+//        Toast.makeText(view?.context , "사진이 추가되었습니다.", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun parseUri(selectedImageUri: Uri) {
+        val fileForName = File(selectedImageUri.toString())
+        val currentTime: Long = System.currentTimeMillis() // ms로 반환
+        println(currentTime)
+        val dateFormat = SimpleDateFormat("HHmmss")
+
+        val formattedTime: String = dateFormat.format(Date(currentTime))
+
+        // Print the formatted time
+        println(formattedTime)
+        filename = fileForName.nameWithoutExtension + formattedTime
+        ext = fileForName.extension
+    }
+    private fun postIdenficicationUpload(uploadImage: IdentificationUploadReq) {
+        Log.d("postmemoryphoto",uploadImage.toString())
+        IdentificationUploadService().postIdenficicationUpload(
+            uploadImage = uploadImage,
+            completion = {
+                    responseState, responseBody ->
+                when(responseState){
+                    RESPONSE_STATE.OKAY -> {
+                        Log.d("retrofit", "category api : ${responseBody}")
+
+                        requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE) // 현재 스택에 있는 모든 프래그먼트를 제거합니다.
+
+                        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                        transaction.replace(R.id.fragmentContainerView3, SignupSuccessFragment())
+                        transaction.addToBackStack(null) // 이전 상태를 백 스택에 추가합니다.
+                        transaction.commit()
+                    }
+
+                    RESPONSE_STATE.FAIL -> {
+                        Log.d("retrofit", "api 호출 에러")
+                    }
+                }
+            })
+    }
 }

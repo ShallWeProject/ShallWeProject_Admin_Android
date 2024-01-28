@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -34,6 +35,14 @@ android {
         viewBinding true
         dataBinding true
         buildConfig = true
+    }
+
+    defaultConfig {
+        def localProperties = new Properties()
+        localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+        buildConfigField("String", "access_key", localProperties['access_key'])
+        buildConfigField("String", "secret_key", localProperties['secret_key'])
+
     }
 }
 
