@@ -22,6 +22,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -100,7 +101,6 @@ interface IRetrofit {
     @POST(API.ADMIN_POST_RESERVATION)
     fun postReservation(@Query("reservationId") reservationId: Long): Call<com.shall_we.admin.reservation.data.MessageRes>
 
-
     //사장님 선물 불러오기
     @GET(API.ADMIN_GET_GIFT)
     fun getGift(): Call<List<ScheduleData>>
@@ -109,7 +109,7 @@ interface IRetrofit {
     fun getReservationGift(): Call<List<ReservationData>>
 
     @POST(API.ADMIN_IDENTIFICATION)
-    fun postIdenficicationUpload(@Body identification: IdentificationUploadReq): Call<JsonElement>
+    fun postIdenficicationUpload(@Header("Authorization") token: String?, @Body identification: IdentificationUploadReq): Call<JsonElement>
 
 
 }

@@ -35,8 +35,6 @@ class SignupSuccessFragment : Fragment() {
                 .replace(R.id.fragmentContainerView3, newFragment)
                 .commit()
         }
-
-
         return binding.root
     }
 

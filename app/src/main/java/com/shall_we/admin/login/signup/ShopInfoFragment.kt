@@ -83,16 +83,6 @@ class ShopInfoFragment : Fragment() {
             openGallery(2)
         }
 
-        // 다음 버튼 색 & 활성화
-        if(firFlag && secFlag && thiFlag){
-            binding.btnNextShopInfo.setBackgroundResource(R.drawable.btn_next)
-            binding.btnNextShopInfo.isClickable = true
-        }
-        else{
-            binding.btnNextShopInfo.setBackgroundResource(R.drawable.btn_next_black)
-            binding.btnNextShopInfo.isClickable = false
-        }
-
         // 다음 버튼 클릭 시
         binding.btnNextShopInfo.setOnClickListener {
             // 이미지 다 올렸으면
@@ -152,7 +142,8 @@ class ShopInfoFragment : Fragment() {
                         )?.toUri()
                     }!! // 선택한 이미지의 경로를 구하는 함수 호출
             firFlag = true
-            binding?.idCardBtn?.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this.requireContext(), R.color.rose600))
+            binding.idCardBtn.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this.requireContext(), R.color.rose600))
+            changeBtnColor()
         }
 
         else if(requestCode == 1 && resultCode == Activity.RESULT_OK){
@@ -167,7 +158,8 @@ class ShopInfoFragment : Fragment() {
                     )?.toUri()
                 }!! // 선택한 이미지의 경로를 구하는 함수 호출
             secFlag = true
-            binding?.ownerBtn?.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this.requireContext(), R.color.rose600))
+            binding.ownerBtn.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this.requireContext(), R.color.rose600))
+            changeBtnColor()
         }
 
         else if(requestCode == 2 && resultCode == Activity.RESULT_OK){
@@ -182,7 +174,8 @@ class ShopInfoFragment : Fragment() {
                     )?.toUri()
                 }!! // 선택한 이미지의 경로를 구하는 함수 호출
             thiFlag = true
-            binding?.bankbookBtn?.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this.requireContext(), R.color.rose600))
+            binding.bankbookBtn.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this.requireContext(), R.color.rose600))
+            changeBtnColor()
         }
     }
 
@@ -205,6 +198,19 @@ class ShopInfoFragment : Fragment() {
             cursor?.close()
         }
         return path
+    }
+
+    private fun changeBtnColor(){
+        // 다음 버튼 색 & 활성화
+        if(firFlag && secFlag && thiFlag){
+            Log.d("shopinfo", "다음 버튼 색 & 활성화")
+            binding.btnNextShopInfo.setBackgroundResource(R.drawable.btn_next)
+            binding.btnNextShopInfo.isClickable = true
+        }
+        else{
+            binding.btnNextShopInfo.setBackgroundResource(R.drawable.btn_next_black)
+            binding.btnNextShopInfo.isClickable = false
+        }
     }
 
 }

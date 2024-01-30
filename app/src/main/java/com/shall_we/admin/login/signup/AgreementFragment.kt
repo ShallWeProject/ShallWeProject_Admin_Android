@@ -2,6 +2,7 @@ package com.shall_we.admin.login.signup
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -22,15 +23,19 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
 import com.amazonaws.regions.Regions
 import com.shall_we.admin.App.Companion.context
 import com.shall_we.admin.BuildConfig
+import com.shall_we.admin.MainActivity
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentAgreementBinding
 import com.shall_we.admin.login.LoginFragment
+import com.shall_we.admin.login.data.AuthRes
 import com.shall_we.admin.login.data.IdentificationUploadReq
 import com.shall_we.admin.login.data.IdentificationUploadUri
 import com.shall_we.admin.login.data.MessageRes
 import com.shall_we.admin.login.data.SignUpReq
+import com.shall_we.admin.login.retrofit.IAuthSignIn
 import com.shall_we.admin.login.retrofit.IAuthSignUp
 import com.shall_we.admin.login.retrofit.IdentificationUploadService
+import com.shall_we.admin.login.retrofit.SignInService
 import com.shall_we.admin.login.retrofit.SignUpService
 import com.shall_we.admin.login.retrofit.ValidCodeService
 import com.shall_we.admin.retrofit.RESPONSE_STATE
@@ -39,7 +44,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class AgreementFragment : Fragment(){
+class AgreementFragment : Fragment(), IAuthSignIn{
     private lateinit var binding : FragmentAgreementBinding
 
     private lateinit var name : String
@@ -142,13 +147,9 @@ class AgreementFragment : Fragment(){
                             upload(identificationUploadUri.bankbookUri)
                             var bankbookFileName = "uploads/$filename.$ext"
                             identificationReq = IdentificationUploadReq(identificationFileName, businessRegistrationFileName, bankbookFileName)
-
-                            // 이미지 서버에 업로드
-                            postIdenficicationUpload(identificationReq)
                         }
                         else if (responseBody == 400){
                             Toast.makeText(context,"${responseBody}. 다시 시도해 주세요",Toast.LENGTH_LONG).show()
-
                         }
                     }
                     RESPONSE_STATE.FAIL -> {
@@ -256,10 +257,6 @@ class AgreementFragment : Fragment(){
                 }
             );
         Log.d("S3Util", "hi")
-//        val uploadImage = IdentificationUploadReq("uploads/$filename.$ext", giftData[giftIdx].idx)
-//        Log.d("upload photo array", "$uploadPhotoArray")
-//        postMemoryPhoto(uploadImage)
-//        Toast.makeText(view?.context , "사진이 추가되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
     private fun parseUri(selectedImageUri: Uri) {
@@ -275,9 +272,11 @@ class AgreementFragment : Fragment(){
         filename = fileForName.nameWithoutExtension + formattedTime
         ext = fileForName.extension
     }
-    private fun postIdenficicationUpload(uploadImage: IdentificationUploadReq) {
+
+    private fun postIdenficicationUpload(token: String, uploadImage: IdentificationUploadReq) {
         Log.d("postmemoryphoto",uploadImage.toString())
         IdentificationUploadService().postIdenficicationUpload(
+            token = token,
             uploadImage = uploadImage,
             completion = {
                     responseState, responseBody ->
@@ -298,5 +297,27 @@ class AgreementFragment : Fragment(){
                     }
                 }
             })
+    }
+
+    override fun onPostAuthSignInSuccess(response: AuthRes) {
+        // 이미지 서버에 업로드
+        postIdenficicationUpload(response.data.accessToken, identificationReq)
+    }
+
+    override fun onPostAuthSignInFailed(message: String) {
+        Log.d("login2","onPostAuthSignInFailed $message")
+        val errorMessage1 = "유효하지 않는 전화번호입니다."
+        val errorMessage2 = "비밀번호가 일치하지 않습니다."
+
+        // 에러 메시지에 따라 다른 액션 수행
+        if (message.contains(errorMessage1)) {
+            Toast.makeText(context,errorMessage1,Toast.LENGTH_LONG).show()
+        } else if (message.contains(errorMessage2)) {
+            Toast.makeText(context,errorMessage2,Toast.LENGTH_LONG).show()
+
+        } else {
+            Toast.makeText(context,"알 수 없는 에러입니다.",Toast.LENGTH_LONG).show()
+
+        }
     }
 }
