@@ -208,12 +208,13 @@
         android:layout_width="328dp"
         android:layout_height="45dp"
         android:layout_marginBottom="46dp"
-        android:background="@drawable/btn_next"
+        android:background="@drawable/btn_next_black"
         android:clickable="false"
         android:text="다음"
         android:textColor="#FFFCFC"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"></Button>
+        app:layout_constraintStart_toStartOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -96,6 +96,7 @@
         android:background="@drawable/btn_next_black"
         android:text="다음"
         android:textSize="15sp"
+        android:clickable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
