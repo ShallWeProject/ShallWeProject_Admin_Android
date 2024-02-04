@@ -19,15 +19,15 @@ class SignUpService() {
         RetrofitClient.getClient(API.BASE_URL)?.create(IRetrofit::class.java)
 
 
-    fun postAuthSignUp(auth: SignUpReq,completion: (RESPONSE_STATE, Int?) -> Unit){
+    fun postAuthSignUp(auth: SignUpReq,completion: (RESPONSE_STATE, Int?,AuthRes?) -> Unit){
         iRetrofit?.authSignUp(SignUpReq(auth.name,auth.phoneNumber,auth.password,auth.marketingConsent))?.enqueue(object: Callback<AuthRes> {
             override fun onResponse(call: Call<AuthRes>, response: Response<AuthRes>) {
                 Log.d("signup",response.code().toString())
-                completion(RESPONSE_STATE.OKAY, response.code())
+                completion(RESPONSE_STATE.OKAY, response.code(),response.body())
             }
 
             override fun onFailure(call: Call<AuthRes>, t: Throwable) {
-                completion(RESPONSE_STATE.FAIL, null)
+                completion(RESPONSE_STATE.FAIL, null, null)
 
             }
         })

@@ -2,6 +2,7 @@ package com.shall_we.admin.login.signup
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -21,6 +22,7 @@ import androidx.fragment.app.FragmentManager
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
 import com.amazonaws.regions.Regions
+import com.shall_we.admin.App
 import com.shall_we.admin.App.Companion.context
 import com.shall_we.admin.BuildConfig
 import com.shall_we.admin.MainActivity
@@ -44,7 +46,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class AgreementFragment : Fragment(), IAuthSignIn{
+class AgreementFragment : Fragment() {
     private lateinit var binding : FragmentAgreementBinding
 
     private lateinit var name : String
@@ -134,22 +136,26 @@ class AgreementFragment : Fragment(), IAuthSignIn{
             val auth = SignUpReq(phoneNumber = phone, name = name, password = password, marketingConsent = binding.cbAgree4.isChecked)
 
             SignUpService().postAuthSignUp(auth, completion = {
-                    responseState, responseBody ->
+                    responseState, responseCode, responseBody ->
                 when(responseState){
                     RESPONSE_STATE.OKAY -> {
-                        Log.d("retrofit", "category api : ${responseBody.hashCode()}")
-                        if(responseBody.hashCode() == 200){
+                        Log.d("retrofit", "category api : ${responseCode.hashCode()}")
+                        if(responseCode.hashCode() == 200){
                             // 이미지 s3에 업로드
-                            upload(identificationUploadUri.identificationUri)
-                            var identificationFileName = "uploads/$filename.$ext"
-                            upload(identificationUploadUri.businessRegistrationUri)
-                            var businessRegistrationFileName = "uploads/$filename.$ext"
-                            upload(identificationUploadUri.bankbookUri)
-                            var bankbookFileName = "uploads/$filename.$ext"
-                            identificationReq = IdentificationUploadReq(identificationFileName, businessRegistrationFileName, bankbookFileName)
+                            if (responseBody != null) {
+                                upload(identificationUploadUri.identificationUri)
+                                var identificationFileName = "uploads/$filename.$ext"
+                                upload(identificationUploadUri.businessRegistrationUri)
+                                var businessRegistrationFileName = "uploads/$filename.$ext"
+                                upload(identificationUploadUri.bankbookUri)
+                                var bankbookFileName = "uploads/$filename.$ext"
+                                identificationReq = IdentificationUploadReq(identificationFileName, businessRegistrationFileName, bankbookFileName)
+                                setUpAccessToken(responseBody.data.accessToken)
+                                postIdenficicationUpload(identificationReq)
+                            }
                         }
-                        else if (responseBody == 400){
-                            Toast.makeText(context,"${responseBody}. 다시 시도해 주세요",Toast.LENGTH_LONG).show()
+                        else if (responseCode == 400){
+                            Toast.makeText(context,"${responseCode}. 다시 시도해 주세요",Toast.LENGTH_LONG).show()
                         }
                     }
                     RESPONSE_STATE.FAIL -> {
@@ -273,23 +279,16 @@ class AgreementFragment : Fragment(), IAuthSignIn{
         ext = fileForName.extension
     }
 
-    private fun postIdenficicationUpload(token: String, uploadImage: IdentificationUploadReq) {
+    private fun postIdenficicationUpload(uploadImage: IdentificationUploadReq) {
         Log.d("postmemoryphoto",uploadImage.toString())
         IdentificationUploadService().postIdenficicationUpload(
-            token = token,
             uploadImage = uploadImage,
             completion = {
                     responseState, responseBody ->
                 when(responseState){
                     RESPONSE_STATE.OKAY -> {
                         Log.d("retrofit", "category api : ${responseBody}")
-
-                        requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE) // 현재 스택에 있는 모든 프래그먼트를 제거합니다.
-
-                        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                        transaction.replace(R.id.fragmentContainerView3, SignupSuccessFragment())
-                        transaction.addToBackStack(null) // 이전 상태를 백 스택에 추가합니다.
-                        transaction.commit()
+                        deleteAccessToken()
                     }
 
                     RESPONSE_STATE.FAIL -> {
@@ -299,25 +298,24 @@ class AgreementFragment : Fragment(), IAuthSignIn{
             })
     }
 
-    override fun onPostAuthSignInSuccess(response: AuthRes) {
-        // 이미지 서버에 업로드
-        postIdenficicationUpload(response.data.accessToken, identificationReq)
+    private fun setUpAccessToken(accessToken: String){
+        val sharedPref = context?.getSharedPreferences("com.shall_we.admin", Context.MODE_PRIVATE)
+        sharedPref?.edit()?.putString("access_token", accessToken)?.apply()
+
+        App.accessToken = sharedPref?.getString("access_token", null)
     }
 
-    override fun onPostAuthSignInFailed(message: String) {
-        Log.d("login2","onPostAuthSignInFailed $message")
-        val errorMessage1 = "유효하지 않는 전화번호입니다."
-        val errorMessage2 = "비밀번호가 일치하지 않습니다."
+    private fun deleteAccessToken(){
+        val sharedPref = context?.getSharedPreferences("com.shall_we.admin", Context.MODE_PRIVATE)
+        sharedPref?.edit()?.putString("access_token", null)?.apply()
 
-        // 에러 메시지에 따라 다른 액션 수행
-        if (message.contains(errorMessage1)) {
-            Toast.makeText(context,errorMessage1,Toast.LENGTH_LONG).show()
-        } else if (message.contains(errorMessage2)) {
-            Toast.makeText(context,errorMessage2,Toast.LENGTH_LONG).show()
+        App.accessToken = sharedPref?.getString("access_token", null)
 
-        } else {
-            Toast.makeText(context,"알 수 없는 에러입니다.",Toast.LENGTH_LONG).show()
+        requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE) // 현재 스택에 있는 모든 프래그먼트를 제거합니다.
 
-        }
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragmentContainerView3, SignupSuccessFragment())
+        transaction.addToBackStack(null) // 이전 상태를 백 스택에 추가합니다.
+        transaction.commit()
     }
 }

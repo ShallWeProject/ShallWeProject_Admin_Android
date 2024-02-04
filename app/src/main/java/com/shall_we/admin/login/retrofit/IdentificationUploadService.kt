@@ -20,8 +20,8 @@ class IdentificationUploadService {
     private val iRetrofit: IRetrofit? =
         RetrofitClient.getClient(API.BASE_URL)?.create(IRetrofit::class.java)
 
-    fun postIdenficicationUpload(token: String, uploadImage: IdentificationUploadReq, completion: (RESPONSE_STATE, Int?) -> Unit){
-        iRetrofit?.postIdenficicationUpload(token = token,identification = uploadImage)?.enqueue(object:
+    fun postIdenficicationUpload(uploadImage: IdentificationUploadReq, completion: (RESPONSE_STATE, Int?) -> Unit){
+        iRetrofit?.postIdenficicationUpload(identification = uploadImage)?.enqueue(object:
             Callback<JsonElement> {
             // 응답 성공인 경우
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {

@@ -109,8 +109,7 @@ interface IRetrofit {
     fun getReservationGift(): Call<List<ReservationData>>
 
     @POST(API.ADMIN_IDENTIFICATION)
-    fun postIdenficicationUpload(@Header("Authorization") token: String?, @Body identification: IdentificationUploadReq): Call<JsonElement>
-
+    fun postIdenficicationUpload(@Body identification: IdentificationUploadReq): Call<JsonElement>
 
 }
 
