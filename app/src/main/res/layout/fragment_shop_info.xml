@@ -31,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/id_card_btn"
         android:layout_width="104dp"
         android:layout_height="39dp"
         android:layout_marginTop="12dp"
@@ -51,10 +51,10 @@
         android:textColor="#333333"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/textView11"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/id_card_btn" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/owner_btn"
         android:layout_width="104dp"
         android:layout_height="39dp"
         android:layout_marginTop="12dp"
@@ -74,10 +74,10 @@
         android:textColor="#333333"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/textView11"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/owner_btn" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/bankbook_btn"
         android:layout_width="104dp"
         android:layout_height="39dp"
         android:layout_marginTop="12dp"
@@ -96,6 +96,7 @@
         android:background="@drawable/btn_next_black"
         android:text="다음"
         android:textSize="15sp"
+        android:clickable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

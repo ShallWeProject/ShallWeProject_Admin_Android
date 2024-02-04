@@ -5,6 +5,7 @@ import com.shall_we.admin.home.data.AuthSignOutResponse
 import com.shall_we.admin.home.data.ReservationInfoRes
 import com.shall_we.admin.login.data.AuthRes
 import com.shall_we.admin.login.data.ChangePasswordReq
+import com.shall_we.admin.login.data.IdentificationUploadReq
 import com.shall_we.admin.login.data.MessageRes
 import com.shall_we.admin.login.data.RefreshTokenReq
 import com.shall_we.admin.login.data.SendOneReq
@@ -23,6 +24,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -60,7 +62,7 @@ interface IRetrofit {
     fun validVerification(@Body validVerificationArray : ValidCodeReq): Call<JsonElement>
 
     // 상품관리 - 사장 경험 선물 리스트
-    @GET(API.ADMIN_EXPERIENCE_GIFT)
+    @GET(API.ADMIN_GET_GIFT)
     fun adminExperienceGift(): Call<JsonElement>
 
     // 상품관리 - 사장 경험 선물 등록
@@ -104,7 +106,6 @@ interface IRetrofit {
     @POST(API.ADMIN_POST_RESERVATION)
     fun postReservation(@Query("reservationId") reservationId: Long): Call<com.shall_we.admin.reservation.data.MessageRes>
 
-
     //사장님 선물 불러오기
     @GET(API.ADMIN_GET_GIFT)
     fun getGift(): Call<List<ScheduleData>>
@@ -112,6 +113,9 @@ interface IRetrofit {
     @GET(API.ADMIN_GET_GIFT)
     fun getReservationGift(): Call<List<ReservationData>>
 
+    @POST(API.ADMIN_IDENTIFICATION)
+    fun postIdenficicationUpload(@Body identification: IdentificationUploadReq): Call<JsonElement>
+  
     @POST(API.ADMIN_ADD_RESERVATION)
     fun AddReservation(@Body reservationInfo: ReservationInfo): Call<JsonElement>
 

@@ -1,7 +1,13 @@
 package com.shall_we.admin.login.signup
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,18 +16,44 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
 import com.amazonaws.regions.Regions
+import com.shall_we.admin.BuildConfig.access_key
+import com.shall_we.admin.BuildConfig.secret_key
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentShopInfoBinding
+import com.shall_we.admin.login.data.IdentificationUploadReq
+import com.shall_we.admin.login.data.IdentificationUploadUri
+import com.shall_we.admin.login.retrofit.IdentificationUploadService
+import com.shall_we.admin.retrofit.RESPONSE_STATE
 import com.shall_we.admin.utils.S3Util
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class ShopInfoFragment : Fragment() {
+
+    private lateinit var binding: FragmentShopInfoBinding
 
     private lateinit var name : String
     private lateinit var phoneNumber : String
     private lateinit var password : String
+
+    private var selectedImageUri: Uri = Uri.EMPTY
+    private var path: Uri = Uri.EMPTY
+
+    private var identificationUri : Uri = Uri.EMPTY
+    private var businessRegistrationUri : Uri = Uri.EMPTY
+    private var bankbookUri : Uri = Uri.EMPTY
+
+    private var firFlag = false
+    private var secFlag = false
+    private var thiFlag = false
+
+    private lateinit var identificationUploadUri: IdentificationUploadUri
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,27 +65,45 @@ class ShopInfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding = FragmentShopInfoBinding.inflate(inflater,container,false)
+        binding = FragmentShopInfoBinding.inflate(inflater,container,false)
+
+        requestPermission()
 
         phoneNumber = arguments?.getString("phone", "").toString()
         name = arguments?.getString("name","").toString()
         password = arguments?.getString("password","").toString()
 
-        requestPermission()
+        binding.idCardBtn.setOnClickListener {
+            openGallery(0)
+        }
+        binding.ownerBtn.setOnClickListener {
+            openGallery(1)
+        }
+        binding.bankbookBtn.setOnClickListener {
+            openGallery(2)
+        }
 
+        // 다음 버튼 클릭 시
         binding.btnNextShopInfo.setOnClickListener {
-            val newFragment = AgreementFragment() // 전환할 다른 프래그먼트 객체 생성
-            val bundle = Bundle()
-            bundle.putString("name",name)
-            bundle.putString("phone",phoneNumber)
-            bundle.putString("password",password)
-            newFragment.arguments = bundle
+            // 이미지 다 올렸으면
+            if(firFlag && secFlag && thiFlag){
+                if(identificationUri != Uri.EMPTY && businessRegistrationUri != Uri.EMPTY && bankbookUri != Uri.EMPTY){
+                    identificationUploadUri = IdentificationUploadUri(identificationUri, businessRegistrationUri, bankbookUri)
+                }
+                val newFragment = AgreementFragment() // 전환할 다른 프래그먼트 객체 생성
+                val bundle = Bundle()
+                bundle.putString("name",name)
+                bundle.putString("phone",phoneNumber)
+                bundle.putString("password",password)
+                bundle.putParcelable("identificationUploadUri", identificationUploadUri as Parcelable)
+                newFragment.arguments = bundle
 
-            // 프래그먼트 전환
-            parentFragmentManager.beginTransaction()
-                .add(R.id.fragmentContainerView3, newFragment)
-                .addToBackStack(null)
-                .commit()
+                // 프래그먼트 전환
+                parentFragmentManager.beginTransaction()
+                    .add(R.id.fragmentContainerView3, newFragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
         }
         return binding.root
     }
@@ -72,40 +122,95 @@ class ShopInfoFragment : Fragment() {
         )
     }
 
-    // 갤러리 열기
-//    private fun openGallery() {
-//        Log.d("gallery", "갤러리")
-//        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-//        startActivityForResult(intent, PICK_IMAGE_REQUEST)
-//    }
+    private fun openGallery(requestCode: Int) {
+        Log.d("gallery", "갤러리")
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, requestCode)
+    }
 
-//    private fun upload() {
-//        S3Util.instance
-//            .setKeys(access_key, secret_key)
-//            .setRegion(Regions.AP_NORTHEAST_2)
-//            .uploadWithTransferUtility(
-//                this.context,
-//                bucketName = "shallwebucket",
-//                folder = "uploads",
-//                file = file,
-//                fileName = "$filename.$ext",
-//                object : TransferListener {
-//                    override fun onStateChanged(id: Int, state: TransferState?) {
-//                    }
-//                    override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {
-//                    }
-//                    override fun onError(id: Int, ex: java.lang.Exception?) {
-//                    }
-//                }
-//            );
-//        Log.d("S3Util", "hi")
-//        val uploadPhotoArray = UploadPhotoArray("uploads/$filename.$ext", giftData[giftIdx].idx)
-//        Log.d("upload photo array", "$uploadPhotoArray")
-//        postMemoryPhoto(uploadPhotoArray)
-//        //Toast.makeText(view?.context , "사진이 추가되었습니다.", Toast.LENGTH_SHORT).show()
-//        Log.d("postMemoryPhoto", "idx: ${giftData[giftIdx].idx},  ${giftData[giftIdx].date} 날짜에 업로드 완료 key: uploads/$filename.$ext")
-//        //val modDate: String = giftData[giftIdx].date.replace(".", "-")
-//        //getMemoryPhoto(modDate, giftData[giftIdx].time)
-//    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            // 선택한 이미지의 Uri 가져오기
+            selectedImageUri = data?.data!!
+            path = selectedImageUri
+            identificationUri =
+                    selectedImageUri?.let {
+                        getImageAbsolutePath(
+                                it,
+                                requireContext()
+                        )?.toUri()
+                    }!! // 선택한 이미지의 경로를 구하는 함수 호출
+            firFlag = true
+            binding.idCardBtn.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this.requireContext(), R.color.rose600))
+            changeBtnColor()
+        }
+
+        else if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+            // 선택한 이미지의 Uri 가져오기
+            selectedImageUri = data?.data!!
+            path = selectedImageUri
+            businessRegistrationUri =
+                selectedImageUri?.let {
+                    getImageAbsolutePath(
+                        it,
+                        requireContext()
+                    )?.toUri()
+                }!! // 선택한 이미지의 경로를 구하는 함수 호출
+            secFlag = true
+            binding.ownerBtn.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this.requireContext(), R.color.rose600))
+            changeBtnColor()
+        }
+
+        else if(requestCode == 2 && resultCode == Activity.RESULT_OK){
+            // 선택한 이미지의 Uri 가져오기
+            selectedImageUri = data?.data!!
+            path = selectedImageUri
+            bankbookUri =
+                selectedImageUri?.let {
+                    getImageAbsolutePath(
+                        it,
+                        requireContext()
+                    )?.toUri()
+                }!! // 선택한 이미지의 경로를 구하는 함수 호출
+            thiFlag = true
+            binding.bankbookBtn.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this.requireContext(), R.color.rose600))
+            changeBtnColor()
+        }
+    }
+
+    private fun getImageAbsolutePath(uri: Uri, context: Context): String? {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        var cursor: Cursor? = null
+        var path: String? = null
+        try {
+            cursor = context.contentResolver.query(uri, projection, null, null, null)
+            cursor?.let {
+                if (it.moveToFirst()) {
+                    val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                    path = it.getString(columnIndex)
+                    Log.d("getImageAbsolutePath", "절대경로 추출 uri = $path")
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("getImageAbsolutePath", "절대경로 추출 오류: ${e.message}")
+        } finally {
+            cursor?.close()
+        }
+        return path
+    }
+
+    private fun changeBtnColor(){
+        // 다음 버튼 색 & 활성화
+        if(firFlag && secFlag && thiFlag){
+            Log.d("shopinfo", "다음 버튼 색 & 활성화")
+            binding.btnNextShopInfo.setBackgroundResource(R.drawable.btn_next)
+            binding.btnNextShopInfo.isClickable = true
+        }
+        else{
+            binding.btnNextShopInfo.setBackgroundResource(R.drawable.btn_next_black)
+            binding.btnNextShopInfo.isClickable = false
+        }
+    }
 
 }
