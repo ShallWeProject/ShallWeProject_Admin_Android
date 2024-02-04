@@ -160,6 +160,8 @@ class ShopInfoFragment : Fragment() {
             secFlag = true
             binding.ownerBtn.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this.requireContext(), R.color.rose600))
             changeBtnColor()
+            Log.d("shopinfo", "businessRegistrationUri = $businessRegistrationUri")
+            Log.d("shopinfo", "path = $path")
         }
 
         else if(requestCode == 2 && resultCode == Activity.RESULT_OK){
