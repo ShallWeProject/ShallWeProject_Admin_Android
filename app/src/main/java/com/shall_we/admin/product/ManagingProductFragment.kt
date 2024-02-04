@@ -123,30 +123,46 @@ class ManagingProductFragment : Fragment() {
             val caution = binding.caution.text.toString()
 
             val explanationList = listOf(
-                    ExplanationRes(stage = curriculum1, description = curriculum1desc, explanationUrl = curriculum1Img),
-                    ExplanationRes(stage = curriculum2, description = curriculum2desc, explanationUrl = curriculum2Img),
-                    ExplanationRes(stage = curriculum3, description = curriculum3desc, explanationUrl = curriculum3Img),
-                    ExplanationRes(stage = "", description = curriculum4desc, explanationUrl = curriculum4Img)
+                ExplanationRes(stage = curriculum1, description = curriculum1desc, explanationUrl = curriculum1Img),
+                ExplanationRes(stage = curriculum2, description = curriculum2desc, explanationUrl = curriculum2Img),
+                ExplanationRes(stage = curriculum3, description = curriculum3desc, explanationUrl = curriculum3Img),
+                ExplanationRes(stage = "", description = curriculum4desc, explanationUrl = curriculum4Img)
             )
 
             val productListData = AdminExperienceReq(
-                    subtitle = subtitle,
-                    expCategory = expCategory,
-                    //sttCategory = expCategory,
-                    title = title,
-                    giftImgKey = listOf("i"),
-                    description = description,
-                    explanation = explanationList,
-                    location = location,
-                    price = price,
-                    note = caution
+                subtitle = subtitle,
+                expCategory = expCategory,
+                //sttCategory = expCategory,
+                title = title,
+                giftImgKey = listOf("i"),
+                description = description,
+                explanation = explanationList,
+                location = location,
+                price = price,
+                note = caution
             )
 
             Log.d("ProductListData", "$productListData")
 
             // 저장하기 api
-            popupMsg("상품이 등록되었습니다. //이거수정필요")
             RetrofitPostCall(productListData)
+
+            //popupMsg("상품이 등록되었습니다.")
+            val alertDialog = CustomAlertDialog(requireContext(),R.layout.custom_popup_layout)
+            val dialog = alertDialog.create()
+            alertDialog.setDialogContent("상품이 등록되었습니다.")
+
+            val layoutParams = WindowManager.LayoutParams()
+            layoutParams.copyFrom(dialog.window?.attributes)
+            layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+            layoutParams.gravity = Gravity.BOTTOM
+            dialog.window?.attributes = layoutParams
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            alertDialog.setNegativeButton("확인") { v ->
+                dialog.dismiss()
+            }
+            dialog.show()
 
             Log.d("ProductListData", "$productListData")
 
@@ -158,8 +174,6 @@ class ManagingProductFragment : Fragment() {
                 .replace(R.id.fragmentContainerView, productFragment)
                 .addToBackStack(null)
                 .commit()
-            //navigateToOriginalFragment()
-            //Toast.makeText(requireContext(), "눌렀음..", Toast.LENGTH_SHORT).show()
         }
         return binding.root
     }
@@ -168,6 +182,23 @@ class ManagingProductFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
+    private fun popupMsg(msg: String) {
+        val alertDialog = CustomAlertDialog(requireContext(),R.layout.custom_popup_layout)
+        val dialog = alertDialog.create()
+        alertDialog.setDialogContent(msg)
+
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(dialog.window?.attributes)
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+        layoutParams.gravity = Gravity.BOTTOM
+        dialog.window?.attributes = layoutParams
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.setNegativeButton("확인") { v ->
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
 
     private fun requestPermission() {
         val locationResultLauncher = registerForActivityResult(
@@ -273,25 +304,6 @@ class ManagingProductFragment : Fragment() {
 //
 //    }
 
-    fun popupMsg(msg : String){
-        val newAlertDialog = CustomAlertDialog(requireContext(), R.layout.custom_popup_layout)
-        newAlertDialog.setDialogContent(msg)
-        val newDialog = newAlertDialog.create()
-
-        val layoutParams = WindowManager.LayoutParams()
-//        layoutParams.copyFrom(newAlertDialog.window?.attributes)
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
-        layoutParams.gravity = Gravity.BOTTOM // 중앙으로 정렬
-        newDialog.window?.attributes = layoutParams
-        newDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 이 부분을 수정
-
-        newAlertDialog.setNegativeButton("확인") { v ->
-            newDialog.dismiss()
-        }
-        newDialog.show()
-    }
-
     private fun navigateToOriginalFragment() {
         parentFragmentManager.popBackStack("fragment", 0) // 백 스택에서 이전 Fragment로 이동
     }
@@ -310,4 +322,3 @@ class ManagingProductFragment : Fragment() {
         })
     }
 }
-

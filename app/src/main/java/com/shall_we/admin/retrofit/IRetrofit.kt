@@ -13,10 +13,12 @@ import com.shall_we.admin.login.data.SignInReq
 import com.shall_we.admin.login.data.SignUpReq
 import com.shall_we.admin.login.data.ValidCodeReq
 import com.shall_we.admin.product.data.AdminExperienceReq
+import com.shall_we.admin.product.data.AdminExperienceRes
 import com.shall_we.admin.product.data.AdminMainRes
 import com.shall_we.admin.reservation.data.ReservationData
 import com.shall_we.admin.reservation.data.ReservationResponse
 import com.shall_we.admin.retrofit.API.ADMIN_GET_RESERVATION
+import com.shall_we.admin.schedule.data.ReservationInfo
 import com.shall_we.admin.schedule.data.ScheduleData
 import retrofit2.Call
 import retrofit2.http.Body
@@ -67,14 +69,17 @@ interface IRetrofit {
     @POST(API.ADMIN_EXPERIENCE_GIFT_REGISTER)
     fun postAdminExperienceGiftRegister(@Body adminExperienceReq: AdminExperienceReq): Call<JsonElement>
 
+    // 상품관리 - 사장 경험 선물 상세 조회
+    @GET(API.ADMIN_EXPERIENCE_GIFT_CHANGE)
+    fun getAdminExperienceGift(@Path("experienceGiftId") experienceGiftId: Int): Call<AdminExperienceRes>
 
     // 상품관리 - 사장 경험 선물 수정
     @PUT(API.ADMIN_EXPERIENCE_GIFT_CHANGE)
     fun putAdminExperienceGift(@Path("experienceGiftId") experienceGiftId: Int, @Body adminExperienceReqArray : AdminExperienceReq): Call<JsonElement>
 
 
-    // 상품관리 - 사장 경험 선물 등록
-    @DELETE(API.ADMIN_EXPERIENCE_GIFT_CHANGE)
+    // 상품관리 - 사장 경험 선물 삭제
+    @PATCH(API.ADMIN_EXPERIENCE_GIFT_CHANGE)
     fun delAdminExperienceGift(@Path("experienceGiftId") experienceGiftId: Int): Call<JsonElement>
 
     // 비밀번호 변경
@@ -110,6 +115,9 @@ interface IRetrofit {
 
     @POST(API.ADMIN_IDENTIFICATION)
     fun postIdenficicationUpload(@Body identification: IdentificationUploadReq): Call<JsonElement>
+  
+    @POST(API.ADMIN_ADD_RESERVATION)
+    fun AddReservation(@Body reservationInfo: ReservationInfo): Call<JsonElement>
 
 }
 

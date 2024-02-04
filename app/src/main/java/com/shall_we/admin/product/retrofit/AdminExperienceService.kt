@@ -4,6 +4,8 @@ import android.util.Log
 import com.google.gson.JsonElement
 import com.shall_we.admin.product.ProductData
 import com.shall_we.admin.product.data.AdminExperienceReq
+import com.shall_we.admin.product.data.AdminExperienceRes
+import com.shall_we.admin.product.data.Product
 import com.shall_we.admin.retrofit.API
 import com.shall_we.admin.retrofit.IRetrofit
 import com.shall_we.admin.retrofit.RESPONSE_STATE
@@ -94,6 +96,33 @@ class AdminExperienceService {
         })
     }
 
+    fun getAdminExperienceGift(
+        experienceGiftId: Int,
+        completion: (RESPONSE_STATE, Product?) -> Unit
+    ) {
+        val call = iRetrofit?.getAdminExperienceGift(experienceGiftId) ?: return
+        call.enqueue(object : Callback<AdminExperienceRes> {
+            // 응답 성공인 경우
+            override fun onResponse(call: Call<AdminExperienceRes>, response: Response<AdminExperienceRes>) {
+                Log.d(
+                    "retrofit",
+                    "RetrofitManager - onResponse() called / response : ${response.code()}"
+                )
+                when (response.code()) {
+                    200 ->
+                        completion(RESPONSE_STATE.OKAY, response.body()!!.data)
+                }
+            }
+
+            // 응답 실패인 경우
+            override fun onFailure(call: Call<AdminExperienceRes>, t: Throwable) {
+                Log.d("retrofit", "RetrofitManager - onFailure() called / t: $t")
+                completion(RESPONSE_STATE.FAIL, null)
+            }
+
+        })
+    }
+
     fun putAdminExperienceGift(
         experienceGiftId: Int, adminExperienceReq: AdminExperienceReq,
         completion: (RESPONSE_STATE) -> Unit
@@ -125,7 +154,7 @@ class AdminExperienceService {
         })
     }
 
-    fun delAdminExperienceGiftRegister(
+    fun delAdminExperienceGift(
         experienceGiftId: Int,
         completion: (RESPONSE_STATE) -> Unit
     ) {

@@ -30,6 +30,7 @@ import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentManagingProductBinding
 import com.shall_we.admin.product.data.AdminExperienceReq
 import com.shall_we.admin.product.data.ExplanationRes
+import com.shall_we.admin.product.data.Product
 import com.shall_we.admin.product.retrofit.AdminExperienceService
 import com.shall_we.admin.retrofit.RESPONSE_STATE
 import com.shall_we.admin.schedule.CustomAlertDialog
@@ -91,8 +92,8 @@ class EditingProductFragment : Fragment() {
             }
         })
 
-        binding.giftImgKey.setOnClickListener {
-
+        binding.btnDel1.setOnClickListener {
+            //binding.curr1Img.setText("")
         }
 
 
@@ -117,10 +118,10 @@ class EditingProductFragment : Fragment() {
             val curriculum4desc = binding.tvCurr4.text.toString()
             val curriculum4Img = binding.curr4Img.text.toString()
             val location = binding.address.text.toString()
-            val caution = binding.caution.text.toString()
+            val note = binding.caution.text.toString()
 
             val explanationList = listOf(
-                ExplanationRes(stage = curriculum1, description = curriculum1desc, explanationUrl = curriculum1Img),
+                ExplanationRes(stage = curriculum1, description = curriculum1desc, explanationUrl = "curriculum1Img"),
                 ExplanationRes(stage = curriculum2, description = curriculum2desc, explanationUrl = curriculum2Img),
                 ExplanationRes(stage = curriculum3, description = curriculum3desc, explanationUrl = curriculum3Img),
                 ExplanationRes(stage = "", description = curriculum4desc, explanationUrl = curriculum4Img)
@@ -136,14 +137,30 @@ class EditingProductFragment : Fragment() {
                 explanation = explanationList,
                 location = location,
                 price = price,
-                note = caution
+                note = note
             )
 
             Log.d("ProductListData", "$productListData")
 
             // 수정하기 api
-            popupMsg("변경사항이 저장되었습니다.")
             RetrofitPutCall(idx, productListData)
+            //popupMsg("변경사항이 저장되었습니다.")
+
+            val alertDialog = CustomAlertDialog(requireContext(),R.layout.custom_popup_layout)
+            val dialog = alertDialog.create()
+            alertDialog.setDialogContent("변경사항이 저장되었습니다.")
+
+            val layoutParams = WindowManager.LayoutParams()
+            layoutParams.copyFrom(dialog.window?.attributes)
+            layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+            layoutParams.gravity = Gravity.BOTTOM
+            dialog.window?.attributes = layoutParams
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            alertDialog.setNegativeButton("확인") { v ->
+                dialog.dismiss()
+            }
+            dialog.show()
 
             Log.d("ProductListData", "$productListData")
 
@@ -155,22 +172,52 @@ class EditingProductFragment : Fragment() {
                 .replace(R.id.fragmentContainerView, productFragment)
                 .addToBackStack(null)
                 .commit()
-            //navigateToOriginalFragment()
-            //Toast.makeText(requireContext(), "눌렀음..", Toast.LENGTH_SHORT).show()
         }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
+        idx = requireArguments().getInt("idx")
+        RetrofitGetCall(idx)
     }
 
-    private fun initView() {
-        idx = requireArguments().getInt("idx")
-        if (idx != null) {
-            //에러
+    private fun initView(data: Product) {
+        binding.subtitle.setText(data.subtitle)
+        binding.expCategory.setText(data.expCategory)
+        binding.product.setText(data.title)
+        binding.price.setText(data.price.toString())
+        binding.description.setText(data.description)
+        binding.tvCurr1.setText(data.explanation[0].stage)
+        binding.curr1Description.setText(data.explanation[0].description)
+        binding.curr1Img.setText(data.explanation[0].explanationUrl)
+        binding.tvCurr2.setText(data.explanation[1].stage)
+        binding.curr2Description.setText(data.explanation[1].description)
+        binding.curr2Img.setText(data.explanation[1].explanationUrl)
+        binding.tvCurr3.setText(data.explanation[2].stage)
+        binding.curr3Description.setText(data.explanation[2].description)
+        binding.curr3Img.setText(data.explanation[2].explanationUrl)
+        binding.curr4Img.setText(data.explanation[3].explanationUrl)
+        binding.address.setText(data.location)
+        binding.caution.setText(data.note)
+    }
+
+    private fun popupMsg(msg: String) {
+        val alertDialog = CustomAlertDialog(requireContext(),R.layout.custom_popup_layout)
+        val dialog = alertDialog.create()
+        alertDialog.setDialogContent(msg)
+
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(dialog.window?.attributes)
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+        layoutParams.gravity = Gravity.BOTTOM
+        dialog.window?.attributes = layoutParams
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.setNegativeButton("확인") { v ->
+            dialog.dismiss()
         }
+        dialog.show()
     }
 
     private fun requestPermission() {
@@ -250,8 +297,7 @@ class EditingProductFragment : Fragment() {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-//
+//    @RequiresApi(Build.VERSION_CODES.O)
 //    private fun upload() {
 //        S3Util.instance
 //            .setKeys(access_key, secret_key)
@@ -274,37 +320,33 @@ class EditingProductFragment : Fragment() {
 //        val imageKey = "uploads/$filename.$ext"
 //        Log.d("imageKey", "$imageKey")
 //        //Toast.makeText(view?.context , "사진이 추가되었습니다.", Toast.LENGTH_SHORT).show()
-//
 //    }
-
-    fun popupMsg(msg : String){
-        val newAlertDialog = CustomAlertDialog(requireContext(), R.layout.custom_popup_layout)
-        newAlertDialog.setDialogContent(msg)
-        val newDialog = newAlertDialog.create()
-
-        val layoutParams = WindowManager.LayoutParams()
-//        layoutParams.copyFrom(newAlertDialog.window?.attributes)
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
-        layoutParams.gravity = Gravity.BOTTOM // 중앙으로 정렬
-        newDialog.window?.attributes = layoutParams
-        newDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 이 부분을 수정
-
-        newAlertDialog.setNegativeButton("확인") { v ->
-            newDialog.dismiss()
-        }
-        newDialog.show()
-    }
 
     private fun navigateToOriginalFragment() {
         parentFragmentManager.popBackStack("fragment", 0) // 백 스택에서 이전 Fragment로 이동
     }
 
+    private fun RetrofitGetCall(idx: Int){
+        AdminExperienceService().getAdminExperienceGift(experienceGiftId = idx) { responseState, responseBody ->
+            when (responseState) {
+                RESPONSE_STATE.OKAY -> {
+                    Log.d("retrofit", "getAdminExperienceGift success")
+                    initView(responseBody!!)
+//
+                    Log.d("RetrofitGetCall body","$responseBody")
+                }
+
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "api 호출 에러")
+                }
+            }
+        }
+    }
     private fun RetrofitPutCall(idx: Int, adminExperienceReq: AdminExperienceReq){
         AdminExperienceService().putAdminExperienceGift(experienceGiftId = idx, adminExperienceReq = adminExperienceReq, completion =  { responseState ->
             when (responseState) {
                 RESPONSE_STATE.OKAY -> {
-                    Log.d("retrofit", "patchAdminExperienceGift success")
+                    Log.d("retrofit", "putAdminExperienceGift success")
                 }
 
                 RESPONSE_STATE.FAIL -> {
