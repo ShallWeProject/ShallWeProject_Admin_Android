@@ -52,6 +52,25 @@ object RetrofitClient {
 
         return retrofitClient
     }
+
+    fun getClient2(baseUrl : String): Retrofit? {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY // 요청 및 응답 바디를 포함한 모든 정보를 로그로 출력
+        }
+        val httpClient = OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
+                .build()
+
+        retrofitClient = Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient)
+                //.client(client.build())
+                .build()
+
+
+        return retrofitClient
+    }
 }
 
 class TokenAuthenticator: Authenticator {

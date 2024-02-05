@@ -19,29 +19,26 @@ import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
-import com.amazonaws.regions.Regions
 import com.shall_we.admin.App
-import com.shall_we.admin.App.Companion.context
-import com.shall_we.admin.BuildConfig
-import com.shall_we.admin.MainActivity
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentAgreementBinding
-import com.shall_we.admin.login.LoginFragment
-import com.shall_we.admin.login.data.AuthRes
 import com.shall_we.admin.login.data.IdentificationUploadReq
 import com.shall_we.admin.login.data.IdentificationUploadUri
-import com.shall_we.admin.login.data.MessageRes
 import com.shall_we.admin.login.data.SignUpReq
-import com.shall_we.admin.login.retrofit.IAuthSignIn
-import com.shall_we.admin.login.retrofit.IAuthSignUp
 import com.shall_we.admin.login.retrofit.IdentificationUploadService
 import com.shall_we.admin.login.retrofit.SignInService
 import com.shall_we.admin.login.retrofit.SignUpService
 import com.shall_we.admin.login.retrofit.ValidCodeService
+import com.shall_we.admin.retrofit.BodyData
 import com.shall_we.admin.retrofit.RESPONSE_STATE
 import com.shall_we.admin.utils.S3Util
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -55,11 +52,14 @@ class AgreementFragment : Fragment() {
 
     private lateinit var identificationUploadUri: IdentificationUploadUri
 
+    private var ext: String = "jpg"
 
-    private var selectedImageUri: Uri = Uri.EMPTY
-    private var filename: String = ""
-    private var ext: String = ""
-    private lateinit var file: File
+    private lateinit var identificationFileName: String
+    private lateinit var businessRegistrationFileName: String
+    private lateinit var bankbookFileName: String
+
+
+    private var imgUrlCounter = 0
 
     private lateinit var identificationReq : IdentificationUploadReq
 
@@ -134,7 +134,6 @@ class AgreementFragment : Fragment() {
 
         binding.btnNextAgree.setOnClickListener {
             val auth = SignUpReq(phoneNumber = phone, name = name, password = password, marketingConsent = binding.cbAgree4.isChecked)
-
             SignUpService().postAuthSignUp(auth, completion = {
                     responseState, responseCode, responseBody ->
                 when(responseState){
@@ -143,15 +142,25 @@ class AgreementFragment : Fragment() {
                         if(responseCode.hashCode() == 200){
                             // 이미지 s3에 업로드
                             if (responseBody != null) {
-                                upload(identificationUploadUri.identificationUri)
-                                var identificationFileName = "uploads/$filename.$ext"
-                                upload(identificationUploadUri.businessRegistrationUri)
-                                var businessRegistrationFileName = "uploads/$filename.$ext"
-                                upload(identificationUploadUri.bankbookUri)
-                                var bankbookFileName = "uploads/$filename.$ext"
-                                identificationReq = IdentificationUploadReq(identificationFileName, businessRegistrationFileName, bankbookFileName)
-                                setUpAccessToken(responseBody.data.accessToken)
-                                postIdenficicationUpload(identificationReq)
+                                val identificationUri = identificationUploadUri.identificationUri
+                                val businessRegistrationUri = identificationUploadUri.businessRegistrationUri
+                                val bankbookUri = identificationUploadUri.bankbookUri
+
+                                // Use coroutines to execute image upload tasks sequentially
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    imgUpload(identificationUri)
+                                    imgUpload(businessRegistrationUri)
+                                    imgUpload(bankbookUri)
+
+                                    // All image uploads completed, proceed with the next steps
+                                    setUpAccessToken(responseBody.data.accessToken)
+                                    identificationReq = IdentificationUploadReq(
+                                        identificationFileName,
+                                        businessRegistrationFileName,
+                                        bankbookFileName
+                                    )
+                                    postIdenficicationUpload(identificationReq)
+                                }
                             }
                         }
                         else if (responseCode == 400){
@@ -237,49 +246,68 @@ class AgreementFragment : Fragment() {
         initAgreement()
     }
 
-    private fun upload(selectedImageUri : Uri) {
-        if (selectedImageUri != null) {
-            this.selectedImageUri = selectedImageUri
-            parseUri(selectedImageUri)
-            file = File(selectedImageUri.toString())
+    private suspend fun imgUpload(identificationUploadUri: Uri) {
+        imgUrlCounter++
+        val fileName = identificationUploadUri.toString().removeSuffix(".jpg").substringAfterLast("/")
+        val ext = "jpg"
+        val file = File(identificationUploadUri.toString())
+
+        val data = BodyData(ext = ext, dir = "uploads", filename = fileName)
+        Log.d("data", "$data")
+
+        val response = withContext(Dispatchers.IO) {
+            IdentificationUploadService().getImgUrl(data)
         }
 
-        S3Util.instance
-            .setKeys(BuildConfig.access_key, BuildConfig.secret_key)
-            .setRegion(Regions.AP_NORTHEAST_2)
-            .uploadWithTransferUtility(
-                this.context,
-                bucketName = "shallwebucket",
-                folder = "uploads",
-                file = file,
-                fileName = "$filename.$ext",
-                object : TransferListener {
-                    override fun onStateChanged(id: Int, state: TransferState?) {
-                    }
-                    override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {
-                    }
-                    override fun onError(id: Int, ex: java.lang.Exception?) {
+        when (response.first) {
+            RESPONSE_STATE.OKAY -> {
+                val imageKey = response.second.substringAfter("\"").removeSuffix("\"")
+                val presignedUrl =
+                    response.third.substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
+                        .removeSuffix("\"")
+                getImgUrlResult(imageKey, presignedUrl)
+
+                val mediaType = "image/*".toMediaTypeOrNull()
+                val requestBody = file.asRequestBody(mediaType)
+
+                val uploadResponse = withContext(Dispatchers.IO) {
+                    IdentificationUploadService().uploadImg(
+                        data = requestBody,
+                        url = "https://shallwebucket.s3.ap-northeast-2.amazonaws.com/",
+                        endpoint = presignedUrl
+                    ) { uploadState, _ ->
+                        // Handle the upload completion if needed
+                        when (uploadState) {
+                            RESPONSE_STATE.OKAY -> {
+                                Log.d("retrofit", "uploadImg api : ${uploadState}")
+                            }
+
+                            RESPONSE_STATE.FAIL -> {
+                                Log.d("retrofit", "uploadImg api 호출 에러")
+                            }
+                        }
                     }
                 }
-            );
-        Log.d("S3Util", "hi")
+            }
+            RESPONSE_STATE.FAIL -> {
+                Log.d("retrofit", "getImgUrl 호출 에러")
+            }
+        }
     }
 
-    private fun parseUri(selectedImageUri: Uri) {
-        val fileForName = File(selectedImageUri.toString())
-        val currentTime: Long = System.currentTimeMillis() // ms로 반환
-        println(currentTime)
-        val dateFormat = SimpleDateFormat("HHmmss")
-
-        val formattedTime: String = dateFormat.format(Date(currentTime))
-
-        // Print the formatted time
-        println(formattedTime)
-        filename = fileForName.nameWithoutExtension + formattedTime
-        ext = fileForName.extension
+    private fun getImgUrlResult(imageKey: String, presignedUrl: String) {
+        if (imgUrlCounter == 1) {
+            identificationFileName = imageKey
+        }
+        else if (imgUrlCounter == 2) {
+            businessRegistrationFileName = imageKey
+        }
+        else if (imgUrlCounter == 3) {
+            bankbookFileName = imageKey
+        }
     }
 
-    private fun postIdenficicationUpload(uploadImage: IdentificationUploadReq) {
+    private fun postIdenficicationUpload (uploadImage: IdentificationUploadReq) {
         Log.d("postmemoryphoto",uploadImage.toString())
         IdentificationUploadService().postIdenficicationUpload(
             uploadImage = uploadImage,

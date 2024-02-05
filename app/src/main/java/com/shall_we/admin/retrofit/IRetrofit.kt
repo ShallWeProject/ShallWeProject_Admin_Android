@@ -20,16 +20,19 @@ import com.shall_we.admin.reservation.data.ReservationResponse
 import com.shall_we.admin.retrofit.API.ADMIN_GET_RESERVATION
 import com.shall_we.admin.schedule.data.ReservationInfo
 import com.shall_we.admin.schedule.data.ScheduleData
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Headers
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface IRetrofit {
 
@@ -119,5 +122,12 @@ interface IRetrofit {
     @POST(API.ADMIN_ADD_RESERVATION)
     fun AddReservation(@Body reservationInfo: ReservationInfo): Call<JsonElement>
 
+    @POST("/default/presignedURL-lambda")
+    fun getImgUrl(@Body data: BodyData): Call<JsonElement>
+
+    @PUT
+    fun uploadImg(@Url url: String,@Body filebody: RequestBody): Call<JsonElement>
+
 }
 
+data class BodyData(val ext: String, val dir: String, val filename: String)
