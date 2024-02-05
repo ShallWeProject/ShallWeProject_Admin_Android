@@ -3,14 +3,12 @@ package com.shall_we.admin.login.signup
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +16,7 @@ import android.widget.Button
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.shall_we.admin.App
 import com.shall_we.admin.R
@@ -26,22 +25,16 @@ import com.shall_we.admin.login.data.IdentificationUploadReq
 import com.shall_we.admin.login.data.IdentificationUploadUri
 import com.shall_we.admin.login.data.SignUpReq
 import com.shall_we.admin.login.retrofit.IdentificationUploadService
-import com.shall_we.admin.login.retrofit.SignInService
 import com.shall_we.admin.login.retrofit.SignUpService
-import com.shall_we.admin.login.retrofit.ValidCodeService
 import com.shall_we.admin.retrofit.BodyData
 import com.shall_we.admin.retrofit.RESPONSE_STATE
-import com.shall_we.admin.utils.S3Util
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
 
 class AgreementFragment : Fragment() {
     private lateinit var binding : FragmentAgreementBinding

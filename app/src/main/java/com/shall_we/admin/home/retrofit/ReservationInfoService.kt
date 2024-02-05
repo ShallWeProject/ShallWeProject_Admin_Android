@@ -1,10 +1,7 @@
 package com.shall_we.admin.home.retrofit
 
 import android.util.Log
-import com.shall_we.admin.home.data.ReservationInfoData
 import com.shall_we.admin.home.data.ReservationInfoRes
-import com.shall_we.admin.login.data.MessageRes
-import com.shall_we.admin.login.data.RefreshTokenReq
 import com.shall_we.admin.retrofit.API
 import com.shall_we.admin.retrofit.IRetrofit
 import com.shall_we.admin.retrofit.RESPONSE_STATE

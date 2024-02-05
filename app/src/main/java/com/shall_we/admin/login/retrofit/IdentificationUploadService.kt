@@ -1,12 +1,8 @@
 package com.shall_we.admin.login.retrofit
 
 import android.util.Log
-import com.google.gson.Gson
 import com.google.gson.JsonElement
-import com.shall_we.admin.login.data.AuthRes
-import com.shall_we.admin.login.data.ErrorRes
 import com.shall_we.admin.login.data.IdentificationUploadReq
-import com.shall_we.admin.login.data.SignInReq
 import com.shall_we.admin.retrofit.API
 import com.shall_we.admin.retrofit.BodyData
 import com.shall_we.admin.retrofit.IRetrofit
@@ -16,7 +12,6 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.http.Url
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 

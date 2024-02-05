@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.provider.MediaStore
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,16 +17,10 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentShopInfoBinding
-import com.shall_we.admin.login.data.IdentificationUploadReq
 import com.shall_we.admin.login.data.IdentificationUploadUri
-import com.shall_we.admin.login.retrofit.IdentificationUploadService
-import com.shall_we.admin.retrofit.RESPONSE_STATE
-import com.shall_we.admin.utils.S3Util
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
 
 class ShopInfoFragment : Fragment() {
 

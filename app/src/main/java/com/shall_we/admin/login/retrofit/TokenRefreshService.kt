@@ -17,8 +17,6 @@ class TokenRefreshService(val authSignInterface: TokenAuthenticator) {
     private val iRetrofit: IRetrofit? =
         RetrofitClient.getClient(API.BASE_URL)?.create(IRetrofit::class.java)
 
-
-
     fun tokenRefresh(refreshToken: RefreshTokenReq, completion: (RESPONSE_STATE, AuthTokenData?) -> Unit) {
         val call = iRetrofit?.tokenRefresh(refreshToken) ?: return
         call.enqueue(object : Callback<AuthRes> {
