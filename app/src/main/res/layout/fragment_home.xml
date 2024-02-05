@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="@color/white"
+    android:background="@color/white"
     tools:context=".home.HomeFragment">
 
     <View
@@ -117,8 +117,9 @@
 
     <TextView
         android:id="@+id/btn_logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:gravity="center"
         android:layout_marginStart="80dp"
         android:layout_marginBottom="25dp"
         android:text="로그아웃"
@@ -129,8 +130,9 @@
 
     <TextView
         android:id="@+id/btn_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:gravity="center"
         android:layout_marginEnd="80dp"
         android:layout_marginBottom="25dp"
         android:text="회원 탈퇴"
