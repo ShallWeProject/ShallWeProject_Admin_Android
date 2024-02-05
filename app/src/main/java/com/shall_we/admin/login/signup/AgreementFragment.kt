@@ -32,6 +32,10 @@ import com.shall_we.admin.login.retrofit.ValidCodeService
 import com.shall_we.admin.retrofit.BodyData
 import com.shall_we.admin.retrofit.RESPONSE_STATE
 import com.shall_we.admin.utils.S3Util
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -48,15 +52,14 @@ class AgreementFragment : Fragment() {
 
     private lateinit var identificationUploadUri: IdentificationUploadUri
 
-
-    private var selectedImageUri: Uri = Uri.EMPTY
-    private var filename: String = ""
     private var ext: String = "jpg"
-    private lateinit var file: File
 
-    lateinit var imageKey: String
-    lateinit var presignedUrl: String
+    private lateinit var identificationFileName: String
+    private lateinit var businessRegistrationFileName: String
+    private lateinit var bankbookFileName: String
 
+
+    private var imgUrlCounter = 0
 
     private lateinit var identificationReq : IdentificationUploadReq
 
@@ -139,23 +142,25 @@ class AgreementFragment : Fragment() {
                         if(responseCode.hashCode() == 200){
                             // 이미지 s3에 업로드
                             if (responseBody != null) {
-                                var identificationFileName = identificationUploadUri.identificationUri.toString().removeSuffix(".jpg")
-                                identificationFileName = identificationFileName.substringAfterLast("/")
-                                getImgUrl(ext = ext, dir = "uploads", filename = identificationFileName.substringAfter("/"), file = File(identificationUploadUri.identificationUri.toString()))
+                                val identificationUri = identificationUploadUri.identificationUri
+                                val businessRegistrationUri = identificationUploadUri.businessRegistrationUri
+                                val bankbookUri = identificationUploadUri.bankbookUri
 
-                                var businessRegistrationFileName = identificationUploadUri.businessRegistrationUri.toString().removeSuffix(".jpg")
-                                businessRegistrationFileName = businessRegistrationFileName.substringAfterLast("/")
-                                getImgUrl(ext = ext, dir = "uploads", filename = businessRegistrationFileName.substringAfter("/"), file = File(identificationUploadUri.businessRegistrationUri.toString()))
+                                // Use coroutines to execute image upload tasks sequentially
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    imgUpload(identificationUri)
+                                    imgUpload(businessRegistrationUri)
+                                    imgUpload(bankbookUri)
 
-                                var bankbookFileName = identificationUploadUri.bankbookUri.toString().removeSuffix(".jpg")
-                                bankbookFileName = bankbookFileName.substringAfterLast("/")
-                                getImgUrl(ext = ext, dir = "uploads", filename = bankbookFileName.substringAfter("/"), file = File(identificationUploadUri.bankbookUri.toString()))
-
-                                setUpAccessToken(responseBody.data.accessToken)
-
-                                identificationReq = IdentificationUploadReq(identificationFileName, businessRegistrationFileName, bankbookFileName)
-                                postIdenficicationUpload(identificationReq)
-
+                                    // All image uploads completed, proceed with the next steps
+                                    setUpAccessToken(responseBody.data.accessToken)
+                                    identificationReq = IdentificationUploadReq(
+                                        identificationFileName,
+                                        businessRegistrationFileName,
+                                        bankbookFileName
+                                    )
+                                    postIdenficicationUpload(identificationReq)
+                                }
                             }
                         }
                         else if (responseCode == 400){
@@ -241,60 +246,65 @@ class AgreementFragment : Fragment() {
         initAgreement()
     }
 
-    private fun getImgUrl(ext: String, dir: String, filename: String, file:File) {
-        val data = BodyData(ext = ext, dir = dir, filename = filename)
+    private suspend fun imgUpload(identificationUploadUri: Uri) {
+        imgUrlCounter++
+        val fileName = identificationUploadUri.toString().removeSuffix(".jpg").substringAfterLast("/")
+        val ext = "jpg"
+        val file = File(identificationUploadUri.toString())
 
-        Log.d("data","$data")
-        IdentificationUploadService().getImgUrl(data,
-                completion = { responseState, imageKey, presignedUrl ->
-                    when (responseState) {
-                        RESPONSE_STATE.OKAY -> {
-                            Log.d("retrofit", "getImgUrl api : ${responseState}")
-                            //API.UPLOAD_IMG=presignedUrl
-                            getImgUrlResult(imageKey, presignedUrl)
+        val data = BodyData(ext = ext, dir = "uploads", filename = fileName)
+        Log.d("data", "$data")
 
-                            // 파일의 MIME 유형 가져오기 (예: text/plain, image/jpeg 등)
-                            val mediaType = "image/*".toMediaTypeOrNull() // 파일의 MIME 유형에 따라 변경
+        val response = withContext(Dispatchers.IO) {
+            IdentificationUploadService().getImgUrl(data)
+        }
 
-                            // RequestBody로 파일을 래핑
-                            val requestBody = file.asRequestBody(mediaType)
+        when (response.first) {
+            RESPONSE_STATE.OKAY -> {
+                val imageKey = response.second.substringAfter("\"").removeSuffix("\"")
+                val presignedUrl =
+                    response.third.substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
+                        .removeSuffix("\"")
+                getImgUrlResult(imageKey, presignedUrl)
 
-                            // 파일을 MultipartBody.Part 형식으로 변환
-//                            val filePart = MultipartBody.Part.createFormData("file", file.name, requestBody)
+                val mediaType = "image/*".toMediaTypeOrNull()
+                val requestBody = file.asRequestBody(mediaType)
 
-                            uploadImg(image = requestBody)
+                val uploadResponse = withContext(Dispatchers.IO) {
+                    IdentificationUploadService().uploadImg(
+                        data = requestBody,
+                        url = "https://shallwebucket.s3.ap-northeast-2.amazonaws.com/",
+                        endpoint = presignedUrl
+                    ) { uploadState, _ ->
+                        // Handle the upload completion if needed
+                        when (uploadState) {
+                            RESPONSE_STATE.OKAY -> {
+                                Log.d("retrofit", "uploadImg api : ${uploadState}")
+                            }
 
-                        }
-
-                        RESPONSE_STATE.FAIL -> {
-                            Log.d("retrofit", "api 호출 에러")
+                            RESPONSE_STATE.FAIL -> {
+                                Log.d("retrofit", "uploadImg api 호출 에러")
+                            }
                         }
                     }
-                })
+                }
+            }
+            RESPONSE_STATE.FAIL -> {
+                Log.d("retrofit", "getImgUrl 호출 에러")
+            }
+        }
     }
 
     private fun getImgUrlResult(imageKey: String, presignedUrl: String) {
-        this.imageKey = imageKey
-        Log.d("First presignedUrl","$presignedUrl")
-        this.presignedUrl = presignedUrl.substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
-        this.presignedUrl = this.presignedUrl.removeSuffix("\"")
-        Log.d("presignedUrl","${this.presignedUrl}")
-    }
-
-    fun uploadImg(image:RequestBody){
-        IdentificationUploadService().uploadImg(
-            data = image, url = "https://shallwebucket.s3.ap-northeast-2.amazonaws.com/", endpoint = this.presignedUrl,
-            completion = { responseState, responseCode ->
-                when (responseState) {
-                    RESPONSE_STATE.OKAY -> {
-                        Log.d("retrofit", "uploadImg api : ${responseState}")
-                    }
-
-                    RESPONSE_STATE.FAIL -> {
-                        Log.d("retrofit", "uploadImg api 호출 에러")
-                    }
-                }
-            })
+        if (imgUrlCounter == 1) {
+            identificationFileName = imageKey
+        }
+        else if (imgUrlCounter == 2) {
+            businessRegistrationFileName = imageKey
+        }
+        else if (imgUrlCounter == 3) {
+            bankbookFileName = imageKey
+        }
     }
 
     private fun postIdenficicationUpload (uploadImage: IdentificationUploadReq) {

@@ -18,11 +18,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
-import com.amazonaws.regions.Regions
-import com.shall_we.admin.BuildConfig.access_key
-import com.shall_we.admin.BuildConfig.secret_key
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentShopInfoBinding
 import com.shall_we.admin.login.data.IdentificationUploadReq

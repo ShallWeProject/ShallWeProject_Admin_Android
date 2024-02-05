@@ -36,14 +36,6 @@ android {
         dataBinding true
         buildConfig = true
     }
-
-    defaultConfig {
-        def localProperties = new Properties()
-        localProperties.load(new FileInputStream(rootProject.file("local.properties")))
-        buildConfigField("String", "access_key", localProperties['access_key'])
-        buildConfigField("String", "secret_key", localProperties['secret_key'])
-
-    }
 }
 
 dependencies {
@@ -86,5 +78,8 @@ dependencies {
     //glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
+
 
 }
