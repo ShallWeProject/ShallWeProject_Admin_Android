@@ -51,12 +51,9 @@ class AgreementFragment : Fragment() {
     private lateinit var businessRegistrationFileName: String
     private lateinit var bankbookFileName: String
 
-
     private var imgUrlCounter = 0
 
     private lateinit var identificationReq : IdentificationUploadReq
-
-    private
 
     fun initAgreement() {
 
