@@ -1,9 +1,7 @@
 package com.shall_we.admin.login.retrofit
 
-import android.util.Log
 import com.google.gson.JsonElement
 import com.shall_we.admin.login.data.ChangePasswordReq
-import com.shall_we.admin.login.data.MessageRes
 import com.shall_we.admin.retrofit.API
 import com.shall_we.admin.retrofit.IRetrofit
 import com.shall_we.admin.retrofit.RESPONSE_STATE

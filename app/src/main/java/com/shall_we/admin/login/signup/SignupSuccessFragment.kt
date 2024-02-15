@@ -1,13 +1,10 @@
 package com.shall_we.admin.login.signup
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
-import com.shall_we.admin.MainActivity
+import androidx.fragment.app.Fragment
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentSignupSuccessBinding
 import com.shall_we.admin.login.LoginFragment

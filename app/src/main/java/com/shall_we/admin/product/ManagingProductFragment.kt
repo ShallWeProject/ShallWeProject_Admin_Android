@@ -26,9 +26,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
-import com.amazonaws.regions.Regions
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentManagingProductBinding
 import com.shall_we.admin.product.data.AdminExperienceReq
@@ -36,7 +33,6 @@ import com.shall_we.admin.product.data.ExplanationRes
 import com.shall_we.admin.product.retrofit.AdminExperienceService
 import com.shall_we.admin.retrofit.RESPONSE_STATE
 import com.shall_we.admin.schedule.CustomAlertDialog
-import com.shall_we.admin.utils.S3Util
 import java.io.File
 
 
