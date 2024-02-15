@@ -5,6 +5,10 @@ import com.google.gson.annotations.SerializedName
 data class ReservationData(
     @SerializedName("experienceGiftId")
     val experienceGiftId: Long,
-    val title: String,
-    val description: String
+
+    @SerializedName("subtitle")
+    val description: String,
+
+    @SerializedName("title")
+    val title: String
 )

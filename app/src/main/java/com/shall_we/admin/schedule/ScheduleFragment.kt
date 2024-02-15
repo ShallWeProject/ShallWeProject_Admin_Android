@@ -19,10 +19,11 @@ class ScheduleFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewAdapter by lazy {
-        ScheduleAdapter(mutableListOf(ScheduleData(123,"[성수] 인기 베이킹 클래스", "기념일 레터링 케이크" + "사지 말고 함께 만들어요"))){ schedule ->
-            navigateToOtherFragment(schedule)
+        ScheduleAdapter(mutableListOf(ScheduleData(123,"[성수] 인기 베이킹 클래스", "기념일 레터링 케이크" + "사지 말고 함께 만들어요"))){ experienceGiftId,subtitle,title ->
+            navigateToOtherFragment(experienceGiftId,subtitle,title)
         }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,10 +54,12 @@ class ScheduleFragment : Fragment() {
 
     }
 
-    private fun navigateToOtherFragment(schedule : ScheduleData){
-
+    private fun navigateToOtherFragment(experienceGiftId: Long, title: String, subtitle: String) {
         val newFragment = RevisingScheduleFragment() // 전환할 다른 프래그먼트 객체 생성
         val bundle = Bundle()
+        bundle.putLong("experienceGiftId", experienceGiftId)
+        bundle.putString("subtitle", subtitle)
+        bundle.putString("title", title)
         newFragment.arguments = bundle
 
         // 프래그먼트 전환
@@ -64,9 +67,8 @@ class ScheduleFragment : Fragment() {
             .replace(R.id.fragmentContainerView, newFragment)
             .addToBackStack(null)
             .commit()
-
-
     }
+
 
     override fun onResume() {
         super.onResume()
