@@ -1,6 +1,7 @@
 package com.shall_we.admin.reservation.retrofit
 
 import android.util.Log
+import com.shall_we.admin.reservation.data.GiftDataResponse
 import com.shall_we.admin.reservation.data.MessageRes
 import com.shall_we.admin.reservation.data.ReservationData
 import com.shall_we.admin.retrofit.API
@@ -53,18 +54,18 @@ class ReservationService {
 
     fun getReservationGift(completion: (RESPONSE_STATE, List<ReservationData>?) -> Unit) {
         val call = iRetrofit?.getReservationGift()
-        call?.enqueue(object : Callback<List<ReservationData>> {
-            override fun onResponse(call: Call<List<ReservationData>>, response: Response<List<ReservationData>>) {
+        call?.enqueue(object : Callback<GiftDataResponse> {
+            override fun onResponse(call: Call<GiftDataResponse>, response: Response<GiftDataResponse>) {
                 if (response.isSuccessful) {
                     Log.d("check",response.body().toString())
                     val giftList = response.body()
-                    completion(RESPONSE_STATE.OKAY, giftList)
+                    completion(RESPONSE_STATE.OKAY, giftList?.data)
                 } else {
                     completion(RESPONSE_STATE.FAIL, null)
                 }
             }
 
-            override fun onFailure(call: Call<List<ReservationData>>, t: Throwable) {
+            override fun onFailure(call: Call<GiftDataResponse>, t: Throwable) {
                 completion(RESPONSE_STATE.FAIL, null)
             }
         })

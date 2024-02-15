@@ -1,16 +1,14 @@
 package com.shall_we.admin.reservation
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentReservationBinding
-import com.shall_we.admin.reservation.ManagingReservationFragment
-import com.shall_we.admin.reservation.ReservationAdapter
 import com.shall_we.admin.reservation.data.ReservationData
 import com.shall_we.admin.reservation.retrofit.ReservationService
 import com.shall_we.admin.retrofit.RESPONSE_STATE
@@ -24,8 +22,8 @@ class ReservationFragment : Fragment() {
     private val viewAdapter by lazy {
         ReservationAdapter(mutableListOf(
             ReservationData(123,"[성수] 인기 베이킹 클래스", "기념일 레터링 케이크" + "사지 말고 함께 만들어요")
-        )) { reservation ->
-            navigateToOtherFragment(reservation)
+        )) { experienceGiftId,subtitle,title ->
+            navigateToOtherFragment(experienceGiftId,subtitle,title)
         }
     }
 
@@ -49,19 +47,22 @@ class ReservationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-            ReservationService().getReservationGift { responseState, data ->
+        ReservationService().getReservationGift { responseState, data ->
             if (responseState == RESPONSE_STATE.OKAY) {
-                viewAdapter.reservationList = data ?: mutableListOf()
-                viewAdapter.notifyDataSetChanged()
+                Log.d("data",data.toString())
+                viewAdapter.updateData(data ?: mutableListOf())
             } else {
                 // Handle error
             }
         }
     }
 
-    private fun navigateToOtherFragment(reservation : ReservationData){
+    private fun navigateToOtherFragment(experienceGiftId: Long, title: String, subtitle: String) {
         val newFragment = ManagingReservationFragment()
         val bundle = Bundle()
+        bundle.putLong("experienceGiftId", experienceGiftId)
+        bundle.putString("title", title)
+        bundle.putString("subtitle", subtitle)
         newFragment.arguments = bundle
 
         parentFragmentManager.beginTransaction()
@@ -69,6 +70,8 @@ class ReservationFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
+
+
 
     override fun onResume() {
         super.onResume()
