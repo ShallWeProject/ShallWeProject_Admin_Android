@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.shall_we.admin.reservation.data.ReservationData
 import com.shall_we.admin.reservation.data.ReservationListData
 import com.shall_we.admin.reservation.data.ReservationResponse
 import com.shall_we.admin.retrofit.API
@@ -17,7 +18,9 @@ class ReservationViewModel: ViewModel() {
     private val _reservations = MutableLiveData<List<ReservationListData>>()
     val reservations: LiveData<List<ReservationListData>> = _reservations
 
-    fun fetchReservations(giftId: Long, date: String) {
+    fun fetchReservations(giftId: Long, date: String): LiveData<List<ReservationListData>> {
+        val result = MutableLiveData<List<ReservationListData>>()
+
         val iRetrofit: IRetrofit? = RetrofitClient.getClient(API.BASE_URL)?.create(IRetrofit::class.java)
         iRetrofit?.getReservationsByDate(giftId, date)?.enqueue(object : Callback<ReservationResponse> {
             override fun onResponse(
@@ -27,8 +30,10 @@ class ReservationViewModel: ViewModel() {
                 if (response.isSuccessful) {
                     val newReservations = response.body()
                     newReservations?.let {
-                        _reservations.value = it.data
-                        Log.d("reservationss",_reservations.value.toString())
+                        it.data?.let { data ->
+                            result.value = data
+                            Log.d("reservationss", result.value.toString())
+                        }
                     }
                 } else {
                     Log.d("ReservationError", "Error: ${response.errorBody()?.string()}")
@@ -39,6 +44,9 @@ class ReservationViewModel: ViewModel() {
                 Log.d("NetworkError", "Error: ${t.message}")
             }
         })
+
+        return result
     }
+
 
 }

@@ -15,9 +15,11 @@ import com.shall_we.admin.login.data.ValidCodeReq
 import com.shall_we.admin.product.data.AdminExperienceReq
 import com.shall_we.admin.product.data.AdminExperienceRes
 import com.shall_we.admin.product.data.AdminMainRes
+import com.shall_we.admin.reservation.data.GiftDataResponse
 import com.shall_we.admin.reservation.data.ReservationData
 import com.shall_we.admin.reservation.data.ReservationResponse
 import com.shall_we.admin.retrofit.API.ADMIN_GET_RESERVATION
+import com.shall_we.admin.schedule.data.GiftResponse
 import com.shall_we.admin.schedule.data.ReservationInfo
 import com.shall_we.admin.schedule.data.ScheduleData
 import okhttp3.RequestBody
@@ -111,10 +113,11 @@ interface IRetrofit {
 
     //사장님 선물 불러오기
     @GET(API.ADMIN_GET_GIFT)
-    fun getGift(): Call<List<ScheduleData>>
+    fun getGift(): Call<GiftResponse>
+
 
     @GET(API.ADMIN_GET_GIFT)
-    fun getReservationGift(): Call<List<ReservationData>>
+    fun getReservationGift(): Call<GiftDataResponse>
 
     @POST(API.ADMIN_IDENTIFICATION)
     fun postIdenficicationUpload(@Body identification: IdentificationUploadReq): Call<JsonElement>
