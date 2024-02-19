@@ -103,8 +103,12 @@ class ManagingReservationFragment : Fragment() {
                                             dialog.window?.attributes = layoutParams
                                             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 이 부분을 수정
                                             alertDialog.setNegativeButton("확인") { v ->
-                                                // 부정 버튼을 클릭했을 때 실행되는 코드 작성
-                                                // 예를 들어, 팝업 다이얼로그를 닫을 수 있습니다.
+                                                // Here, fetch the new data and update the adapter.
+                                                experienceGiftId?.let {
+                                                    viewModel.fetchReservations(it, date).observe(viewLifecycleOwner, Observer { newReservations ->
+                                                        (binding.recyclerview.adapter as? ReservationListAdapter)?.reservationList = newReservations
+                                                    })
+                                                }
                                                 dialog.dismiss()
                                             }
                                             dialog.show()
