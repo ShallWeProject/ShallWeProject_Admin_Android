@@ -103,6 +103,8 @@
         android:id="@+id/btn4"
         app:layout_constraintLeft_toLeftOf="@+id/btnbtnbtn"
         app:layout_constraintTop_toBottomOf="@+id/btnbtnbtn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="20dp"
         android:layout_marginTop="10dp"
         android:textSize="15dp"
         android:text="상품목록으로"

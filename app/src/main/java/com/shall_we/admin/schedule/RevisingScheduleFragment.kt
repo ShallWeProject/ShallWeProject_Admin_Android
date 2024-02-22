@@ -67,16 +67,23 @@ class RevisingScheduleFragment : Fragment() {
 
         // 리사이클러뷰에 어댑터를 설정합니다.
         val timeList = listOf<TimeData>(
-            TimeData("1시"),
-            TimeData("2시"),
-            TimeData("3시"),
-            TimeData("4시"),
-            TimeData("5시"),
-            TimeData("6시"),
-            TimeData("6시"),
-            TimeData("7시"),
             TimeData("8시"),
             TimeData("9시"),
+            TimeData("10시"),
+            TimeData("11시"),
+            TimeData("12시"),
+            TimeData("13시"),
+            TimeData("14시"),
+            TimeData("15시"),
+            TimeData("16시"),
+            TimeData("17시"),
+            TimeData("18시"),
+            TimeData("19시"),
+            TimeData("20시"),
+            TimeData("21시"),
+            TimeData("22시"),
+            TimeData("23시"),
+            TimeData("24시")
         )  // 실제 데이터로 교체해야 합니다.
 
         var selectedTimes = mutableListOf<String>()
@@ -152,7 +159,7 @@ class RevisingScheduleFragment : Fragment() {
         }
 
         binding.btn4.setOnClickListener {
-            val newFragment =  ProductFragment()// 전환할 다른 프래그먼트 객체 생성
+            val newFragment =  ScheduleFragment()// 전환할 다른 프래그먼트 객체 생성
             val bundle = Bundle()
             newFragment.arguments = bundle
 
