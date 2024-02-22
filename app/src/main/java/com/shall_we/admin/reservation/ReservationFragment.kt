@@ -21,7 +21,7 @@ class ReservationFragment : Fragment() {
 
     private val viewAdapter by lazy {
         ReservationAdapter(mutableListOf(
-            ReservationData(123,"[성수] 인기 베이킹 클래스", "기념일 레터링 케이크" + "사지 말고 함께 만들어요")
+            //ReservationData(123,"[성수] 인기 베이킹 클래스", "기념일 레터링 케이크" + "사지 말고 함께 만들어요")
         )) { experienceGiftId,subtitle,title ->
             navigateToOtherFragment(experienceGiftId,subtitle,title)
         }
@@ -45,6 +45,7 @@ class ReservationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
 
         ReservationService().getReservationGift { responseState, data ->

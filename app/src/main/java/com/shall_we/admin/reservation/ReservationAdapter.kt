@@ -21,13 +21,13 @@ class ReservationAdapter(var reservationList : List<ReservationData>,private val
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType:Int):ReservationViewHolder{
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_schedule,parent,false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_schedules,parent,false)
         return ReservationViewHolder(view)
     }
 
     override fun onBindViewHolder(holder : ReservationViewHolder, position:Int){
-        holder.title.text = reservationList[position].title
-        holder.description.text = reservationList[position].description
+        holder.title.text = reservationList[position].description
+        holder.description.text = reservationList[position].title
 
         // Set the click listener for the whole item view
         holder.itemView.setOnClickListener {
