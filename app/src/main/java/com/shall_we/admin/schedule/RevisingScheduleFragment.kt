@@ -79,8 +79,18 @@ class RevisingScheduleFragment : Fragment() {
             TimeData("9시"),
         )  // 실제 데이터로 교체해야 합니다.
 
+        var selectedTimes = mutableListOf<String>()
         val timeAdapter = SchduleTimeAdapter(timeList) { timeData ->
+
+            val time = timeData.toLocalTimeFormat()
             // 아이템 클릭 시 수행할 행동을 정의합니다.
+            if (time in selectedTimes) {
+                // 시간이 이미 선택되어 있다면 선택을 취소합니다.
+                selectedTimes.remove(time)
+            } else {
+                // 시간이 선택되어 있지 않다면 선택합니다.
+                selectedTimes.add(time)
+            }
         }
 
         rec.apply {
@@ -98,9 +108,8 @@ class RevisingScheduleFragment : Fragment() {
                 // 선택된 날짜를 문자열로 변환합니다.
                 val selectedDate = String.format("%04d-%02d-%02d", date.year, date.month + 1, date.day)
 
-                // 선택된 시간들을 리스트로 만듭니다.
-                selectedTimes = timeList.map { it.toLocalTimeFormat() }  // TimeData의 toLocalTimeFormat 메서드를 사용하여 시간을 변환합니다.
-            } else {
+                 }
+            else {
                 rec.visibility = View.INVISIBLE
             }
         }

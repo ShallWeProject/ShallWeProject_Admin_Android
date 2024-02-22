@@ -43,6 +43,7 @@ class ScheduleService {
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
                 if (response.isSuccessful) {
                     val result = response.body()
+                    Log.d("is",result.toString())
                     completion(RESPONSE_STATE.OKAY, result)
                 } else {
                     completion(RESPONSE_STATE.FAIL, null)
