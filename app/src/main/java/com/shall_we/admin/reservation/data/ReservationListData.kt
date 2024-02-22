@@ -5,6 +5,7 @@ data class ReservationListData(
     val status: String,
     val name: String,
     val time: String,
+    val payment:String,
     val phonenumber: String,
     val person: Int
 )

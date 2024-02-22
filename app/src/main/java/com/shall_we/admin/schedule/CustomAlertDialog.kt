@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.shall_we.admin.databinding.CustomPopupLayoutBinding
+import com.shall_we.admin.reservation.data.ReservationListData
 
 
 class CustomAlertDialog(private val context: Context, private val layoutResId: Int) {
@@ -32,6 +33,13 @@ class CustomAlertDialog(private val context: Context, private val layoutResId: I
         textView.text = text
     }
 
+    fun setReservations(reservations: List<ReservationListData>) {
+        val tvDialogName = binding.root.findViewById<TextView>(R.id.tvDialogName) // 예약 데이터를 표시할 TextView의 ID
+        tvDialogName.text = reservations.firstOrNull()?.name ?: "No Name" // 각 예약 데이터를 문자열로 변환하여 줄바꿈 문자로 연결합니다
+        val  tvDialogPeople=binding.root.findViewById<TextView>(R.id.tvDialogPeople)
+        tvDialogPeople.text = reservations.firstOrNull()?.person.toString() ?: "0"
+
+    }
 
     fun setNegativeButton(text: String, listener: View.OnClickListener) {
         // 사용자가 원하는 버튼 ID에 맞게 수정

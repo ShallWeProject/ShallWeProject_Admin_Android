@@ -1,12 +1,9 @@
 package com.shall_we.admin.schedule
 
 import ScheduleService
-import TimeAdapter
-import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -21,10 +18,7 @@ import com.shall_we.admin.databinding.FragmentRevisingScheduleBinding
 import com.shall_we.admin.product.ProductFragment
 import com.shall_we.admin.schedule.data.ReservationInfo
 import com.shall_we.admin.schedule.data.TimeData
-import java.text.ParseException
-import java.text.SimpleDateFormat
 
-import java.util.Date
 import java.util.Locale
 
 
@@ -33,6 +27,9 @@ class RevisingScheduleFragment : Fragment() {
     private var _binding: FragmentRevisingScheduleBinding? = null
     private val binding get() = _binding!!
     private lateinit var calendarView: MaterialCalendarView
+    private var experienceGiftId: Long? = null
+    private var title: String? = null
+    private var subtitle: String? = null
     private val locale: Locale = Locale("ko")
     private val scheduleService = ScheduleService()  // ScheduleService의 인스턴스를 생성합니다.
     private var selectedTimes: List<String> = emptyList()
@@ -40,7 +37,9 @@ class RevisingScheduleFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-
+            experienceGiftId = it.getLong("experienceGiftId")
+            title=it.getString("title")
+            subtitle=it.getString("subtitle")
         }
     }
 
@@ -56,6 +55,14 @@ class RevisingScheduleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         calendarView = binding.calendar
+
+        subtitle?.let {
+            binding.description.setText(it)
+        }
+        title?.let{
+            binding.title.setText(it)
+        }
+
         val rec = binding.rec
 
         // 리사이클러뷰에 어댑터를 설정합니다.
@@ -64,11 +71,26 @@ class RevisingScheduleFragment : Fragment() {
             TimeData("2시"),
             TimeData("3시"),
             TimeData("4시"),
-            TimeData("5시")
+            TimeData("5시"),
+            TimeData("6시"),
+            TimeData("6시"),
+            TimeData("7시"),
+            TimeData("8시"),
+            TimeData("9시"),
         )  // 실제 데이터로 교체해야 합니다.
 
+        var selectedTimes = mutableListOf<String>()
         val timeAdapter = SchduleTimeAdapter(timeList) { timeData ->
+
+            val time = timeData.toLocalTimeFormat()
             // 아이템 클릭 시 수행할 행동을 정의합니다.
+            if (time in selectedTimes) {
+                // 시간이 이미 선택되어 있다면 선택을 취소합니다.
+                selectedTimes.remove(time)
+            } else {
+                // 시간이 선택되어 있지 않다면 선택합니다.
+                selectedTimes.add(time)
+            }
         }
 
         rec.apply {
@@ -86,9 +108,8 @@ class RevisingScheduleFragment : Fragment() {
                 // 선택된 날짜를 문자열로 변환합니다.
                 val selectedDate = String.format("%04d-%02d-%02d", date.year, date.month + 1, date.day)
 
-                // 선택된 시간들을 리스트로 만듭니다.
-                selectedTimes = timeList.map { it.toLocalTimeFormat() }  // TimeData의 toLocalTimeFormat 메서드를 사용하여 시간을 변환합니다.
-            } else {
+                 }
+            else {
                 rec.visibility = View.INVISIBLE
             }
         }
@@ -100,10 +121,11 @@ class RevisingScheduleFragment : Fragment() {
 
             // 예약 정보를 만듭니다.
             val reservationInfo = ReservationInfo(
-                experienceGiftId = 1,
+               experienceGiftId,
                 dateTimeMap = mapOf(
                     selectedDate to selectedTimes
                 )
+
             )
             scheduleService.addReservation(reservationInfo) { state, result ->
                 // 응답 처리 코드를 여기에 작성합니다.
@@ -143,10 +165,7 @@ class RevisingScheduleFragment : Fragment() {
 
         }
 
-
-
     }
-
 
         override fun onDestroyView() {
             super.onDestroyView()

@@ -6,13 +6,12 @@ import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentPhoneAuthBinding
 import com.shall_we.admin.login.data.SendOneReq

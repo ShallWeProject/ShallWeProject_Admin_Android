@@ -22,7 +22,6 @@
         <activity
             android:name=".login.LoginActivity"
             android:exported="true"
-            android:label="@string/title_activity_login"
             android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,7 +35,6 @@
             android:theme="@style/Theme.App.Starting">
 
         </activity>
-        <service android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService" android:enabled="true"/>
 
     </application>
 
