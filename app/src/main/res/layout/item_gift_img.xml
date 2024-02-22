@@ -13,19 +13,19 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/category_img"
+            android:id="@+id/iv_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="0.5dp"
-            app:layout_constraintBottom_toTopOf="@+id/category_name"
+            app:layout_constraintBottom_toTopOf="@+id/tv_del"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/btn_next_black" />
+            android:background="@color/white"/>
 
         <TextView
-            android:id="@+id/category_name"
+            android:id="@+id/tv_del"
             android:layout_width="13dp"
             android:layout_height="13dp"
             android:layout_marginTop="4dp"
