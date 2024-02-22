@@ -242,13 +242,13 @@
                 android:background="@drawable/button"
                 android:padding="5dp"/>
 
-            <TextView
+            <ImageView
                 android:id="@+id/curr1_img"
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_marginTop="10dp"
-                android:textSize="0sp"
                 android:background="@drawable/splash_icon"
+                android:scaleType="fitXY"
                 app:layout_constraintTop_toBottomOf="@id/tv_curr1"
                 app:layout_constraintStart_toStartOf="@id/tv_curr1"/>
 
@@ -296,15 +296,24 @@
                 android:background="@drawable/button"
                 android:padding="5dp"/>
 
-            <TextView
+            <ImageView
                 android:id="@+id/curr2_img"
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_marginTop="10dp"
-                android:textSize="0sp"
+                android:scaleType="fitXY"
                 android:background="@drawable/splash_icon"
                 app:layout_constraintTop_toBottomOf="@id/tv_curr2"
                 app:layout_constraintStart_toStartOf="@id/tv_curr2"/>
+
+            <TextView
+                android:id="@+id/btn_del2"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/del_img"
+                app:layout_constraintTop_toBottomOf="@id/tv_curr2"
+                app:layout_constraintEnd_toEndOf="@id/curr2_img"/>
 
             <EditText
                 android:id="@+id/curr2_description"
@@ -342,15 +351,25 @@
                 android:background="@drawable/button"
                 android:padding="5dp"/>
 
-            <TextView
+            <ImageView
                 android:id="@+id/curr3_img"
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_marginTop="10dp"
-                android:textSize="0sp"
+                android:scaleType="fitXY"
                 android:background="@drawable/splash_icon"
                 app:layout_constraintTop_toBottomOf="@id/tv_curr3"
                 app:layout_constraintStart_toStartOf="@id/tv_curr3"/>
+
+
+            <TextView
+                android:id="@+id/btn_del3"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/del_img"
+                app:layout_constraintTop_toBottomOf="@id/tv_curr3"
+                app:layout_constraintEnd_toEndOf="@id/curr3_img"/>
 
             <EditText
                 android:id="@+id/curr3_description"
@@ -391,15 +410,25 @@
                 android:background="@drawable/button"
                 android:padding="5dp"/>
 
-            <TextView
+            <ImageView
                 android:id="@+id/curr4_img"
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_marginTop="10dp"
-                android:textSize="0sp"
+                android:scaleType="fitXY"
                 android:background="@drawable/splash_icon"
                 app:layout_constraintTop_toBottomOf="@id/tv_curr4"
                 app:layout_constraintStart_toStartOf="@id/tv_curr4"/>
+
+
+            <TextView
+                android:id="@+id/btn_del4"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/del_img"
+                app:layout_constraintTop_toBottomOf="@id/tv_curr4"
+                app:layout_constraintEnd_toEndOf="@id/curr4_img"/>
 
             <TextView
                 android:id="@+id/tv_address"

@@ -26,22 +26,52 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentManagingProductBinding
+import com.shall_we.admin.login.retrofit.IdentificationUploadService
 import com.shall_we.admin.product.data.AdminExperienceReq
-import com.shall_we.admin.product.data.ExplanationRes
+import com.shall_we.admin.product.data.ExplanationReq
 import com.shall_we.admin.product.data.Product
 import com.shall_we.admin.product.retrofit.AdminExperienceService
+import com.shall_we.admin.product.retrofit.ProductImgUploadService
+import com.shall_we.admin.retrofit.BodyData
 import com.shall_we.admin.retrofit.RESPONSE_STATE
 import com.shall_we.admin.schedule.CustomAlertDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 
-class EditingProductFragment : Fragment() {
+class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
     private var _binding: FragmentManagingProductBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var adapter: GiftImgAdapter
+
+    private var expCategory: String? = null
+
     private var selectedImageUri: Uri = Uri.EMPTY
+    private var curr1Uri: Uri = Uri.EMPTY
+    private var curr2Uri: Uri = Uri.EMPTY
+    private var curr3Uri: Uri = Uri.EMPTY
+    private var curr4Uri: Uri = Uri.EMPTY
+    private var curr1ImgKey: String? = null
+    private var curr2ImgKey: String? = null
+    private var curr3ImgKey: String? = null
+    private var curr4ImgKey: String? = null
+    private var img1changed = false
+    private var img2changed = false
+    private var img3changed = false
+    private var img4changed = false
     private var filename: String = ""
     private var ext: String = ""
     private lateinit var file: File
@@ -60,20 +90,22 @@ class EditingProductFragment : Fragment() {
         _binding = FragmentManagingProductBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
         //val scrollView = binding.scrollView
+        requestPermission()
+
+//        binding.rvGiftImg.adapter = GiftImgAdapter(requireContext())
+//        binding.rvGiftImg.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
 
         val list = resources.getStringArray(R.array.select_category).toList()
-        //val list = listOf("베이킹", "공예", "문화예술", "아웃도어", "스포츠")
         _binding!!.spinner.adapter =
             CategorySpinnnerAdapter(requireContext(), R.layout.dropdown_item, list)
         _binding!!.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                val value = binding.spinner.getItemAtPosition(p2).toString()
-                binding.expCategory.text = value
-//                Toast.makeText(requireContext(), value, Toast.LENGTH_SHORT).show()
+                expCategory = binding.spinner.getItemAtPosition(p2).toString()
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                binding.expCategory.text = null
+                expCategory = null
             }
         }
 
@@ -92,61 +124,70 @@ class EditingProductFragment : Fragment() {
             }
         })
 
+        binding.giftImgKey.setOnClickListener {
+            openGallery(0)
+        }
+
+        binding.tvCurr1Img.setOnClickListener {
+            openGallery(1)
+        }
+
+        binding.tvCurr2Img.setOnClickListener {
+            openGallery(2)
+        }
+
+        binding.tvCurr3Img.setOnClickListener {
+            openGallery(3)
+        }
+
+        binding.tvCurr4Img.setOnClickListener {
+            openGallery(4)
+        }
+
         binding.btnDel1.setOnClickListener {
-            //binding.curr1Img.setText("")
+            binding.curr1Img.setImageResource(R.drawable.splash_icon)
+            curr1ImgKey = ""
+        }
+
+        binding.btnDel2.setOnClickListener {
+            binding.curr2Img.setImageResource(R.drawable.splash_icon)
+            curr2ImgKey = ""
+        }
+
+        binding.btnDel3.setOnClickListener {
+            binding.curr3Img.setImageResource(R.drawable.splash_icon)
+            curr3ImgKey = ""
+        }
+
+        binding.btnDel4.setOnClickListener {
+            binding.curr4Img.setImageResource(R.drawable.splash_icon)
+            curr4ImgKey = ""
         }
 
 
         binding.btnSave.setOnClickListener {
-            val subtitle = binding.subtitle.text.toString()
-            val expCategory = binding.expCategory.text.toString()
-            val title = binding.product.text.toString()
-            val priceText = binding.price.text.toString()
-            val price: Int? = priceText.toIntOrNull()
-            //val giftImgKey = binding.thumbnail.text.toString()
-            val description = binding.description.text.toString()
-//            val contextImg = binding.contextImg.text.toString()
-            val curriculum1 = binding.tvCurr1.text.toString()
-            val curriculum1desc = binding.curr1Description.text.toString()
-            val curriculum1Img = binding.curr1Img.text.toString()
-            val curriculum2 = binding.tvCurr2.text.toString()
-            val curriculum2desc = binding.curr2Description.text.toString()
-            val curriculum2Img = binding.curr2Img.text.toString()
-            val curriculum3 = binding.tvCurr3.text.toString()
-            val curriculum3desc = binding.curr3Description.text.toString()
-            val curriculum3Img = binding.curr3Img.text.toString()
-            val curriculum4desc = binding.tvCurr4.text.toString()
-            val curriculum4Img = binding.curr4Img.text.toString()
-            val location = binding.address.text.toString()
-            val note = binding.caution.text.toString()
 
-            val explanationList = listOf(
-                ExplanationRes(stage = curriculum1, description = curriculum1desc, explanationUrl = "curriculum1Img"),
-                ExplanationRes(stage = curriculum2, description = curriculum2desc, explanationUrl = curriculum2Img),
-                ExplanationRes(stage = curriculum3, description = curriculum3desc, explanationUrl = curriculum3Img),
-                ExplanationRes(stage = "", description = curriculum4desc, explanationUrl = curriculum4Img)
-            )
+                // 이미지 업로드 변경사항 생긴 커리큘럼만 imgUpload 해야함
+            if (img1changed) {
+                imgUpload(curr1Uri, 1)
+            }
+            if (img2changed) {
+                imgUpload(curr2Uri, 2)
+            }
+            if (img3changed) {
+                imgUpload(curr3Uri, 3)
+            }
+            if (img4changed) {
+                imgUpload(curr4Uri, 4)
+            }
 
-            val productListData = AdminExperienceReq(
-                subtitle = subtitle,
-                expCategory = expCategory,
-                //sttCategory = expCategory,
-                title = title,
-                giftImgKey = listOf("i"),
-                description = description,
-                explanation = explanationList,
-                location = location,
-                price = price,
-                note = note
-            )
 
-            Log.d("ProductListData", "$productListData")
+            Log.d("imgUpload 1", "$curr1ImgKey")
 
-            // 수정하기 api
-            RetrofitPutCall(idx, productListData)
+
             //popupMsg("변경사항이 저장되었습니다.")
 
-            val alertDialog = CustomAlertDialog(requireContext(),R.layout.custom_popup_layout)
+            val alertDialog = CustomAlertDialog(requireContext(), R.layout.custom_popup_layout)
             val dialog = alertDialog.create()
             alertDialog.setDialogContent("변경사항이 저장되었습니다.")
 
@@ -158,11 +199,75 @@ class EditingProductFragment : Fragment() {
             dialog.window?.attributes = layoutParams
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             alertDialog.setNegativeButton("확인") { v ->
+
+    //            Log.d("curriculum","$curr1ImgKey, $curr2ImgKey, $curr3ImgKey, $curr4ImgKey")
+                val subtitle = binding.subtitle.text.toString()
+                val title = binding.product.text.toString()
+                val priceText = binding.price.text.toString()
+                val price: Int? = priceText.toIntOrNull()
+                //val giftImgKey = binding.thumbnail.text.toString()
+                val description = binding.description.text.toString()
+    //            val contextImg = binding.contextImg.text.toString()
+                val curriculum1 = binding.tvCurr1.text.toString()
+                val curriculum1desc = binding.curr1Description.text.toString()
+                val curriculum1Img = curr1ImgKey
+                val curriculum2 = binding.tvCurr2.text.toString()
+                val curriculum2desc = binding.curr2Description.text.toString()
+                val curriculum2Img = curr2ImgKey
+                val curriculum3 = binding.tvCurr3.text.toString()
+                val curriculum3desc = binding.curr3Description.text.toString()
+                val curriculum3Img = curr3ImgKey
+                val curriculum4desc = binding.tvCurr4.text.toString()
+                val curriculum4Img = curr4ImgKey
+                val location = binding.address.text.toString()
+                val note = binding.caution.text.toString()
+
+                val explanationList = listOf(
+                    ExplanationReq(
+                        stage = curriculum1,
+                        description = curriculum1desc,
+                        explanationKey = curriculum1Img
+                    ),
+                    ExplanationReq(
+                        stage = curriculum2,
+                        description = curriculum2desc,
+                        explanationKey = curriculum2Img
+                    ),
+                    ExplanationReq(
+                        stage = curriculum3,
+                        description = curriculum3desc,
+                        explanationKey = curriculum3Img
+                    ),
+                    ExplanationReq(
+                        stage = "",
+                        description = curriculum4desc,
+                        explanationKey = curriculum4Img
+                    )
+                )
+
+                val productListData = AdminExperienceReq(
+                    subtitle = subtitle,
+                    expCategory = expCategory!!,
+                    title = title,
+                    giftImgKey = listOf(""),
+                    description = description,
+                    explanation = explanationList,
+                    location = location,
+                    price = price,
+                    note = note
+                )
+
+                Log.d("ProductListData", "$productListData")
+
+
+                // 수정하기 api
+                RetrofitPutCall(idx, productListData)
                 dialog.dismiss()
             }
             dialog.show()
 
-            Log.d("ProductListData", "$productListData")
+            //Log.d("ProductListData", "$productListData")
+
 
         }
 
@@ -176,6 +281,17 @@ class EditingProductFragment : Fragment() {
         return binding.root
     }
 
+    private fun initGiftImg(resultData: List<String>) {
+        adapter = GiftImgAdapter(requireContext())
+        binding.rvGiftImg.adapter = adapter
+        adapter.setOnItemClickListener(this)
+
+        Log.d("retrofit", "initAlbum, $resultData")
+
+        adapter.datas = resultData
+        adapter.notifyDataSetChanged()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         idx = requireArguments().getInt("idx")
@@ -184,22 +300,124 @@ class EditingProductFragment : Fragment() {
 
     private fun initView(data: Product) {
         binding.subtitle.setText(data.subtitle)
-        binding.expCategory.setText(data.expCategory)
+        val index = resources.getStringArray(R.array.select_category).toList()
+            .indexOf(data.expCategory)
+        if (index != -1) {
+            binding.spinner.setSelection(index)
+        }
         binding.product.setText(data.title)
         binding.price.setText(data.price.toString())
         binding.description.setText(data.description)
-        binding.tvCurr1.setText(data.explanation[0].stage)
-        binding.curr1Description.setText(data.explanation[0].description)
-        binding.curr1Img.setText(data.explanation[0].explanationUrl)
-        binding.tvCurr2.setText(data.explanation[1].stage)
-        binding.curr2Description.setText(data.explanation[1].description)
-        binding.curr2Img.setText(data.explanation[1].explanationUrl)
-        binding.tvCurr3.setText(data.explanation[2].stage)
-        binding.curr3Description.setText(data.explanation[2].description)
-        binding.curr3Img.setText(data.explanation[2].explanationUrl)
-        binding.curr4Img.setText(data.explanation[3].explanationUrl)
+
+        adapter = GiftImgAdapter(requireContext())
+        binding.rvGiftImg.adapter = adapter
+        adapter.setOnItemClickListener(this)
+
+        adapter.datas = data.giftImgKey
+        adapter.notifyDataSetChanged()
+
+
+        if (data.explanation != null) {
+            Log.d("data.explanation", "${data.explanation}")
+            binding.tvCurr1.setText(data.explanation.get(0)?.stage ?: "")
+            binding.curr1Description.setText(data.explanation?.get(0)?.description ?: "")
+            Glide.with(this).load(data.explanation?.get(0)?.explanationUrl).into(binding.curr1Img)
+            curr1ImgKey = data.explanation?.get(0)?.explanationUrl.toString()
+                .substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
+                .removeSuffix("\"")
+            binding.tvCurr2.setText(data.explanation?.get(1)?.stage ?: "")
+            binding.curr2Description.setText(data.explanation?.get(1)?.description ?: "")
+            Glide.with(this).load(data.explanation?.get(1)?.explanationUrl).into(binding.curr2Img)
+            curr2ImgKey = data.explanation?.get(1)?.explanationUrl.toString()
+                .substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
+                .removeSuffix("\"")
+            binding.tvCurr3.setText(data.explanation?.get(2)?.stage ?: "")
+            binding.curr3Description.setText(data.explanation?.get(2)?.description ?: "")
+            Glide.with(this).load(data.explanation?.get(2)?.explanationUrl).into(binding.curr3Img)
+            curr3ImgKey = data.explanation?.get(2)?.explanationUrl.toString()
+                .substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
+                .removeSuffix("\"")
+        }
+        Glide.with(this).load(data.explanation?.get(3)?.explanationUrl).into(binding.curr4Img)
+        curr4ImgKey = data.explanation?.get(3)?.explanationUrl.toString().substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/").removeSuffix("\"")
         binding.address.setText(data.location)
         binding.caution.setText(data.note)
+        Log.d("currImgKey","$curr1ImgKey,$curr2ImgKey,$curr3ImgKey,$curr4ImgKey")
+    }
+
+    private fun imgUpload(uri: Uri, step: Int) {
+        file = File(uri.toString())
+
+        Log.d("imgUpload","$uri, $file")
+        val filename = file.nameWithoutExtension
+        val ext = file.extension
+
+        val data = BodyData(ext = ext, dir = "admin", filename = filename)
+        Log.d("data", "$data")
+
+        ProductImgUploadService().getImgUrl(data) { responseState, responseBody ->
+            when (responseState) {
+                RESPONSE_STATE.OKAY -> {
+                    Log.d("getImgUrl", "$responseBody")
+                    val imageKey = responseBody?.asJsonObject?.get("imageKey").toString().replace("\"", "")
+                    val endpoint =responseBody?.asJsonObject?.get("presignedUrl").toString().substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
+                            .removeSuffix("\"")
+
+                    val mediaType = "image/*".toMediaTypeOrNull()
+                    var requestBody :RequestBody? = null
+
+                    when (step) {
+                        1 -> {
+                            requestBody = File(curr1Uri.toString()).asRequestBody(mediaType)
+                            curr1ImgKey = imageKey
+                            Log.d("currImgKey","$imageKey")
+                        }
+                        2 -> {
+                            requestBody = File(curr2Uri.toString()).asRequestBody(mediaType)
+                            curr2ImgKey = imageKey
+                            Log.d("currImgKey","$imageKey")
+                        }
+                        3 -> {
+                            requestBody = File(curr3Uri.toString()).asRequestBody(mediaType)
+                            curr3ImgKey = imageKey
+                            Log.d("currImgKey","$imageKey")
+                        }
+                        4 -> {
+                            requestBody = File(curr4Uri.toString()).asRequestBody(mediaType)
+                            curr4ImgKey = imageKey
+                            Log.d("currImgKey","$imageKey")
+                        }
+                    }
+
+
+
+                    Log.d("uploadImg requestBody", "$requestBody")
+
+                        ProductImgUploadService().uploadImg(
+                            data = requestBody!!,
+                            url = "https://shallwebucket.s3.ap-northeast-2.amazonaws.com/",
+                            endpoint = endpoint
+                        ) { uploadState, _ ->
+                            // Handle the upload completion if needed
+                            when (uploadState) {
+                                RESPONSE_STATE.OKAY -> {
+                                    Log.d("uploadImg currkey", "$curr1ImgKey")
+                                    Log.d("retrofit", "uploadImg api : ${uploadState}")
+                                }
+
+                                RESPONSE_STATE.FAIL -> {
+                                    Log.d("uploadImg currkey", "$curr1ImgKey")
+                                    Log.d("retrofit", "uploadImg api 호출 에러")
+                                }
+                            }
+                        }
+                    }
+
+                RESPONSE_STATE.FAIL -> {
+                    Log.d("retrofit", "getImgUrl 호출 에러")
+                }
+            }
+        }
     }
 
     private fun popupMsg(msg: String) {
@@ -236,36 +454,97 @@ class EditingProductFragment : Fragment() {
     private val PICK_IMAGE_REQUEST = 1 // 요청 코드
 
     // 갤러리 열기
-    private fun openGallery() {
+    private fun openGallery(requestCode: Int) {
         Log.d("gallery", "갤러리")
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+        startActivityForResult(intent, requestCode)
     }
 
     // startActivityForResult로부터 결과 처리
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
 
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+        }
+        // 1단계 사진 첨부
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             // 선택한 이미지의 Uri 가져오기
             selectedImageUri = data?.data!!
             path = selectedImageUri
-            selectedImageUri =
+
+            Glide.with(requireContext())
+                .load(path) // 이미지의 Uri를 로드합니다.
+                .into(binding.curr1Img);
+
+            curr1Uri =
                 selectedImageUri?.let {
                     getImageAbsolutePath(
                         it,
                         requireContext()
                     )?.toUri()
                 }!!// 선택한 이미지의 경로를 구하는 함수 호출
-            if (selectedImageUri != null) {
-                this.selectedImageUri = selectedImageUri
-                parseUri(selectedImageUri)
-                file = File(selectedImageUri.toString())
-                //upload()
-            }
+            img1changed = true
+        }
+
+        else if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
+            selectedImageUri = data?.data!!
+            path = selectedImageUri
+
+            Glide.with(requireContext())
+                .load(path) // 이미지의 Uri를 로드합니다.
+                .into(binding.curr2Img);
+
+            curr2Uri =
+                selectedImageUri?.let {
+                    getImageAbsolutePath(
+                        it,
+                        requireContext()
+                    )?.toUri()
+                }!!
+            img2changed = true
+        }
+
+        else if (requestCode == 3 && resultCode == Activity.RESULT_OK) {
+            selectedImageUri = data?.data!!
+            path = selectedImageUri
+
+            Glide.with(requireContext())
+                .load(path) // 이미지의 Uri를 로드합니다.
+                .into(binding.curr3Img);
+
+            curr3Uri =
+                selectedImageUri?.let {
+                    getImageAbsolutePath(
+                        it,
+                        requireContext()
+                    )?.toUri()
+                }!!
+            Log.d("curr4Uri", "$curr4Uri")
+            img3changed = true
+        }
+
+        else if (requestCode == 4 && resultCode == Activity.RESULT_OK) {
+            selectedImageUri = data?.data!!
+            path = selectedImageUri
+
+            Glide.with(requireContext())
+                .load(path) // 이미지의 Uri를 로드합니다.
+                .into(binding.curr4Img);
+
+            curr4Uri =
+                selectedImageUri?.let {
+                    getImageAbsolutePath(
+                        it,
+                        requireContext()
+                    )?.toUri()
+                }!!
+
+            Log.d("curr4Uri", "$curr4Uri")
+            img4changed = true
         }
     }
+
     // Uri에서 절대 경로 추출하기
     private fun getImageAbsolutePath(uri: Uri, context: Context): String? {
         val projection = arrayOf(MediaStore.Images.Media.DATA)
@@ -287,40 +566,23 @@ class EditingProductFragment : Fragment() {
         }
         return path
     }
+
     private fun parseUri(selectedImageUri: Uri) {
         val fileForName = File(selectedImageUri.toString())
         filename = fileForName.nameWithoutExtension
         ext = fileForName.extension
-//        Log.d("fileForName", "$fileForName")
-//        Log.d("filename, ext", "$filename $ext")
-//        Log.d("Album Result", "$selectedImageUri")
 
     }
 
-//    @RequiresApi(Build.VERSION_CODES.O)
-//    private fun upload() {
-//        S3Util.instance
-//            .setKeys(access_key, secret_key)
-//            .setRegion(Regions.AP_NORTHEAST_2)
-//            .uploadWithTransferUtility(
-//                this.context,
-//                "shallwebucket",
-//                "uploads",
-//                file,
-//                object : TransferListener {
-//                    override fun onStateChanged(id: Int, state: TransferState?) {
-//                    }
-//                    override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {
-//                    }
-//                    override fun onError(id: Int, ex: java.lang.Exception?) {
-//                    }
-//                }
-//            );
-//        Log.d("S3Util", "hi")
-//        val imageKey = "uploads/$filename.$ext"
-//        Log.d("imageKey", "$imageKey")
-//        //Toast.makeText(view?.context , "사진이 추가되었습니다.", Toast.LENGTH_SHORT).show()
-//    }
+    private fun checkAllFilled(): Boolean {
+        if (true) {
+            return true
+        }
+        else {
+            // toast message 띄우기
+            return false
+        }
+    }
 
     private fun navigateToOriginalFragment() {
         parentFragmentManager.popBackStack("fragment", 0) // 백 스택에서 이전 Fragment로 이동
@@ -331,8 +593,9 @@ class EditingProductFragment : Fragment() {
             when (responseState) {
                 RESPONSE_STATE.OKAY -> {
                     Log.d("retrofit", "getAdminExperienceGift success")
-                    initView(responseBody!!)
-//
+                    if (responseBody != null) {
+                        initView(responseBody)
+                    }
                     Log.d("RetrofitGetCall body","$responseBody")
                 }
 
@@ -342,6 +605,7 @@ class EditingProductFragment : Fragment() {
             }
         }
     }
+
     private fun RetrofitPutCall(idx: Int, adminExperienceReq: AdminExperienceReq){
         AdminExperienceService().putAdminExperienceGift(experienceGiftId = idx, adminExperienceReq = adminExperienceReq, completion =  { responseState ->
             when (responseState) {
@@ -354,6 +618,10 @@ class EditingProductFragment : Fragment() {
                 }
             }
         })
+    }
+
+    override fun onItemClick(position: Int) {
+
     }
 }
 

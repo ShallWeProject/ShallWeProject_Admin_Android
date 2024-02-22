@@ -27,8 +27,8 @@ class ProductAdapter(private val productList: List<ProductData>?, private val on
     override fun onBindViewHolder(holder: ProductAdapter.ProductViewHolder, position: Int) {
         val product = productList?.get(position)
         if (product != null) {
-            holder.title.text = product.title
-            holder.description.text = product.subtitle
+            holder.title.text = product.subtitle
+            holder.description.text = product.title
 
             holder.itemView.setOnClickListener {
                 onItemClick(position)
