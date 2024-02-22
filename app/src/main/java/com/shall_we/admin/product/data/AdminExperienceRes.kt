@@ -28,7 +28,7 @@ data class Product(
     @SerializedName("description")
     val description: String,
     @SerializedName("explanation")
-    val explanation: List<ExplanationRes>,
+    val explanation: List<ExplanationRes>?,
     @SerializedName("location")
     val location: String,
     @SerializedName("price")
@@ -37,4 +37,13 @@ data class Product(
     val note: String,
     @SerializedName("experienceGiftId")
     val experienceGiftId: Int
+)
+
+data class ExplanationRes (
+    @SerializedName("stage")
+    val stage: String? = null,
+    @SerializedName("description")
+    val description: String? = null,
+    @SerializedName("explanationUrl")
+    val explanationUrl: String? = null
 )
