@@ -21,13 +21,13 @@ class ScheduleAdapter(var scheduleList: List<ScheduleData>, private val onItemCl
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType:Int):ScheduleViewHolder{
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_schedule,parent,false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_schedules,parent,false)
         return ScheduleViewHolder(view)
     }
 
     override fun onBindViewHolder(holder : ScheduleViewHolder, position:Int){
-        holder.title.text = scheduleList[position].title
-        holder.description.text = scheduleList[position].subtitle
+        holder.title.text = scheduleList[position].subtitle
+        holder.description.text = scheduleList[position].title
 
 
         // Set the click listener for the whole item view

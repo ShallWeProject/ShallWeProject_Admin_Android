@@ -19,10 +19,11 @@ class ScheduleFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewAdapter by lazy {
-        ScheduleAdapter(mutableListOf(ScheduleData(123,"[성수] 인기 베이킹 클래스", "기념일 레터링 케이크" + "사지 말고 함께 만들어요"))){ experienceGiftId,subtitle,title ->
-            navigateToOtherFragment(experienceGiftId,subtitle,title)
+        ScheduleAdapter(mutableListOf()) { experienceGiftId, subtitle, title ->
+            navigateToOtherFragment(experienceGiftId, subtitle, title)
         }
     }
+
 
 
     override fun onCreateView(

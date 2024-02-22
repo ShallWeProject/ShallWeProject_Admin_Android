@@ -38,8 +38,8 @@ class RevisingScheduleFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             experienceGiftId = it.getLong("experienceGiftId")
-            title=it.getString("subtitle")
-            subtitle=it.getString("title")
+            title=it.getString("title")
+            subtitle=it.getString("subtitle")
         }
     }
 
