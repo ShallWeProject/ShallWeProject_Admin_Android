@@ -337,9 +337,11 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
             curr3ImgKey = data.explanation?.get(2)?.explanationUrl.toString()
                 .substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
                 .removeSuffix("\"")
+//            Glide.with(this).load(data.explanation?.get(3)?.explanationUrl).into(binding.curr4Img)
+//            curr4ImgKey = data.explanation?.get(3)?.explanationUrl.toString()
+//                .substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
+//                .removeSuffix("\"")
         }
-        Glide.with(this).load(data.explanation?.get(3)?.explanationUrl).into(binding.curr4Img)
-        curr4ImgKey = data.explanation?.get(3)?.explanationUrl.toString().substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/").removeSuffix("\"")
         binding.address.setText(data.location)
         binding.caution.setText(data.note)
         Log.d("currImgKey","$curr1ImgKey,$curr2ImgKey,$curr3ImgKey,$curr4ImgKey")
