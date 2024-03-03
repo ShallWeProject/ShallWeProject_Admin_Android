@@ -16,8 +16,8 @@
             <item
                 android:drawable="@drawable/ic_down"
                 android:gravity="center|end"
-                android:width="24dp"
-                android:height="18dp" />
+                android:width="22dp"
+                android:height="14dp" />
         </layer-list>
     </item>
 </selector>
