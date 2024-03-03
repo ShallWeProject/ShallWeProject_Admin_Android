@@ -8,21 +8,22 @@
     android:theme="@style/Theme.MaterialComponents.DayNight"
     tools:context=".product.ManagingProductFragment">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintTop_toTopOf="parent">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="20dp">
+            android:paddingBottom="20dp"
+            android:paddingRight="24dp">
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="18dp"
-                android:textColor="@color/black"
+                android:textColor="@color/shall_black"
                 android:layout_margin="10dp"
                 android:textStyle="bold"
                 android:text="상품 관리"
@@ -39,20 +40,20 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"
                 android:text="지역"
-                android:textSize="15sp"
-                android:textColor="@color/black"/>
+                android:textSize="14sp"
+                android:textColor="@color/shall_black"/>
 
             <EditText
                 android:id="@+id/subtitle"
-                android:layout_width="280dp"
+                android:layout_width="243dp"
                 android:layout_height="wrap_content"
-                android:minHeight="40dp"
-                app:layout_constraintStart_toStartOf="@id/giftImgKey"
+                android:minHeight="34dp"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title"
                 android:layout_marginTop="15dp"
-                android:layout_marginEnd="20dp"
                 android:background="@drawable/border"
                 android:padding="5dp"
+                android:textSize="12sp"
                 android:hint="지역을 입력해주세요."/>
 
             <TextView
@@ -64,8 +65,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"
                 android:text="카테고리"
-                android:textSize="15sp"
-                android:textColor="@color/black"/>
+                android:textSize="14sp"
+                android:textColor="@color/shall_black"/>
 
             <TextView
                 android:id="@+id/expCategory"
@@ -74,12 +75,14 @@
                 android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="@id/subtitle"
                 app:layout_constraintTop_toBottomOf="@+id/subtitle"/>
+
             <Spinner
                 android:id="@+id/spinner"
-                android:layout_width="280dp"
-                android:layout_height="50dp"
+                android:layout_width="243dp"
+                android:layout_height="34dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
+                android:padding="0dp"
                 android:theme="@style/SpinnerTheme"
                 android:background="@drawable/background_spinner_option"
                 app:layout_constraintStart_toStartOf="@id/subtitle"
@@ -95,18 +98,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"
                 android:text="상품명"
-                android:textSize="15sp"
-                android:textColor="@color/black"/>
+                android:textSize="14sp"
+                android:textColor="@color/shall_black"/>
 
             <EditText
                 android:id="@+id/product"
-                android:layout_width="280dp"
+                android:layout_width="243dp"
                 android:layout_height="wrap_content"
-                android:minHeight="40dp"
+                android:minHeight="34dp"
                 app:layout_constraintStart_toStartOf="@id/subtitle"
                 app:layout_constraintTop_toBottomOf="@+id/spinner"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
+                android:textSize="12sp"
                 android:background="@drawable/border"
                 android:padding="5dp"
                 android:hint="상품명을 입력해주세요."/>
@@ -120,32 +124,34 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"
                 android:text="가격"
-                android:textSize="15sp"
-                android:textColor="@color/black"/>
+                android:textSize="14sp"
+                android:textColor="@color/shall_black"/>
 
             <EditText
                 android:id="@+id/price"
-                android:layout_width="280dp"
-                android:layout_height="40dp"
+                android:layout_width="243dp"
+                android:layout_height="34dp"
                 app:layout_constraintStart_toStartOf="@id/subtitle"
                 app:layout_constraintTop_toBottomOf="@+id/product"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/border"
+                android:textSize="12sp"
+                android:textColor="@color/shall_black"
                 android:inputType="number"
-                android:gravity="right"
+                android:gravity="center_vertical|right"
                 android:paddingRight="30dp"/>
 
             <TextView
                 android:id="@+id/tv_price_won"
-                android:layout_width="280dp"
-                android:layout_height="40dp"
+                android:layout_width="243dp"
+                android:layout_height="34dp"
                 app:layout_constraintStart_toStartOf="@id/subtitle"
                 app:layout_constraintTop_toBottomOf="@+id/product"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:text="원"
-                android:textSize="18sp"
+                android:textSize="12sp"
                 android:gravity="center_vertical|right"
                 android:paddingRight="10dp"/>
             <TextView
@@ -157,8 +163,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"
                 android:text="대표사진"
-                android:textSize="15sp"
-                android:textColor="@color/black"/>
+                android:textSize="14sp"
+                android:textColor="@color/shall_black"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -167,24 +173,25 @@
                 android:layout_marginStart="16dp"
                 android:text="(복수선택 가능)"
                 android:textSize="10sp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/shall_black"/>
 
             <TextView
                 android:id="@+id/giftImgKey"
-                android:layout_width="80dp"
-                android:layout_height="40dp"
-                app:layout_constraintStart_toEndOf="@id/tv_giftImgKey"
+                android:layout_width="72dp"
+                android:layout_height="34dp"
+                app:layout_constraintStart_toStartOf="@id/tv_price_won"
                 app:layout_constraintTop_toBottomOf="@+id/price"
                 android:layout_marginTop="8dp"
-                android:layout_marginStart="15dp"
                 android:text="사진첨부"
+                android:textSize="9sp"
+                android:textColor="@color/shall_black"
                 android:gravity="center"
                 android:background="@drawable/button"
                 android:padding="5dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_giftImg"
-                android:layout_width="0dp"
+                android:layout_width="280dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:paddingEnd="10dp"
@@ -192,7 +199,8 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintStart_toStartOf="@+id/giftImgKey"
                 app:layout_constraintTop_toBottomOf="@+id/giftImgKey"
-                tools:listitem="@layout/item_gift_img" />
+                tools:listitem="@layout/item_gift_img"
+                android:nestedScrollingEnabled="false"/>
 
             <TextView
                 android:id="@+id/tv_description"
@@ -202,8 +210,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"
                 android:text="본문설명"
-                android:textSize="15sp"
-                android:textColor="@color/black"/>
+                android:textSize="14sp"
+                android:textColor="@color/shall_black"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -213,11 +221,11 @@
                 android:layout_marginStart="16dp"
                 android:text="(최대 500자)"
                 android:textSize="10sp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/shall_black"/>
 
             <EditText
                 android:id="@+id/description"
-                android:layout_width="280dp"
+                android:layout_width="243dp"
                 android:layout_height="wrap_content"
                 android:minHeight="120dp"
                 android:maxLength="500"
@@ -228,6 +236,7 @@
                 android:gravity="top"
                 android:background="@drawable/border"
                 android:padding="5dp"
+                android:textSize="12sp"
                 android:hint="상품설명을 입력해주세요."/>
 
             <TextView
@@ -239,30 +248,33 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"
                 android:text="커리큘럼"
-                android:textSize="15sp"
-                android:textColor="@color/black"/>
+                android:textSize="14sp"
+                android:textColor="@color/shall_black"/>
 
             <EditText
                 android:id="@+id/tv_curr1"
-                android:layout_width="190dp"
-                android:layout_height="wrap_content"
-                android:minHeight="40dp"
+                android:layout_width="162dp"
+                android:layout_height="34dp"
+                android:minHeight="34dp"
                 app:layout_constraintStart_toStartOf="@id/description"
                 app:layout_constraintTop_toBottomOf="@+id/description"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
+                android:textSize="12sp"
                 android:background="@drawable/border"
                 android:padding="5dp"/>
 
             <TextView
                 android:id="@+id/tv_curr1_img"
-                android:layout_width="80dp"
-                android:layout_height="40dp"
+                android:layout_width="72dp"
+                android:layout_height="34dp"
                 app:layout_constraintEnd_toEndOf="@id/product"
                 app:layout_constraintTop_toBottomOf="@+id/description"
                 android:layout_marginTop="8dp"
                 android:text="사진첨부"
                 android:gravity="center"
+                android:textSize="9sp"
+                android:textColor="@color/shall_black"
                 android:background="@drawable/button"
                 android:padding="5dp"/>
 
@@ -287,8 +299,9 @@
 
             <EditText
                 android:id="@+id/curr1_description"
-                android:layout_width="280dp"
-                android:layout_height="100dp"
+                android:layout_width="243dp"
+                android:layout_height="wrap_content"
+                android:minHeight="100dp"
                 app:layout_constraintStart_toStartOf="@id/subtitle"
                 app:layout_constraintTop_toBottomOf="@+id/curr1_img"
                 android:layout_marginTop="8dp"
@@ -296,28 +309,32 @@
                 android:background="@drawable/border"
                 android:padding="5dp"
                 android:gravity="top"
+                android:textSize="12sp"
                 android:hint="1단계 상세설명을 입력해주세요."/>
 
             <EditText
                 android:id="@+id/tv_curr2"
-                android:layout_width="190dp"
+                android:layout_width="161dp"
                 android:layout_height="wrap_content"
-                android:minHeight="40dp"
+                android:minHeight="34dp"
                 app:layout_constraintStart_toStartOf="@id/tv_curr1"
                 app:layout_constraintTop_toBottomOf="@+id/curr1_description"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/border"
+                android:textSize="12sp"
                 android:padding="5dp"/>
 
             <TextView
                 android:id="@+id/tv_curr2_img"
-                android:layout_width="80dp"
-                android:layout_height="40dp"
+                android:layout_width="72dp"
+                android:layout_height="34dp"
                 app:layout_constraintEnd_toEndOf="@id/product"
                 app:layout_constraintTop_toBottomOf="@+id/curr1_description"
                 android:layout_marginTop="8dp"
                 android:text="사진첨부"
+                android:textSize="9sp"
+                android:textColor="@color/shall_black"
                 android:gravity="center"
                 android:background="@drawable/button"
                 android:padding="5dp"/>
@@ -343,8 +360,9 @@
 
             <EditText
                 android:id="@+id/curr2_description"
-                android:layout_width="280dp"
-                android:layout_height="100dp"
+                android:layout_width="243dp"
+                android:layout_height="wrap_content"
+                android:minHeight="100dp"
                 app:layout_constraintStart_toStartOf="@id/subtitle"
                 app:layout_constraintTop_toBottomOf="@+id/curr2_img"
                 android:layout_marginTop="8dp"
@@ -352,28 +370,32 @@
                 android:background="@drawable/border"
                 android:padding="5dp"
                 android:gravity="top"
+                android:textSize="12sp"
                 android:hint="2단계 상세설명을 입력해주세요."/>
 
             <EditText
                 android:id="@+id/tv_curr3"
-                android:layout_width="190dp"
+                android:layout_width="161dp"
                 android:layout_height="wrap_content"
-                android:minHeight="40dp"
+                android:minHeight="34dp"
                 app:layout_constraintStart_toStartOf="@id/tv_curr1"
                 app:layout_constraintTop_toBottomOf="@+id/curr2_description"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
+                android:textSize="12sp"
                 android:background="@drawable/border"
                 android:padding="5dp"/>
 
             <TextView
                 android:id="@+id/tv_curr3_img"
-                android:layout_width="80dp"
-                android:layout_height="40dp"
+                android:layout_width="72dp"
+                android:layout_height="34dp"
                 app:layout_constraintEnd_toEndOf="@id/product"
                 app:layout_constraintTop_toBottomOf="@+id/curr2_description"
                 android:layout_marginTop="8dp"
                 android:text="사진첨부"
+                android:textSize="9sp"
+                android:textColor="@color/shall_black"
                 android:gravity="center"
                 android:background="@drawable/button"
                 android:padding="5dp"/>
@@ -400,8 +422,9 @@
 
             <EditText
                 android:id="@+id/curr3_description"
-                android:layout_width="280dp"
-                android:layout_height="100dp"
+                android:layout_width="243dp"
+                android:layout_height="wrap_content"
+                android:minHeight="100dp"
                 app:layout_constraintStart_toStartOf="@id/subtitle"
                 app:layout_constraintTop_toBottomOf="@+id/curr3_img"
                 android:layout_marginTop="8dp"
@@ -409,30 +432,34 @@
                 android:background="@drawable/border"
                 android:padding="5dp"
                 android:gravity="top"
+                android:textSize="12sp"
                 android:hint="3단계 상세설명을 입력해주세요."/>
 
             <TextView
                 android:id="@+id/tv_curr4"
-                android:layout_width="190dp"
-                android:layout_height="40dp"
+                android:layout_width="161dp"
+                android:layout_height="34dp"
                 app:layout_constraintStart_toStartOf="@id/tv_curr1"
                 app:layout_constraintTop_toBottomOf="@+id/curr3_description"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:text="4단계: 완성"
-                android:textSize="18sp"
+                android:textSize="12sp"
+                android:textColor="@color/shall_black"
                 android:gravity="center_vertical"
                 android:background="@drawable/border"
                 android:padding="5dp"/>
 
             <TextView
                 android:id="@+id/tv_curr4_img"
-                android:layout_width="80dp"
-                android:layout_height="40dp"
+                android:layout_width="72dp"
+                android:layout_height="34dp"
                 app:layout_constraintEnd_toEndOf="@id/product"
                 app:layout_constraintTop_toBottomOf="@+id/curr3_description"
                 android:layout_marginTop="8dp"
                 android:text="사진첨부"
+                android:textSize="9sp"
+                android:textColor="@color/shall_black"
                 android:gravity="center"
                 android:background="@drawable/button"
                 android:padding="5dp"/>
@@ -442,11 +469,10 @@
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_marginTop="10dp"
-                android:scaleType="fitXY"
                 android:background="@drawable/splash_icon"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/tv_curr4"
-                app:layout_constraintStart_toStartOf="@id/tv_curr4"/>
+                android:scaleType="fitXY"
+                app:layout_constraintStart_toStartOf="@id/tv_curr4"
+                app:layout_constraintTop_toBottomOf="@id/tv_curr4" />
 
 
             <TextView
@@ -455,9 +481,8 @@
                 android:layout_height="13dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/del_img"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/tv_curr4"
-                app:layout_constraintEnd_toEndOf="@id/curr4_img"/>
+                app:layout_constraintEnd_toEndOf="@id/curr4_img"
+                app:layout_constraintTop_toBottomOf="@id/tv_curr4" />
 
             <TextView
                 android:id="@+id/tv_address"
@@ -468,18 +493,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"
                 android:text="주소"
-                android:textSize="15sp"
-                android:textColor="@color/black"/>
+                android:textSize="14sp"
+                android:textColor="@color/shall_black"/>
 
             <EditText
                 android:id="@+id/address"
-                android:layout_width="280dp"
-                android:layout_height="40dp"
+                android:layout_width="243dp"
+                android:layout_height="34dp"
                 app:layout_constraintStart_toStartOf="@id/subtitle"
                 app:layout_constraintTop_toBottomOf="@+id/curr4_img"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/border"
+                android:textSize="12sp"
                 android:padding="5dp"/>
 
             <TextView
@@ -490,12 +516,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"
                 android:text="유의사항"
-                android:textSize="15sp"
-                android:textColor="@color/black"/>
+                android:textSize="14sp"
+                android:textColor="@color/shall_black"/>
 
             <EditText
                 android:id="@+id/caution"
-                android:layout_width="280dp"
+                android:layout_width="243dp"
                 android:layout_height="wrap_content"
                 android:minHeight="120dp"
                 app:layout_constraintStart_toStartOf="@id/subtitle"
@@ -504,30 +530,35 @@
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/border"
                 android:gravity="top"
+                android:textSize="12sp"
                 android:padding="5dp"/>
-            
+
+
             <ImageButton
                 android:id="@+id/btn_save"
-                android:layout_width="340dp"
-                android:layout_height="40dp"
+                android:layout_width="328dp"
+                android:layout_height="39dp"
                 android:background="@drawable/btn_save"
                 android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/caution"
-                android:layout_marginTop="30dp"/>
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="26dp"/>
 
 
             <ImageButton
                 android:id="@+id/btn_back"
-                android:layout_width="340dp"
-                android:layout_height="40dp"
+                android:layout_width="328dp"
+                android:layout_height="39dp"
                 android:background="@drawable/btn_list"
                 android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btn_save"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="26dp"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

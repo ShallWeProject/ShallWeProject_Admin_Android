@@ -34,8 +34,8 @@
 
     <ImageButton
         android:id="@+id/btn_add"
-        android:layout_width="340dp"
-        android:layout_height="40dp"
+        android:layout_width="328dp"
+        android:layout_height="39dp"
         android:background="@drawable/btn_add"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,8 +46,8 @@
 
     <ImageButton
         android:id="@+id/btn_delete"
-        android:layout_width="340dp"
-        android:layout_height="40dp"
+        android:layout_width="328dp"
+        android:layout_height="39dp"
         android:background="@drawable/btn_delete"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
