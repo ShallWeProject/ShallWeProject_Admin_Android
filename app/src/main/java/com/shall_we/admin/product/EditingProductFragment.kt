@@ -26,11 +26,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentManagingProductBinding
-import com.shall_we.admin.login.retrofit.IdentificationUploadService
 import com.shall_we.admin.product.data.AdminExperienceReq
 import com.shall_we.admin.product.data.ExplanationReq
 import com.shall_we.admin.product.data.Product
@@ -39,12 +37,6 @@ import com.shall_we.admin.product.retrofit.ProductImgUploadService
 import com.shall_we.admin.retrofit.BodyData
 import com.shall_we.admin.retrofit.RESPONSE_STATE
 import com.shall_we.admin.schedule.CustomAlertDialog
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -63,15 +55,12 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
     private var curr1Uri: Uri = Uri.EMPTY
     private var curr2Uri: Uri = Uri.EMPTY
     private var curr3Uri: Uri = Uri.EMPTY
-    private var curr4Uri: Uri = Uri.EMPTY
     private var curr1ImgKey: String? = null
     private var curr2ImgKey: String? = null
     private var curr3ImgKey: String? = null
-    private var curr4ImgKey: String? = null
     private var img1changed = false
     private var img2changed = false
     private var img3changed = false
-    private var img4changed = false
     private var filename: String = ""
     private var ext: String = ""
     private lateinit var file: File
@@ -140,10 +129,6 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
             openGallery(3)
         }
 
-        binding.tvCurr4Img.setOnClickListener {
-            openGallery(4)
-        }
-
         binding.btnDel1.setOnClickListener {
             binding.curr1Img.setImageResource(R.drawable.splash_icon)
             curr1ImgKey = ""
@@ -159,15 +144,9 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
             curr3ImgKey = ""
         }
 
-        binding.btnDel4.setOnClickListener {
-            binding.curr4Img.setImageResource(R.drawable.splash_icon)
-            curr4ImgKey = ""
-        }
-
-
         binding.btnSave.setOnClickListener {
 
-                // 이미지 업로드 변경사항 생긴 커리큘럼만 imgUpload 해야함
+            // 이미지 업로드 변경사항 생긴 커리큘럼만 imgUpload 해야함
             if (img1changed) {
                 imgUpload(curr1Uri, 1)
             }
@@ -177,10 +156,6 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
             if (img3changed) {
                 imgUpload(curr3Uri, 3)
             }
-            if (img4changed) {
-                imgUpload(curr4Uri, 4)
-            }
-
 
             Log.d("imgUpload 1", "$curr1ImgKey")
 
@@ -200,14 +175,14 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             alertDialog.setNegativeButton("확인") { v ->
 
-    //            Log.d("curriculum","$curr1ImgKey, $curr2ImgKey, $curr3ImgKey, $curr4ImgKey")
+                //            Log.d("curriculum","$curr1ImgKey, $curr2ImgKey, $curr3ImgKey, $curr4ImgKey")
                 val subtitle = binding.subtitle.text.toString()
                 val title = binding.product.text.toString()
                 val priceText = binding.price.text.toString()
                 val price: Int? = priceText.toIntOrNull()
                 //val giftImgKey = binding.thumbnail.text.toString()
                 val description = binding.description.text.toString()
-    //            val contextImg = binding.contextImg.text.toString()
+                //            val contextImg = binding.contextImg.text.toString()
                 val curriculum1 = binding.tvCurr1.text.toString()
                 val curriculum1desc = binding.curr1Description.text.toString()
                 val curriculum1Img = curr1ImgKey
@@ -217,8 +192,6 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
                 val curriculum3 = binding.tvCurr3.text.toString()
                 val curriculum3desc = binding.curr3Description.text.toString()
                 val curriculum3Img = curr3ImgKey
-                val curriculum4desc = binding.tvCurr4.text.toString()
-                val curriculum4Img = curr4ImgKey
                 val location = binding.address.text.toString()
                 val note = binding.caution.text.toString()
 
@@ -239,9 +212,6 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
                         explanationKey = curriculum3Img
                     ),
                     ExplanationReq(
-                        stage = "",
-                        description = curriculum4desc,
-                        explanationKey = curriculum4Img
                     )
                 )
 
@@ -337,14 +307,10 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
             curr3ImgKey = data.explanation?.get(2)?.explanationUrl.toString()
                 .substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
                 .removeSuffix("\"")
-//            Glide.with(this).load(data.explanation?.get(3)?.explanationUrl).into(binding.curr4Img)
-//            curr4ImgKey = data.explanation?.get(3)?.explanationUrl.toString()
-//                .substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
-//                .removeSuffix("\"")
         }
         binding.address.setText(data.location)
         binding.caution.setText(data.note)
-        Log.d("currImgKey","$curr1ImgKey,$curr2ImgKey,$curr3ImgKey,$curr4ImgKey")
+        Log.d("currImgKey","$curr1ImgKey,$curr2ImgKey,$curr3ImgKey")
     }
 
     private fun imgUpload(uri: Uri, step: Int) {
@@ -363,7 +329,7 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
                     Log.d("getImgUrl", "$responseBody")
                     val imageKey = responseBody?.asJsonObject?.get("imageKey").toString().replace("\"", "")
                     val endpoint =responseBody?.asJsonObject?.get("presignedUrl").toString().substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
-                            .removeSuffix("\"")
+                        .removeSuffix("\"")
 
                     val mediaType = "image/*".toMediaTypeOrNull()
                     var requestBody :RequestBody? = null
@@ -384,36 +350,31 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
                             curr3ImgKey = imageKey
                             Log.d("currImgKey","$imageKey")
                         }
-                        4 -> {
-                            requestBody = File(curr4Uri.toString()).asRequestBody(mediaType)
-                            curr4ImgKey = imageKey
-                            Log.d("currImgKey","$imageKey")
-                        }
                     }
 
 
 
                     Log.d("uploadImg requestBody", "$requestBody")
 
-                        ProductImgUploadService().uploadImg(
-                            data = requestBody!!,
-                            url = "https://shallwebucket.s3.ap-northeast-2.amazonaws.com/",
-                            endpoint = endpoint
-                        ) { uploadState, _ ->
-                            // Handle the upload completion if needed
-                            when (uploadState) {
-                                RESPONSE_STATE.OKAY -> {
-                                    Log.d("uploadImg currkey", "$curr1ImgKey")
-                                    Log.d("retrofit", "uploadImg api : ${uploadState}")
-                                }
+                    ProductImgUploadService().uploadImg(
+                        data = requestBody!!,
+                        url = "https://shallwebucket.s3.ap-northeast-2.amazonaws.com/",
+                        endpoint = endpoint
+                    ) { uploadState, _ ->
+                        // Handle the upload completion if needed
+                        when (uploadState) {
+                            RESPONSE_STATE.OKAY -> {
+                                Log.d("uploadImg currkey", "$curr1ImgKey")
+                                Log.d("retrofit", "uploadImg api : ${uploadState}")
+                            }
 
-                                RESPONSE_STATE.FAIL -> {
-                                    Log.d("uploadImg currkey", "$curr1ImgKey")
-                                    Log.d("retrofit", "uploadImg api 호출 에러")
-                                }
+                            RESPONSE_STATE.FAIL -> {
+                                Log.d("uploadImg currkey", "$curr1ImgKey")
+                                Log.d("retrofit", "uploadImg api 호출 에러")
                             }
                         }
                     }
+                }
 
                 RESPONSE_STATE.FAIL -> {
                     Log.d("retrofit", "getImgUrl 호출 에러")
@@ -522,28 +483,8 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
                         requireContext()
                     )?.toUri()
                 }!!
-            Log.d("curr4Uri", "$curr4Uri")
+            Log.d("curr3Uri", "$curr3Uri")
             img3changed = true
-        }
-
-        else if (requestCode == 4 && resultCode == Activity.RESULT_OK) {
-            selectedImageUri = data?.data!!
-            path = selectedImageUri
-
-            Glide.with(requireContext())
-                .load(path) // 이미지의 Uri를 로드합니다.
-                .into(binding.curr4Img);
-
-            curr4Uri =
-                selectedImageUri?.let {
-                    getImageAbsolutePath(
-                        it,
-                        requireContext()
-                    )?.toUri()
-                }!!
-
-            Log.d("curr4Uri", "$curr4Uri")
-            img4changed = true
         }
     }
 

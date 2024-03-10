@@ -63,11 +63,9 @@ class ManagingProductFragment : Fragment() {
     private var curr1Uri: Uri = Uri.EMPTY
     private var curr2Uri: Uri = Uri.EMPTY
     private var curr3Uri: Uri = Uri.EMPTY
-    private var curr4Uri: Uri = Uri.EMPTY
     private var curr1ImgKey: String? = null
     private var curr2ImgKey: String? = null
     private var curr3ImgKey: String? = null
-    private var curr4ImgKey: String? = null
     private var filename: String = ""
     private var ext: String = ""
     private lateinit var file: File
@@ -136,10 +134,6 @@ class ManagingProductFragment : Fragment() {
             openGallery(3)
         }
 
-        binding.tvCurr4Img.setOnClickListener {
-            openGallery(4)
-        }
-
         binding.btnDel1.setOnClickListener {
             binding.curr1Img.setImageResource(R.drawable.splash_icon)
             curr1ImgKey = ""
@@ -155,19 +149,12 @@ class ManagingProductFragment : Fragment() {
             curr3ImgKey = ""
         }
 
-        binding.btnDel4.setOnClickListener {
-            binding.curr4Img.setImageResource(R.drawable.splash_icon)
-            curr4ImgKey = ""
-        }
-
-
         binding.btnSave.setOnClickListener {
 
             // 이미지 업로드 변경사항 생긴 커리큘럼만 imgUpload 해야함
             imgUpload(curr1Uri, 1)
             imgUpload(curr2Uri, 2)
             imgUpload(curr3Uri, 3)
-            imgUpload(curr4Uri, 4)
 
             //popupMsg("변경사항이 저장되었습니다.")
 
@@ -198,8 +185,6 @@ class ManagingProductFragment : Fragment() {
                 val curriculum3 = binding.tvCurr3.text.toString()
                 val curriculum3desc = binding.curr3Description.text.toString()
                 val curriculum3Img = curr3ImgKey
-                val curriculum4desc = binding.tvCurr4.text.toString()
-                val curriculum4Img = curr4ImgKey
                 val location = binding.address.text.toString()
                 val note = binding.caution.text.toString()
 
@@ -218,11 +203,6 @@ class ManagingProductFragment : Fragment() {
                         stage = curriculum3,
                         description = curriculum3desc,
                         explanationKey = curriculum3Img
-                    ),
-                    ExplanationReq(
-                        stage = "",
-                        description = curriculum4desc,
-                        explanationKey = curriculum4Img
                     )
                 )
 
@@ -298,11 +278,6 @@ class ManagingProductFragment : Fragment() {
                         3 -> {
                             requestBody = File(curr3Uri.toString()).asRequestBody(mediaType)
                             curr3ImgKey = imageKey
-                            Log.d("currImgKey","$imageKey")
-                        }
-                        4 -> {
-                            requestBody = File(curr4Uri.toString()).asRequestBody(mediaType)
-                            curr4ImgKey = imageKey
                             Log.d("currImgKey","$imageKey")
                         }
                     }
@@ -436,27 +411,9 @@ class ManagingProductFragment : Fragment() {
                         requireContext()
                     )?.toUri()
                 }!!
-            Log.d("curr4Uri", "$curr4Uri")
+            Log.d("curr3Uri", "$curr3Uri")
         }
 
-        else if (requestCode == 4 && resultCode == Activity.RESULT_OK) {
-            selectedImageUri = data?.data!!
-            path = selectedImageUri
-
-            Glide.with(requireContext())
-                .load(path) // 이미지의 Uri를 로드합니다.
-                .into(binding.curr4Img);
-
-            curr4Uri =
-                selectedImageUri?.let {
-                    getImageAbsolutePath(
-                        it,
-                        requireContext()
-                    )?.toUri()
-                }!!
-
-            Log.d("curr4Uri", "$curr4Uri")
-        }
     }
 
     // Uri에서 절대 경로 추출하기
