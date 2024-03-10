@@ -437,7 +437,7 @@
 
             <TextView
                 android:id="@+id/tv_curr4"
-                android:layout_width="161dp"
+                android:layout_width="243dp"
                 android:layout_height="34dp"
                 app:layout_constraintStart_toStartOf="@id/tv_curr1"
                 app:layout_constraintTop_toBottomOf="@+id/curr3_description"
@@ -451,37 +451,12 @@
                 android:padding="5dp"/>
 
             <TextView
-                android:id="@+id/tv_curr4_img"
-                android:layout_width="72dp"
-                android:layout_height="34dp"
-                app:layout_constraintEnd_toEndOf="@id/product"
-                app:layout_constraintTop_toBottomOf="@+id/curr3_description"
-                android:layout_marginTop="8dp"
-                android:text="사진첨부"
-                android:textSize="9sp"
-                android:textColor="@color/shall_black"
-                android:gravity="center"
-                android:background="@drawable/button"
-                android:padding="5dp"/>
-
-            <ImageView
-                android:id="@+id/curr4_img"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/splash_icon"
-                android:scaleType="fitXY"
-                app:layout_constraintStart_toStartOf="@id/tv_curr4"
-                app:layout_constraintTop_toBottomOf="@id/tv_curr4" />
-
-
-            <TextView
                 android:id="@+id/btn_del4"
                 android:layout_width="13dp"
                 android:layout_height="13dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/del_img"
-                app:layout_constraintEnd_toEndOf="@id/curr4_img"
+                app:layout_constraintEnd_toEndOf="@id/tv_curr4"
                 app:layout_constraintTop_toBottomOf="@id/tv_curr4" />
 
             <TextView
@@ -501,7 +476,7 @@
                 android:layout_width="243dp"
                 android:layout_height="34dp"
                 app:layout_constraintStart_toStartOf="@id/subtitle"
-                app:layout_constraintTop_toBottomOf="@+id/curr4_img"
+                app:layout_constraintTop_toBottomOf="@+id/tv_curr4"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/border"
