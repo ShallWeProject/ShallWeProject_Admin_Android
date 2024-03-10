@@ -12,7 +12,8 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:overScrollMode="never">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -199,7 +200,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/giftImgKey">
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_giftImg"
-                    android:layout_width="243dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -293,7 +294,7 @@
                 android:layout_height="72dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/splash_icon"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 app:layout_constraintTop_toBottomOf="@id/tv_curr1"
                 app:layout_constraintStart_toStartOf="@id/tv_curr1"/>
 
@@ -353,7 +354,7 @@
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_marginTop="10dp"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 android:background="@drawable/splash_icon"
                 app:layout_constraintTop_toBottomOf="@id/tv_curr2"
                 app:layout_constraintStart_toStartOf="@id/tv_curr2"/>
@@ -414,7 +415,7 @@
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_marginTop="10dp"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 android:background="@drawable/splash_icon"
                 app:layout_constraintTop_toBottomOf="@id/tv_curr3"
                 app:layout_constraintStart_toStartOf="@id/tv_curr3"/>
