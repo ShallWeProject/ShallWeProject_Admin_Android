@@ -36,13 +36,16 @@ class ReservationListAdapter(_reservationList : List<ReservationListData>, priva
         holder.time.text = reservation.time
         holder.payment.text= reservation.payment
         holder.person.text=reservation.person.toString()
-        holder.phonenumber.text=reservation.phonenumber
+        holder.phonenumber.text=reservation.phoneNum
 
 
         if (reservation.status == "WAITING") {
             holder.statusImageView.setImageResource(R.drawable.waiting) // 대기 중인 경우의 이미지
         } else {
             holder.statusImageView.setImageResource(R.drawable.reserved) // 그 외의 경우의 이미지
+            holder.payment.text="예약 확정"
+            holder.phonenumber.text=reservation.phoneNum
+            holder.person.text=reservation.person.toString()
         }
         // Set the click listener for the whole item view
         holder.itemView.setOnClickListener {

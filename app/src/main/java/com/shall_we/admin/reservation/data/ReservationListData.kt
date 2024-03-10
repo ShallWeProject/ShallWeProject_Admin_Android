@@ -6,7 +6,7 @@ data class ReservationListData(
     val name: String,
     val time: String,
     val payment:String,
-    val phonenumber: String,
+    val phoneNum: String,
     val person: Int
 )
 
