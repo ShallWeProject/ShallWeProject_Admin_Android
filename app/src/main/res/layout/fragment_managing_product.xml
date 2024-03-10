@@ -154,6 +154,7 @@
                 android:textSize="12sp"
                 android:gravity="center_vertical|right"
                 android:paddingRight="10dp"/>
+
             <TextView
                 android:id="@+id/tv_giftImgKey"
                 android:layout_width="wrap_content"
@@ -165,6 +166,7 @@
                 android:text="대표사진"
                 android:textSize="14sp"
                 android:textColor="@color/shall_black"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -189,18 +191,25 @@
                 android:background="@drawable/button"
                 android:padding="5dp"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_giftImg"
-                android:layout_width="280dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cv_giftImg"
+                android:layout_width="243dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:paddingEnd="10dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintStart_toStartOf="@+id/giftImgKey"
-                app:layout_constraintTop_toBottomOf="@+id/giftImgKey"
-                tools:listitem="@layout/item_gift_img"
-                android:nestedScrollingEnabled="false"/>
+                app:layout_constraintTop_toBottomOf="@+id/giftImgKey">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_giftImg"
+                    android:layout_width="243dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="15dp"
+                    android:paddingEnd="10dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_gift_img"
+                    android:nestedScrollingEnabled="false"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/tv_description"
@@ -230,7 +239,7 @@
                 android:minHeight="120dp"
                 android:maxLength="500"
                 app:layout_constraintStart_toStartOf="@id/subtitle"
-                app:layout_constraintTop_toBottomOf="@+id/rv_giftImg"
+                app:layout_constraintTop_toBottomOf="@+id/cv_giftImg"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:gravity="top"
