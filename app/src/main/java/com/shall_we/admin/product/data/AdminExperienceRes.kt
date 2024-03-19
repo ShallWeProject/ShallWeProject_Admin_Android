@@ -24,7 +24,7 @@ data class Product(
     @SerializedName("title")
     val title: String, // 상품명
     @SerializedName("giftImgKey")
-    val giftImgKey: List<String>?,// 대표사진
+    val giftImgKey: MutableList<String>?,// 대표사진
     @SerializedName("description")
     val description: String,
     @SerializedName("explanation")

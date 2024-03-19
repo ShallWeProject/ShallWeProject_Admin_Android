@@ -71,6 +71,10 @@ class ManagingProductFragment : Fragment() {
     private lateinit var file: File
     private var path: Uri = Uri.EMPTY
 
+    private var giftImgUri: Uri = Uri.EMPTY
+    private var imgUriList: MutableList<Uri> = mutableListOf()
+    private var giftKeyList: MutableList<String> = mutableListOf()
+
     var idx: Int = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,6 +122,49 @@ class ManagingProductFragment : Fragment() {
             }
         })
 
+        val noteEditText: EditText? = view?.findViewById(R.id.caution)
+
+        // 텍스트 변경을 감지하는 TextWatcher 설정
+        binding.caution.addTextChangedListener(object : TextWatcher {
+            var lastLength = 0
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                lastLength = s?.length ?: 0
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val cursorPosition = binding.caution.selectionStart
+
+                // 사용자가 엔터를 입력한 경우 새로운 줄에 "• "를 추가
+                if (s.toString().endsWith("\n")) {
+                    s?.insert(cursorPosition, "• ")
+                }
+
+                // 사용자가 백스페이스를 입력한 경우
+                if (s?.length!! < lastLength) {
+                    // 현재 커서 위치의 줄을 가져옴
+                    val currentLine = s?.subSequence(s.lastIndexOf("\n", cursorPosition - 1) + 1, cursorPosition) ?: ""
+                    Log.d("currentLine", "$currentLine")
+                    // 해당 줄이 비어 있고 "• "로 시작하면 해당 줄을 삭제
+                    if (currentLine.isBlank() && s.toString().startsWith("•", cursorPosition)) {
+                        val start = s.lastIndexOf("\n", cursorPosition - 1) + 1
+                        val end = cursorPosition + 2 // "• "까지 포함
+                        s.delete(start, end)
+                    }
+                }
+
+                // 맨 윗줄의 "• "는 무조건 남도록 함
+                if (s.isNullOrBlank() || !s.startsWith("• ")) {
+                    if (!s.isNullOrBlank() && !s.toString().startsWith("• ")) {
+                        s.insert(0, "• ") // "• "를 삽입
+                    }
+                }
+            }
+        })
+
+
         binding.giftImgKey.setOnClickListener {
             openGallery(0)
         }
@@ -155,6 +202,7 @@ class ManagingProductFragment : Fragment() {
             imgUpload(curr1Uri, 1)
             imgUpload(curr2Uri, 2)
             imgUpload(curr3Uri, 3)
+            imgListUpload(imgUriList)
 
             //popupMsg("변경사항이 저장되었습니다.")
 
@@ -174,7 +222,7 @@ class ManagingProductFragment : Fragment() {
                 val title = binding.product.text.toString()
                 val priceText = binding.price.text.toString()
                 val price: Int? = priceText.toIntOrNull()
-                //val giftImgKey = binding.thumbnail.text.toString()
+                val giftImgKey = giftKeyList
                 val description = binding.description.text.toString()
                 val curriculum1 = binding.tvCurr1.text.toString()
                 val curriculum1desc = binding.curr1Description.text.toString()
@@ -210,7 +258,7 @@ class ManagingProductFragment : Fragment() {
                     subtitle = subtitle,
                     expCategory = expCategory!!,
                     title = title,
-                    giftImgKey = listOf(""),
+                    giftImgKey = giftImgKey,
                     description = description,
                     explanation = explanationList,
                     location = location,
@@ -241,6 +289,22 @@ class ManagingProductFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.rvGiftImg.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            val giftImgAdapter = GiftImgAdapter(imgUriList)
+            giftImgAdapter.setOnItemClickListener(object : GiftImgAdapter.OnItemClickListener {
+                override fun onItemClick(position: Int) {
+                    Log.d("remove", "remove")
+                    imgUriList.removeAt(position)
+                    //adapter?.notifyDataSetChanged()
+                    giftImgAdapter.notifyDataSetChanged()
+                    //binding.rvGiftImg.adapter = GiftImgAdapter(imgUriList)
+                }
+            })
+            adapter = giftImgAdapter
+        }
     }
 
     private fun imgUpload(uri: Uri, step: Int) {
@@ -250,7 +314,7 @@ class ManagingProductFragment : Fragment() {
         val filename = file.nameWithoutExtension
         val ext = file.extension
 
-        val data = BodyData(ext = ext, dir = "admin", filename = filename)
+        val data = BodyData(ext = ext, dir = "explanation", filename = filename)
         Log.d("data", "$data")
 
         ProductImgUploadService().getImgUrl(data) { responseState, responseBody ->
@@ -261,7 +325,7 @@ class ManagingProductFragment : Fragment() {
                     val endpoint =responseBody?.asJsonObject?.get("presignedUrl").toString().substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
                         .removeSuffix("\"")
 
-                    val mediaType = "image/*".toMediaTypeOrNull()
+                    val mediaType = "image/${ext}".toMediaTypeOrNull()
                     var requestBody :RequestBody? = null
 
                     when (step) {
@@ -313,6 +377,65 @@ class ManagingProductFragment : Fragment() {
         }
     }
 
+    private fun imgListUpload(list: MutableList<Uri>) {
+        Log.d("imgListUpload", "$list")
+        for (i in list.indices) {
+//            if (list[i] in preImgList)
+//                continue
+
+            val file = File(list[i].toString())
+
+            Log.d("imgUpload", "$file")
+            val filename = file.nameWithoutExtension
+            val ext = file.extension
+
+            val data = BodyData(ext = ext, dir = "explanation", filename = filename)
+            Log.d("data", "$data")
+
+            ProductImgUploadService().getImgUrl(data) { responseState, responseBody ->
+                when (responseState) {
+                    RESPONSE_STATE.OKAY -> {
+                        Log.d("getImgUrl", "$responseBody")
+                        val imageKey = responseBody?.asJsonObject?.get("imageKey").toString().replace("\"", "")
+                        val endpoint = responseBody?.asJsonObject?.get("presignedUrl").toString().substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
+                            .removeSuffix("\"")
+
+                        val mediaType = "image/${ext}".toMediaTypeOrNull()
+                        val requestBody = file.asRequestBody(mediaType)
+                        giftKeyList.add(imageKey)
+                        Log.d("giftImgKey", "$imageKey")
+                        Log.d("giftImgKeyList", "$giftKeyList")
+
+                        Log.d("uploadImg requestBody", "$requestBody")
+
+                        ProductImgUploadService().uploadImg(
+                            data = requestBody!!,
+                            url = "https://shallwebucket.s3.ap-northeast-2.amazonaws.com/",
+                            endpoint = endpoint
+                        ) { uploadState, _ ->
+                            // Handle the upload completion if needed
+                            when (uploadState) {
+                                RESPONSE_STATE.OKAY -> {
+                                    Log.d("uploadImg currkey", "$imageKey")
+                                    Log.d("retrofit", "uploadImg api : ${uploadState}")
+                                }
+
+                                RESPONSE_STATE.FAIL -> {
+                                    Log.d("uploadImg currkey", "$imageKey")
+                                    Log.d("retrofit", "uploadImg api 호출 에러")
+                                }
+                            }
+                        }
+                    }
+
+                    RESPONSE_STATE.FAIL -> {
+                        Log.d("retrofit", "getImgUrl 호출 에러")
+                    }
+                }
+            }
+        }
+    }
+
     private fun popupMsg(msg: String) {
         val alertDialog = CustomAlertDialog(requireContext(),R.layout.custom_popup_layout)
         val dialog = alertDialog.create()
@@ -358,7 +481,23 @@ class ManagingProductFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            selectedImageUri = data?.data!!
+            // path = selectedImageUri
 
+            //imgUriList.add(path) // 나중에 선택된 리스트가 오른쪽에 추가
+            //newImgList = mutableListOf(path.toString() + newImgList) // 나중에 선택된 리스트가 왼쪽에 추가
+            giftImgUri =
+                selectedImageUri?.let {
+                    getImageAbsolutePath(
+                        it,
+                        requireContext()
+                    )?.toUri()
+                }!!// 선택한 이미지의 경로를 구하는 함수 호출
+            Log.d("giftImgUri", "$giftImgUri")
+            Log.d("path", "$path")
+            imgUriList.add(giftImgUri)
+            binding.rvGiftImg.adapter?.notifyDataSetChanged()
+            //binding.rvGiftImg.adapter = GiftImgAdapter(imgUriList)
         }
         // 1단계 사진 첨부
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
