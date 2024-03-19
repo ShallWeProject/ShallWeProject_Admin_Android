@@ -26,6 +26,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.shall_we.admin.R
 import com.shall_we.admin.databinding.FragmentManagingProductBinding
@@ -43,7 +44,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 
-class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
+class EditingProductFragment : Fragment() {
     private var _binding: FragmentManagingProductBinding? = null
     private val binding get() = _binding!!
 
@@ -61,10 +62,19 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
     private var img1changed = false
     private var img2changed = false
     private var img3changed = false
+
+    private var giftImgUri: Uri = Uri.EMPTY
+    private var giftImgKey: String? = null
+    private var giftImgChanged = false
+    private var imgUriList: MutableList<Uri> = mutableListOf()
+
     private var filename: String = ""
     private var ext: String = ""
-    private lateinit var file: File
     private var path: Uri = Uri.EMPTY
+
+    private var preImgList: MutableList<Uri> = mutableListOf()
+    private var newImgList: MutableList<String>? = null
+    private var giftKeyList: MutableList<String> = mutableListOf()
 
     var idx: Int = -1
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,13 +87,7 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentManagingProductBinding.inflate(inflater, container, false)
-        // Inflate the layout for this fragment
-        //val scrollView = binding.scrollView
         requestPermission()
-
-//        binding.rvGiftImg.adapter = GiftImgAdapter(requireContext())
-//        binding.rvGiftImg.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-
 
         val list = resources.getStringArray(R.array.select_category).toList()
         _binding!!.spinner.adapter =
@@ -146,7 +150,7 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
 
         binding.btnSave.setOnClickListener {
 
-            // 이미지 업로드 변경사항 생긴 커리큘럼만 imgUpload 해야함
+                // 이미지 업로드 변경사항 생긴 커리큘럼만 imgUpload 해야함
             if (img1changed) {
                 imgUpload(curr1Uri, 1)
             }
@@ -156,6 +160,11 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
             if (img3changed) {
                 imgUpload(curr3Uri, 3)
             }
+
+            if (giftImgChanged) {
+                imgListUpload(imgUriList)
+            }
+
 
             Log.d("imgUpload 1", "$curr1ImgKey")
 
@@ -175,14 +184,13 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             alertDialog.setNegativeButton("확인") { v ->
 
-                //            Log.d("curriculum","$curr1ImgKey, $curr2ImgKey, $curr3ImgKey, $curr4ImgKey")
+    //            Log.d("curriculum","$curr1ImgKey, $curr2ImgKey, $curr3ImgKey, $curr4ImgKey")
                 val subtitle = binding.subtitle.text.toString()
                 val title = binding.product.text.toString()
                 val priceText = binding.price.text.toString()
                 val price: Int? = priceText.toIntOrNull()
-                //val giftImgKey = binding.thumbnail.text.toString()
+                val giftImgKey = giftKeyList
                 val description = binding.description.text.toString()
-                //            val contextImg = binding.contextImg.text.toString()
                 val curriculum1 = binding.tvCurr1.text.toString()
                 val curriculum1desc = binding.curr1Description.text.toString()
                 val curriculum1Img = curr1ImgKey
@@ -210,8 +218,6 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
                         stage = curriculum3,
                         description = curriculum3desc,
                         explanationKey = curriculum3Img
-                    ),
-                    ExplanationReq(
                     )
                 )
 
@@ -219,7 +225,7 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
                     subtitle = subtitle,
                     expCategory = expCategory!!,
                     title = title,
-                    giftImgKey = listOf(""),
+                    giftImgKey = giftImgKey,
                     description = description,
                     explanation = explanationList,
                     location = location,
@@ -251,16 +257,24 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
         return binding.root
     }
 
-    private fun initGiftImg(resultData: List<String>) {
-        adapter = GiftImgAdapter(requireContext())
-        binding.rvGiftImg.adapter = adapter
-        adapter.setOnItemClickListener(this)
-
-        Log.d("retrofit", "initAlbum, $resultData")
-
-        adapter.datas = resultData
-        adapter.notifyDataSetChanged()
-    }
+//    private fun initGiftImg(resultData: List<String>) {
+//        adapter = GiftImgAdapter(requireContext())
+//        binding.rvGiftImg.adapter = adapter
+//        adapter.setOnItemClickListener(this)
+//
+//        Log.d("retrofit", "initAlbum, $resultData")
+//
+//        adapter.datas = resultData
+//        adapter.notifyDataSetChanged()
+//
+//        binding.rvGiftImg.apply {
+//            setHasFixedSize(true)
+//            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+//            val giftImgAdapter = GiftImgAdapter(context)
+//            giftImgAdapter.setOnItemClickListener(this@EditingProductFragment)
+//            adapter = giftImgAdapter
+//        }
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -279,12 +293,30 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
         binding.price.setText(data.price.toString())
         binding.description.setText(data.description)
 
-        adapter = GiftImgAdapter(requireContext())
-        binding.rvGiftImg.adapter = adapter
-        adapter.setOnItemClickListener(this)
+        for (i in data.giftImgKey?.indices!!) {
+            imgUriList.add(data.giftImgKey[i].toUri())
+            preImgList.add(data.giftImgKey[i].toUri())
+        }
+        newImgList = data.giftImgKey
 
-        adapter.datas = data.giftImgKey
-        adapter.notifyDataSetChanged()
+        binding.rvGiftImg.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            val giftImgAdapter = GiftImgAdapter(imgUriList)
+            giftImgAdapter.setOnItemClickListener(object : GiftImgAdapter.OnItemClickListener {
+                override fun onItemClick(position: Int) {
+//                    newImgList = newImgList?.toMutableList()?.apply {
+//                        removeAt(position)
+//                    }
+                    Log.d("remove", "remove")
+                    imgUriList.removeAt(position)
+                    //adapter?.notifyDataSetChanged()
+                    giftImgAdapter.notifyDataSetChanged()
+                    //binding.rvGiftImg.adapter = GiftImgAdapter(imgUriList)
+                }
+            })
+            adapter = giftImgAdapter
+        }
 
 
         if (data.explanation != null) {
@@ -313,14 +345,15 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
         Log.d("currImgKey","$curr1ImgKey,$curr2ImgKey,$curr3ImgKey")
     }
 
+
     private fun imgUpload(uri: Uri, step: Int) {
-        file = File(uri.toString())
+        val file = File(uri.toString())
 
         Log.d("imgUpload","$uri, $file")
         val filename = file.nameWithoutExtension
         val ext = file.extension
 
-        val data = BodyData(ext = ext, dir = "admin", filename = filename)
+        val data = BodyData(ext = ext, dir = "explanation", filename = filename)
         Log.d("data", "$data")
 
         ProductImgUploadService().getImgUrl(data) { responseState, responseBody ->
@@ -329,9 +362,9 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
                     Log.d("getImgUrl", "$responseBody")
                     val imageKey = responseBody?.asJsonObject?.get("imageKey").toString().replace("\"", "")
                     val endpoint =responseBody?.asJsonObject?.get("presignedUrl").toString().substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
-                        .removeSuffix("\"")
+                            .removeSuffix("\"")
 
-                    val mediaType = "image/*".toMediaTypeOrNull()
+                    val mediaType = "image/${ext}".toMediaTypeOrNull()
                     var requestBody :RequestBody? = null
 
                     when (step) {
@@ -356,28 +389,87 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
 
                     Log.d("uploadImg requestBody", "$requestBody")
 
-                    ProductImgUploadService().uploadImg(
-                        data = requestBody!!,
-                        url = "https://shallwebucket.s3.ap-northeast-2.amazonaws.com/",
-                        endpoint = endpoint
-                    ) { uploadState, _ ->
-                        // Handle the upload completion if needed
-                        when (uploadState) {
-                            RESPONSE_STATE.OKAY -> {
-                                Log.d("uploadImg currkey", "$curr1ImgKey")
-                                Log.d("retrofit", "uploadImg api : ${uploadState}")
-                            }
+                        ProductImgUploadService().uploadImg(
+                            data = requestBody!!,
+                            url = "https://shallwebucket.s3.ap-northeast-2.amazonaws.com/",
+                            endpoint = endpoint
+                        ) { uploadState, _ ->
+                            // Handle the upload completion if needed
+                            when (uploadState) {
+                                RESPONSE_STATE.OKAY -> {
+                                    Log.d("uploadImg currkey", "$curr1ImgKey")
+                                    Log.d("retrofit", "uploadImg api : ${uploadState}")
+                                }
 
-                            RESPONSE_STATE.FAIL -> {
-                                Log.d("uploadImg currkey", "$curr1ImgKey")
-                                Log.d("retrofit", "uploadImg api 호출 에러")
+                                RESPONSE_STATE.FAIL -> {
+                                    Log.d("uploadImg currkey", "$curr1ImgKey")
+                                    Log.d("retrofit", "uploadImg api 호출 에러")
+                                }
                             }
                         }
                     }
-                }
 
                 RESPONSE_STATE.FAIL -> {
                     Log.d("retrofit", "getImgUrl 호출 에러")
+                }
+            }
+        }
+    }
+
+    private fun imgListUpload(list: MutableList<Uri>) {
+        Log.d("imgListUpload", "$list")
+        for (i in list.indices) {
+//            if (list[i] in preImgList)
+//                continue
+
+            val file = File(list[i].toString())
+
+            Log.d("imgUpload", "$file")
+            val filename = file.nameWithoutExtension
+            val ext = file.extension
+
+            val data = BodyData(ext = ext, dir = "explanation", filename = filename)
+            Log.d("data", "$data")
+
+            ProductImgUploadService().getImgUrl(data) { responseState, responseBody ->
+                when (responseState) {
+                    RESPONSE_STATE.OKAY -> {
+                        Log.d("getImgUrl", "$responseBody")
+                        val imageKey = responseBody?.asJsonObject?.get("imageKey").toString().replace("\"", "")
+                        val endpoint = responseBody?.asJsonObject?.get("presignedUrl").toString().substringAfter("https://shallwebucket.s3.ap-northeast-2.amazonaws.com/")
+                            .removeSuffix("\"")
+
+                        val mediaType = "image/${ext}".toMediaTypeOrNull()
+                        val requestBody = file.asRequestBody(mediaType)
+                        giftKeyList.add(imageKey)
+                        Log.d("giftImgKey", "$imageKey")
+                        Log.d("giftImgKeyList", "$giftKeyList")
+
+                        Log.d("uploadImg requestBody", "$requestBody")
+
+                        ProductImgUploadService().uploadImg(
+                            data = requestBody!!,
+                            url = "https://shallwebucket.s3.ap-northeast-2.amazonaws.com/",
+                            endpoint = endpoint
+                        ) { uploadState, _ ->
+                            // Handle the upload completion if needed
+                            when (uploadState) {
+                                RESPONSE_STATE.OKAY -> {
+                                    Log.d("uploadImg currkey", "$imageKey")
+                                    Log.d("retrofit", "uploadImg api : ${uploadState}")
+                                }
+
+                                RESPONSE_STATE.FAIL -> {
+                                    Log.d("uploadImg currkey", "$imageKey")
+                                    Log.d("retrofit", "uploadImg api 호출 에러")
+                                }
+                            }
+                        }
+                    }
+
+                    RESPONSE_STATE.FAIL -> {
+                        Log.d("retrofit", "getImgUrl 호출 에러")
+                    }
                 }
             }
         }
@@ -395,7 +487,7 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
         layoutParams.gravity = Gravity.BOTTOM
         dialog.window?.attributes = layoutParams
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        alertDialog.setNegativeButton("확인") { v ->
+        alertDialog.setPositiveButton("확인") { v ->
             dialog.dismiss()
         }
         dialog.show()
@@ -414,8 +506,6 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
         )
     }
 
-    private val PICK_IMAGE_REQUEST = 1 // 요청 코드
-
     // 갤러리 열기
     private fun openGallery(requestCode: Int) {
         Log.d("gallery", "갤러리")
@@ -428,10 +518,27 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            selectedImageUri = data?.data!!
+            // path = selectedImageUri
 
+            //imgUriList.add(path) // 나중에 선택된 리스트가 오른쪽에 추가
+            //newImgList = mutableListOf(path.toString() + newImgList) // 나중에 선택된 리스트가 왼쪽에 추가
+            giftImgUri =
+                selectedImageUri?.let {
+                    getImageAbsolutePath(
+                        it,
+                        requireContext()
+                    )?.toUri()
+                }!!// 선택한 이미지의 경로를 구하는 함수 호출
+            Log.d("giftImgUri", "$giftImgUri")
+            Log.d("path", "$path")
+            imgUriList.add(giftImgUri)
+            binding.rvGiftImg.adapter?.notifyDataSetChanged()
+            giftImgChanged = true
         }
+
         // 1단계 사진 첨부
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+        else if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             // 선택한 이미지의 Uri 가져오기
             selectedImageUri = data?.data!!
             path = selectedImageUri
@@ -518,13 +625,8 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
     }
 
     private fun checkAllFilled(): Boolean {
-        if (true) {
-            return true
-        }
-        else {
-            // toast message 띄우기
-            return false
-        }
+        // toast message 띄우기
+        return binding.subtitle.text.isNotEmpty() && expCategory != null && binding.product.text.isNotEmpty() && binding.price.text.isNotEmpty() && binding.description.text.isNotEmpty() && binding.tvCurr1.text.isNotEmpty() && binding.curr1Description.text.isNotEmpty() && binding.tvCurr2.text.isNotEmpty() && binding.curr2Description.text.isNotEmpty() && binding.tvCurr3.text.isNotEmpty() && binding.curr3Description.text.isNotEmpty() && binding.address.text.isNotEmpty() && binding.caution.text.isNotEmpty()
     }
 
     private fun navigateToOriginalFragment() {
@@ -561,10 +663,6 @@ class EditingProductFragment : Fragment(), GiftImgAdapter.OnItemClickListener {
                 }
             }
         })
-    }
-
-    override fun onItemClick(position: Int) {
-
     }
 }
 
